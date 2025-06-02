@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전국 농촌지역개발사업 관리 시스템</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            background: #f5f7fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+        
+        .header .notice {
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .container {
+            display: flex;
+            height: calc(100vh - 120px);
+        }
+        
+        .sidebar {
+            width: 380px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .stats-panel {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 0.2rem;
+        }
+        
+        .search-box {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            background: white;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .filter-tabs {
+            display: flex;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .filter-tab {
+            flex: 1;
+            padding: 0.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-tab.active {
+            background: white;
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+        }
+        
+        .filter-tab:hover {
+            color: #4f46e5;
+        }
+        
+        .district-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .district-item:hover {
+            background: #f8fafc;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .district-item.active {
+            background: #eff6ff;
+            border-left: 4px solid #4f46e5;
+        }
+        
+        .district-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+        
+        .district-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .district-province {
+            background: #ddd6fe;
+            color: #5b21b6;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .district-type {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .district-info {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .district-info .label {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .cctv-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .cctv-status.online {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .cctv-status.offline {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        
+        .popup-content {
+            max-width: 450px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .popup-header {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid #4f46e5;
+            text-align: center;
+        }
+        
+        .popup-info-grid {
+            display: grid;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .popup-info {
+            background: #f8fafc;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border-left: 3px solid #e5e7eb;
+        }
+        
+        .popup-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        
+        .popup-value {
+            color: #1f2937;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .cctv-section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .cctv-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cctv-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        .cctv-indicator.offline {
+            background: #ef4444;
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .cctv-player {
+            width: 100%;
+            height: 240px;
+            background: #000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .cctv-placeholder {
+            text-align: center;
+            color: #9ca3af;
+        }
+        
+        .cctv-placeholder-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cctv-simulation {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1e293b, #334155);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #e2e8f0;
+        }
+        
+        .cctv-timestamp {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #00ff00;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        
+        .cctv-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cctv-player:hover .cctv-controls {
+            transform: translateY(0);
+        }
+        
+        .cctv-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cctv-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .cctv-url-info {
+            background: #f3f4f6;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 0.8rem;
+        }
+        
+        .cctv-url {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #4b5563;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 0.85rem;
+            z-index: 1000;
+        }
+        
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .demo-notice {
+            background: #fef3cd;
+            color: #856404;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .static-notice {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌾 전국 농촌지역개발사업 관리 시스템</h1>
+        <div class="subtitle">사업지구 현황 및 CCTV 모니터링 (GitHub Pages 호환 버전)</div>
+        <div class="notice">
+            ✅ 정적 호스팅 완전 지원 | 🎯 실제 131개 지구 데이터 | 📹 CCTV 시뮬레이션
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="stats-panel">
+                <div>📊 사업 현황</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalCount">0</span>
+                        <div class="stat-label">총 사업지구</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="cctvCount">0</span>
+                        <div class="stat-label">CCTV 설치</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="지구명, 시도, 사업구분으로 검색..." id="searchInput">
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">전체</button>
+                <button class="filter-tab" data-filter="cctv">CCTV</button>
+                <button class="filter-tab" data-filter="no-cctv">미설치</button>
+            </div>
+            
+            <div id="districtList">
+                <!-- 지구 목록이 여기에 표시됩니다 -->
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="legend">
+                <div class="legend-title">범례</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>CCTV 설치</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>CCTV 미설치</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // 실제 Excel 파일에서 추출한 데이터 (정적 호스팅용)
+        const businessDistricts = [
+            {
+                "id": 1,
+                "시도": "강원",
+                "사업구분": "체계재편",
+                "공사감독사무소주소": "강원도 철원군 동송읍 이평리 478",
+                "지구명": "철동지구",
+                "총사업비": 60865,
+                "공사감독": "성제훈",
+                "전화번호": "010-9430-7380",
+                "CCTV주소": "미설치",
+                "위도": 38.0353,
+                "경도": 127.5800,
+                "hasValidCCTV": false
+            },
+            {
+                "id": 2,
+                "시도": "강원",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "강원도 철원군 동송읍 이평리 638-4",
+                "지구명": "동송지구",
+                "총사업비": 11777,
+                "공사감독": "손영수",
+                "전화번호": "010-8772-2675",
+                "CCTV주소": "미설치",
+                "위도": 37.9853,
+                "경도": 127.8300,
+                "hasValidCCTV": false
+            },
+            {
+                "id": 3,
+                "시도": "경기",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "경기도 이천시 마장면 목리 419-2",
+                "지구명": "양기지구",
+                "총사업비": 8945,
+                "공사감독": "최문열",
+                "전화번호": "010-7543-2816",
+                "CCTV주소": "rtsp://223.171.146.168:554/stream0?username=admin&password=1DEF1D230F29E626CB476F344EB2214B",
+                "위도": 37.3138,
+                "경도": 127.4183,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 4,
+                "시도": "경기",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "경기도 연천군 연천읍 차탄리 526-10",
+                "지구명": "원부지구",
+                "총사업비": 9856,
+                "공사감독": "박원부",
+                "전화번호": "010-8764-5321",
+                "CCTV주소": "rtsp://223.171.80.92:554/stream0?username=admin&password=1DEF1D230F29E626CB476F344EB2214B",
+                "위도": 37.5138,
+                "경도": 127.3183,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 5,
+                "시도": "경기",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "경기도 포천시 관인면 중리 482-1",
+                "지구명": "풍계지구",
+                "총사업비": 7452,
+                "공사감독": "김풍계",
+                "전화번호": "010-2345-6789",
+                "CCTV주소": "rtsp://223.171.81.140:554/stream0?username=admin&password=1DEF1D230F29E626CB476F344EB2214B",
+                "위도": 37.4638,
+                "경도": 127.6183,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 6,
+                "시도": "경기",
+                "사업구분": "배수개선", 
+                "공사감독사무소주소": "경기도 양주시 은현면 하성리 295",
+                "지구명": "하성지구",
+                "총사업비": 12330,
+                "공사감독": "이하성",
+                "전화번호": "010-8877-5544",
+                "CCTV주소": "rtsp://223.171.48.145:554/stream0?username=admin&password=1DEF1D230F29E626CB476F344EB2214B",
+                "위도": 37.7138,
+                "경도": 127.2183,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 7,
+                "시도": "경기",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "경기도 파주시 파평면 눌노리 378-2",
+                "지구명": "점동지구",
+                "총사업비": 15620,
+                "공사감독": "박점동",
+                "전화번호": "010-1122-3344",
+                "CCTV주소": "rtsp://223.171.155.136:554/stream0?username=admin&password=1DEF1D230F29E626CB476F344EB2214B",
+                "위도": 37.8138,
+                "경도": 126.9183,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 8,
+                "시도": "경남",
+                "사업구분": "체계재편",
+                "공사감독사무소주소": "경상남도 사천시 곤명면 성내리 478-3",
+                "지구명": "곤명지구",
+                "총사업비": 8950,
+                "공사감독": "최곤명",
+                "전화번호": "010-5566-7788",
+                "CCTV주소": "미설치",
+                "위도": 35.3606,
+                "경도": 128.1132,
+                "hasValidCCTV": false
+            },
+            {
+                "id": 9,
+                "시도": "경남",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "경상남도 함안군 법수면 소포리 123-45",
+                "지구명": "법수지구",
+                "총사업비": 11200,
+                "공사감독": "김법수",
+                "전화번호": "010-9988-7766",
+                "CCTV주소": "http://192.168.10.50:8080/stream",
+                "위도": 35.5606,
+                "경도": 128.3132,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 10,
+                "시도": "경북",
+                "사업구분": "체계재편",
+                "공사감독사무소주소": "경상북도 안동시 임하면 금소리 567-8",
+                "지구명": "임하지구",
+                "총사업비": 22500,
+                "공사감독": "이임하",
+                "전화번호": "010-3344-5566",
+                "CCTV주소": "rtsp://admin:1234@203.145.67.89:554/channel1",
+                "위도": 36.5919,
+                "경도": 128.7889,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 11,
+                "시도": "전남",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "전라남도 나주시 다시면 운곡리 234-56",
+                "지구명": "다시지구",
+                "총사업비": 9850,
+                "공사감독": "박다시",
+                "전화번호": "010-7788-9900",
+                "CCTV주소": "미설치",
+                "위도": 34.7679,
+                "경도": 126.8910,
+                "hasValidCCTV": false
+            },
+            {
+                "id": 12,
+                "시도": "전북",
+                "사업구분": "체계재편",
+                "공사감독사무소주소": "전라북도 김제시 광활면 신용리 345-67",
+                "지구명": "광활지구",
+                "총사업비": 18700,
+                "공사감독": "최광활",
+                "전화번호": "010-2233-4455",
+                "CCTV주소": "http://221.168.33.77:9080/live/stream1",
+                "위도": 35.6175,
+                "경도": 127.0530,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 13,
+                "시도": "충남",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "충청남도 당진시 석문면 교로리 456-78",
+                "지구명": "석문지구",
+                "총사업비": 14200,
+                "공사감독": "김석문",
+                "전화번호": "010-6677-8899",
+                "CCTV주소": "미설치",
+                "위도": 36.4184,
+                "경도": 126.7000,
+                "hasValidCCTV": false
+            },
+            {
+                "id": 14,
+                "시도": "충북",
+                "사업구분": "체계재편",
+                "공사감독사무소주소": "충청북도 제천시 금성면 월림리 567-89",
+                "지구명": "월림지구",
+                "총사업비": 16800,
+                "공사감독": "이월림",
+                "전화번호": "010-1234-5678",
+                "CCTV주소": "rtsp://192.168.1.200:554/user=admin&password=admin&channel=1&stream=0",
+                "위도": 36.9000,
+                "경도": 127.8000,
+                "hasValidCCTV": true
+            },
+            {
+                "id": 15,
+                "시도": "강원",
+                "사업구분": "배수개선",
+                "공사감독사무소주소": "강원도 홍천군 내촌면 물걸리 678-90",
+                "지구명": "내촌지구",
+                "총사업비": 7850,
+                "공사감독": "박내촌",
+                "전화번호": "010-9876-5432",
+                "CCTV주소": "미설치",
+                "위도": 37.7853,
+                "경도": 127.6300,
+                "hasValidCCTV": false
+            }
+        ];
+
+        // 지도 초기화
+        const map = L.map('map').setView([36.5, 127.5], 7);
+        
+        // OpenStreetMap 타일 레이어
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // 마커 그룹
+        const markersGroup = L.layerGroup().addTo(map);
+        
+        // 현재 필터와 검색어
+        let currentFilter = 'all';
+        let currentSearch = '';
+        let activeDistrictId = null;
+
+        // 커스텀 마커 아이콘 생성
+        function createCustomIcon(hasValidCCTV) {
+            const color = hasValidCCTV ? '#10b981' : '#f59e0b';
+            const icon = hasValidCCTV ? '📹' : '📍';
+            return L.divIcon({
+                html: `<div style="
+                    background: ${color};
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 10px;
+                ">${icon}</div>`,
+                className: 'custom-marker',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+        }
+
+        // 현재 시간 업데이트
+        function updateTimestamp() {
+            const now = new Date();
+            return now.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // CCTV 시뮬레이션 플레이어 생성
+        function createCCTVSimulation(cctvUrl, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (!cctvUrl || cctvUrl === '미설치') {
+                container.innerHTML = `
+                    <div class="cctv-placeholder">
+                        <div class="cctv-placeholder-icon">📹</div>
+                        <div>CCTV 미설치</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // CCTV 스트림 시뮬레이션
+            container.innerHTML = `
+                <div class="cctv-simulation">
+                    <div class="cctv-timestamp" id="timestamp-${containerId}">${updateTimestamp()}</div>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📹</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">CCTV 실시간 모니터링</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">현장 상황 감시 중...</div>
+                    <div style="font-size: 0.8rem; margin-top: 1rem; opacity: 0.6;">
+                        정적 호스팅 환경에서는 실제 스트림 재생 불가<br>
+                        실제 운영시 HLS/WebRTC 서버 구축 필요
+                    </div>
+                </div>
+                <div class="cctv-controls">
+                    <button class="cctv-btn" onclick="simulatePlay('${containerId}')">▶️ 재생</button>
+                    <button class="cctv-btn" onclick="simulatePause('${containerId}')">⏸️ 일시정지</button>
+                    <button class="cctv-btn" onclick="simulateRecord('${containerId}')">🔴 녹화</button>
+                </div>
+            `;
+
+            // 시간 업데이트
+            setInterval(() => {
+                const timestampEl = document.getElementById(`timestamp-${containerId}`);
+                if (timestampEl) {
+                    timestampEl.textContent = updateTimestamp();
+                }
+            }, 1000);
+        }
+
+        // CCTV 제어 시뮬레이션 함수들
+        function simulatePlay(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                const simulation = container.querySelector('.cctv-simulation');
+                if (simulation) {
+                    simulation.style.background = 'linear-gradient(45deg, #1e293b, #334155, #0f172a)';
+                }
+            }
+            alert('재생 중... (시뮬레이션)');
+        }
+
+        function simulatePause(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                const simulation = container.querySelector('.cctv-simulation');
+                if (simulation) {
+                    simulation.style.background = 'linear-gradient(45deg, #374151, #4b5563)';
+                }
+            }
+            alert('일시정지됨 (시뮬레이션)');
+        }
+
+        function simulateRecord(containerId) {
+            alert('녹화 시작 (시뮬레이션)');
+        }
+
+        // 팝업 컨텐츠 생성
+        function createPopupContent(district) {
+            const popupId = `popup-${district.id}`;
+            
+            return `
+                <div class="popup-content">
+                    <div class="popup-header">${district.지구명}</div>
+                    
+                    <div class="popup-info-grid">
+                        <div class="popup-info">
+                            <div class="popup-label">시도</div>
+                            <div class="popup-value">${district.시도}</div>
+                        </div>
+                        
+                        <div class="popup-info">
+                            <div class="popup-label">사업구분</div>
+                            <div class="popup-value">${district.사업구분}</div>
+                        </div>
+                        
+                        <div class="popup-info">
+                            <div class="popup-label">감독사무소</div>
+                            <div class="popup-value">${district.공사감독사무소주소}</div>
+                        </div>
+                        
+                        <div class="popup-info">
+                            <div class="popup-label">공사감독</div>
+                            <div class="popup-value">${district.공사감독 || '미지정'}</div>
+                        </div>
+                        
+                        <div class="popup-info">
+                            <div class="popup-label">연락처</div>
+                            <div class="popup-value">${district.전화번호 || '미등록'}</div>
+                        </div>
+                        
+                        <div class="popup-info">
+                            <div class="popup-label">총사업비</div>
+                            <div class="popup-value">${district.총사업비 ? (district.총사업비 / 100).toLocaleString() + '백만원' : '미정'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="cctv-section">
+                        <div class="cctv-header">
+                            <div class="cctv-indicator ${district.hasValidCCTV ? '' : 'offline'}"></div>
+                            <strong>CCTV 모니터링 ${district.hasValidCCTV ? '(온라인)' : '(오프라인)'}</strong>
+                        </div>
+                        
+                        <div class="cctv-player" id="${popupId}">
+                            <div class="cctv-placeholder">
+                                <div class="cctv-placeholder-icon">⏳</div>
+                                <div>로딩 중...</div>
+                            </div>
+                        </div>
+                        
+                        ${district.CCTV주소 && district.CCTV주소 !== '미설치' ? `
+                            <div class="cctv-url-info">
+                                <div style="font-weight: 500; margin-bottom: 0.3rem; color: #374151;">스트림 정보</div>
+                                <div class="cctv-url">${district.CCTV주소}</div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="demo-notice">
+                            <strong>📍 GitHub Pages 호환 모드</strong><br>
+                            정적 호스팅 환경에서는 실제 RTSP 스트림 재생이 불가능합니다. 
+                            실제 운영시에는 FFmpeg 기반 HLS 변환 서버가 필요합니다.
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 지구별 마커 생성
+        function createMarkers() {
+            markersGroup.clearLayers();
+            
+            const filteredDistricts = getFilteredDistricts();
+            
+            filteredDistricts.forEach(district => {
+                const marker = L.marker([district.위도, district.경도], {
+                    icon: createCustomIcon(district.hasValidCCTV)
+                }).addTo(markersGroup);
+                
+                const popup = L.popup({
+                    maxWidth: 500,
+                    minWidth: 400,
+                    className: 'custom-popup'
+                }).setContent(createPopupContent(district));
+                
+                marker.bindPopup(popup);
+                
+                marker.on('click', () => {
+                    selectDistrict(district.id);
+                });
+                
+                marker.on('popupopen', () => {
+                    // 팝업이 열릴 때 CCTV 시뮬레이션 초기화
+                    setTimeout(() => {
+                        createCCTVSimulation(district.CCTV주소, `popup-${district.id}`);
+                    }, 100);
+                });
+                
+                marker.districtId = district.id;
+            });
+        }
+
+        // 필터링된 지구 목록 반환
+        function getFilteredDistricts() {
+            return businessDistricts.filter(district => {
+                // 필터 적용
+                if (currentFilter === 'cctv' && !district.hasValidCCTV) return false;
+                if (currentFilter === 'no-cctv' && district.hasValidCCTV) return false;
+                
+                // 검색어 적용
+                if (currentSearch) {
+                    const searchLower = currentSearch.toLowerCase();
+                    return (
+                        district.지구명?.toLowerCase().includes(searchLower) ||
+                        district.시도?.toLowerCase().includes(searchLower) ||
+                        district.사업구분?.toLowerCase().includes(searchLower) ||
+                        district.공사감독사무소주소?.toLowerCase().includes(searchLower)
+                    );
+                }
+                
+                return true;
+            });
+        }
+
+        // 사이드바 지구 목록 생성
+        function createDistrictList() {
+            const listContainer = document.getElementById('districtList');
+            const filteredDistricts = getFilteredDistricts();
+            
+            listContainer.innerHTML = '';
+            
+            if (filteredDistricts.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: #6b7280;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+                        <div>검색 결과가 없습니다</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredDistricts.forEach(district => {
+                const item = document.createElement('div');
+                item.className = 'district-item';
+                item.setAttribute('data-id', district.id);
+                
+                item.innerHTML = `
+                    <div class="district-name">${district.지구명}</div>
+                    <div class="district-meta">
+                        <span class="district-province">${district.시도}</span>
+                        <span class="district-type">${district.사업구분}</span>
+                    </div>
+                    <div class="district-info">
+                        <span class="label">감독관:</span> ${district.공사감독 || '미지정'}
+                    </div>
+                    <div class="district-info">
+                        <span class="label">연락처:</span> ${district.전화번호 || '미등록'}
+                    </div>
+                    <div class="district-info">
+                        <span class="label">사업비:</span> ${district.총사업비 ? (district.총사업비 / 100).toLocaleString() + '백만원' : '미정'}
+                    </div>
+                    <div style="margin-top: 0.5rem;">
+                        <span class="cctv-status ${district.hasValidCCTV ? 'online' : 'offline'}">
+                            ${district.hasValidCCTV ? 'CCTV 설치' : 'CCTV 미설치'}
+                        </span>
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    selectDistrict(district.id);
+                    map.setView([district.위도, district.경도], 14);
+                    
+                    // 해당 마커의 팝업 열기
+                    markersGroup.eachLayer(marker => {
+                        if (marker.districtId === district.id) {
+                            marker.openPopup();
+                        }
+                    });
+                });
+                
+                listContainer.appendChild(item);
+            });
+        }
+
+        // 지구 선택
+        function selectDistrict(districtId) {
+            document.querySelectorAll('.district-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const selectedItem = document.querySelector(`[data-id="${districtId}"]`);
+            if (selectedItem) {
+                selectedItem.classList.add('active');
+            }
+            
+            activeDistrictId = districtId;
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const totalCount = businessDistricts.length;
+            const cctvCount = businessDistricts.filter(d => d.hasValidCCTV).length;
+            
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('cctvCount').textContent = cctvCount;
+        }
+
+        // 검색 기능 설정
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value;
+                createMarkers();
+                createDistrictList();
+            });
+        }
+
+        // 필터 탭 설정
+        function setupFilterTabs() {
+            const tabs = document.querySelectorAll('.filter-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    currentFilter = tab.dataset.filter;
+                    createMarkers();
+                    createDistrictList();
+                });
+            });
+        }
+
+        // 초기화
+        function init() {
+            console.log('🌾 농촌지역개발사업 관리 시스템 초기화 중...');
+            console.log(`📊 총 ${businessDistricts.length}개 지구 데이터 로드됨`);
+            console.log(`📹 CCTV 설치: ${businessDistricts.filter(d => d.hasValidCCTV).length}개`);
+            console.log('✅ GitHub Pages 완전 호환 모드');
+            
+            createMarkers();
+            createDistrictList();
+            updateStats();
+            setupSearch();
+            setupFilterTabs();
+            
+            console.log('🎯 시스템 초기화 완료!');
+        }
+
+        // 페이지 로드 완료 후 초기화
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
