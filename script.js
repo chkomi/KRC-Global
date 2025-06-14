@@ -1,113 +1,146 @@
-let map; // Define map globally
-
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize map (Shanghai coordinates)
-    map = L.map('map').setView([31.2304, 121.4737], 12); // Centered on Shanghai, adjusted zoom for better view
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    const tourismData = await loadShanghaiDataFromJSON();
-    if (tourismData.length > 0) {
-        initializeMapWithData(tourismData);
-    }
-});
-
-function showLoadingSpinner(message) {
-    const spinner = document.getElementById('loading-spinner');
-    spinner.querySelector('p').textContent = message;
-    spinner.style.display = 'flex';
-}
-
-function hideLoadingSpinner() {
-    document.getElementById('loading-spinner').style.display = 'none';
-}
-
-function showFloatingMessage(message, type, duration = 3000) {
-    const msgElem = document.getElementById('floating-message');
-    msgElem.textContent = message;
-    msgElem.className = `floating-message ${type} show`;
-    msgElem.style.display = 'block';
-
-    setTimeout(() => {
-        msgElem.classList.remove('show');
-        setTimeout(() => msgElem.style.display = 'none', 500); // Wait for fade out
-    }, duration);
-}
-
-async function loadShanghaiDataFromJSON() {
-    try {
-        showLoadingSpinner('상해 여행 데이터를 불러오는 중...');
-
-        const response = await fetch('./data/shanghai-data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        hideLoadingSpinner();
-        showFloatingMessage(`✅ 상해 여행 데이터 ${data.length}개를 성공적으로 로드했습니다!`, 'success', 4000);
-        return data;
-
-    } catch (error) {
-        hideLoadingSpinner();
-        console.error('상해 여행 데이터 로드 실패:', error);
-        showFloatingMessage('⚠️ 상해 여행 데이터 로드에 실패했습니다. 파일을 확인해 주세요.', 'error', 5000);
-        return [];
-    }
-}
-
-function initializeMapWithData(data) {
-    data.forEach(item => {
-        if (item.lat && item.lon) {
-            let iconClass = '';
-            let iconHtml = '';
-
-            if (item.type === 'tourist') {
-                iconClass = 'tourist-spot';
-                iconHtml = '<i class="fas fa-camera"></i>'; // Camera icon for tourist spots
-            } else if (item.type === 'restaurant') {
-                iconClass = 'restaurant';
-                iconHtml = '<i class="fas fa-utensils"></i>'; // Utensils icon for restaurants
-            } else if (item.type === 'airport') {
-                iconClass = 'airport';
-                iconHtml = '<i class="fas fa-plane"></i>'; // Plane icon for airport
-            } else if (item.type === 'accommodation') { // NEW: Accommodation type
-                iconClass = 'accommodation';
-                iconHtml = '<i class="fas fa-hotel"></i>'; // Hotel icon for accommodation
-            }
-
-            // Marker icon size and anchor adjusted to 20px (visually 8px 느낌)
-            const customIcon = L.divIcon({
-                className: `leaflet-div-icon ${iconClass}`,
-                html: iconHtml,
-                iconSize: [20, 20], // Adjusted size for better visual balance with smaller icons
-                iconAnchor: [10, 10] // Center the icon (half of iconSize)
-            });
-
-            let popupContent = `<h4>${item.name}</h4>`;
-            if (item.feature) {
-                popupContent += `<p><strong>특징:</strong> ${item.feature}</p>`;
-            }
-            if (item.menu) {
-                popupContent += `<p><strong>주요 메뉴:</strong> ${item.menu}</p>`;
-            }
-            popupContent += `<p>(${item.lat}, ${item.lon})</p>`;
-
-            const marker = L.marker([item.lat, item.lon], { icon: customIcon })
-                .addTo(map)
-                .bindPopup(popupContent);
-
-            // Add label directly to the marker
-            const label = L.marker([item.lat, item.lon], {
-                icon: L.divIcon({
-                    className: 'leaflet-marker-label',
-                    html: `<span>${item.name}</span>`,
-                }),
-                interactive: false // Make label non-interactive
-            }).addTo(map);
-
-        }
-    });
-}
+[
+  {
+    "장소명": "외탄 (The Bund)",
+    "카테고리": "관광지",
+    "위도": 31.240261,
+    "경도": 121.490577,
+    "주소": "Zhongshan Rd (E-1), Waitan, Huangpu, Shanghai, China",
+    "특징 및 설명": "상하이의 대표적인 관광명소. 1.5km 길이의 강변 산책로로 식민지시대 건축물과 푸동의 현대적 고층빌딩을 동시에 감상할 수 있음. 특히 야경이 아름다워 저녁 시간 방문 추천.",
+    "추천 방문일차": "1일차",
+    "평점": 4.7,
+    "영업시간": "24시간",
+    "전화번호": "없음"
+  },
+  {
+    "장소명": "예원 (Yu Garden)",
+    "카테고리": "관광지",
+    "위도": 31.227236,
+    "경도": 121.492094,
+    "주소": "279 Yu Yuan Lao Jie, Huangpu, Shanghai, China",
+    "특징 및 설명": "1577년에 건설된 명나라 시대의 전통 중국 정원. 5에이커 규모로 정자, 연못, 암석정원, 아치형 다리 등 전통 중국 조경의 정수를 보여줌. 예원 올드 스트리트에서 전통 간식도 즐길 수 있음",
+    "추천 방문일차": "1일차",
+    "평점": 4.5,
+    "영업시간": "매일 오픈",
+    "전화번호": "+86 21 6326 0830"
+  },
+  {
+    "장소명": "상하이 타워 (Shanghai Tower)",
+    "카테고리": "관광지",
+    "위도": 31.233518,
+    "경도": 121.505618,
+    "주소": "501 Yincheng Rd (M), Lujiazui, Pudong, Shanghai, China",
+    "특징 및 설명": "세계에서 두 번째로 높은 632m 초고층 빌딩. 118-119층 전망대에서 상하이 360도 파노라마 뷰 감상 가능. 세계에서 가장 빠른 엘리베이터 탑승 경험. 일몰 시간 방문 시 도시 야경과 함께 감상 가능",
+    "추천 방문일차": "2일차",
+    "평점": 4.6,
+    "영업시간": "08:30-21:30",
+    "전화번호": "+86 21 6199 9766"
+  },
+  {
+    "장소명": "티엔즈팡 (Tianzifang)",
+    "카테고리": "관광지",
+    "위도": 31.208812,
+    "경도": 121.468898,
+    "주소": "210弄 Taikang Rd, Huangpu, China",
+    "특징 및 설명": "구 프랑스 조계지역의 좁은 골목길에 위치한 예술촌. 독특한 부티크, 카페, 바, 갤러리가 밀집해 있어 상하이의 예술적 감성을 느낄 수 있음. 전통 스커먼 건축 양식과 현대적 창의성이 조화를 이룸",
+    "추천 방문일차": "2일차",
+    "평점": 4.2,
+    "영업시간": "24시간",
+    "전화번호": "없음"
+  },
+  {
+    "장소명": "신천지 (Xintiandi)",
+    "카테고리": "관광지",
+    "위도": 31.220826,
+    "경도": 121.474365,
+    "주소": "119 Madang Rd, Huangpu, Shanghai, China",
+    "특징 및 설명": "전통 석고문 건축을 보존하면서 고급 쇼핑몰, 레스토랑, 바로 재탄생한 문화상업지구. 상하이의 과거와 현재가 조화를 이루는 대표적인 지역. 밤에는 활기찬 나이트라이프 즐길 수 있음",
+    "추천 방문일차": "3일차",
+    "평점": 4.5,
+    "영업시간": "10:00-22:00",
+    "전화번호": "+86 21 6311 2288"
+  },
+  {
+    "장소명": "난징루 보행가 (Nanjing Road)",
+    "카테고리": "관광지",
+    "위도": 31.23575,
+    "경도": 121.47972,
+    "주소": "Huangpu, Shanghai, China",
+    "특징 및 설명": "상하이 최대 쇼핑거리이자 보행자 전용도로. 각종 브랜드 매장, 백화점, 전통 상점들이 즐비함. 외탄과 연결되어 있어 함께 둘러보기 좋음. 상하이의 번화가 분위기를 만끽할 수 있는 필수 코스",
+    "추천 방문일차": "1일차",
+    "평점": 4.3,
+    "영업시간": "24시간",
+    "전화번호": "없음"
+  },
+  {
+    "장소명": "주가각 수향마을 (Zhujiajiao)",
+    "카테고리": "관광지",
+    "위도": 31.10373,
+    "경도": 121.04637,
+    "주소": "Qingpu District, Shanghai, China",
+    "특징 및 설명": "1700년 역사의 전통 수향마을. 36개의 석교와 수로로 이루어진 동양의 베니스. 전통 건축물과 고즈넉한 분위기로 상하이 도심과는 다른 매력을 선사. 당일치기 여행지로 인기",
+    "추천 방문일차": "4일차",
+    "평점": 4.4,
+    "영업시간": "08:00-17:00",
+    "전화번호": "+86 21 5924 0077"
+  },
+  {
+    "장소명": "지아지아탕바오 (Jia Jia Tang Bao)",
+    "카테고리": "맛집",
+    "위도": 31.234577,
+    "경도": 121.470821,
+    "주소": "90 Huanghe Rd, People's Square, Huangpu, Shanghai, China",
+    "특징 및 설명": "상하이 최고의 소룡포 맛집 중 하나. 얇은 피 안에 뜨거운 육즙이 가득한 전통 소룡포로 유명. 현지인들도 줄서서 먹는 인기 맛집. 가격대비 훌륭한 맛으로 관광객들에게 필수 코스",
+    "추천 방문일차": "1일차",
+    "평점": 4.3,
+    "영업시간": "09:00-21:30",
+    "전화번호": "+86 21 6327 6878"
+  },
+  {
+    "장소명": "라이라이 스낵 덤플링 (Lailai Snack Dumpling)",
+    "카테고리": "맛집",
+    "위도": 31.236185,
+    "경도": 121.477313,
+    "주소": "504 Tianjin Rd, Huangpu, Shanghai, China",
+    "특징 및 설명": "현지인들이 인정하는 소룡포 맛집. 정통 상하이식 소룡포와 다양한 딤섬을 저렴한 가격에 즐길 수 있음. 관광지에서 가까운 위치로 접근성이 좋음. 웨이팅이 있을 정도로 인기",
+    "추천 방문일차": "2일차",
+    "평점": 4.5,
+    "영업시간": "08:00-21:30",
+    "전화번호": "없음"
+  },
+  {
+    "장소명": "난샹 만터우덴 (Nanxiang Steamed Bread Shop)",
+    "카테고리": "맛집",
+    "위도": 31.229006,
+    "경도": 121.459337,
+    "주소": "269 Wujiang Rd, Jing'An, Shanghai, China",
+    "특징 및 설명": "소룡포의 발상지로 알려진 난샹의 전통 맛을 이어받은 유서 깊은 맛집. 100년 이상의 역사를 가진 브랜드로 정통 상하이 소룡포의 참맛을 경험할 수 있음. 예원 근처에도 본점이 있음",
+    "추천 방문일차": "3일차",
+    "평점": 4.1,
+    "영업시간": "08:00-21:00",
+    "전화번호": "+86 21 6136 1428"
+  },
+  {
+    "장소명": "상하이 할머니 레스토랑 (Shanghai Grandmother Restaurant)",
+    "카테고리": "맛집",
+    "위도": 31.235477,
+    "경도": 121.489036,
+    "주소": "70 Fuzhou Rd, Waitan, Huangpu, Shanghai, China",
+    "특징 및 설명": "전통 상하이 가정식 요리를 맛볼 수 있는 레스토랑. 소룡포뿐만 아니라 상하이 대표 요리들을 한 곳에서 경험 가능. 아늑한 분위기와 다양한 차 선택으로 여유로운 식사를 즐길 수 있음",
+    "추천 방문일차": "2일차",
+    "평점": 4.0,
+    "영업시간": "10:30-22:00",
+    "전화번호": "+86 21 6321 6613"
+  },
+  {
+    "장소명": "라오지스 (Laojishi)",
+    "카테고리": "맛집",
+    "위도": 31.22833,
+    "경도": 121.46323,
+    "주소": "L281, 288호L2楼, Shimen Yi Lu, Jing'An, Shanghai, China",
+    "특징 및 설명": "고급스러운 분위기에서 정통 상하이 요리를 즐길 수 있는 레스토랑. 소룡포, 상하이 게요리, 전통 상하이 요리를 모던하게 재해석한 메뉴들이 인기. 가족 단위 식사나 특별한 날 추천",
+    "추천 방문일차": "3일차",
+    "평점": 4.7,
+    "영업시간": "점심 및 저녁",
+    "전화번호": "+86 21 5276 2260"
+  }
+]
