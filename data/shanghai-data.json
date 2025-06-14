@@ -1,0 +1,282 @@
+[
+    {
+        "name": "상하이 푸동 국제공항 (PVG)",
+        "type": "airport",
+        "lat": 31.1443,
+        "lon": 121.8058,
+        "feature": "상해의 주요 국제 관문"
+    },
+    {
+        "name": "와이탄",
+        "type": "tourist",
+        "lat": 31.2374,
+        "lon": 121.4883,
+        "feature": "황푸강변의 유럽풍 건축물과 푸동 스카이라인 조망"
+    },
+    {
+        "name": "동방명주",
+        "type": "tourist",
+        "lat": 31.2397,
+        "lon": 121.4998,
+        "feature": "상하이의 랜드마크 TV 타워, 전망대"
+    },
+    {
+        "name": "상하이 타워",
+        "type": "tourist",
+        "lat": 31.2346,
+        "lon": 121.5033,
+        "feature": "세계에서 두 번째로 높은 빌딩, 최고층 전망대"
+    },
+    {
+        "name": "예원",
+        "type": "tourist",
+        "lat": 31.2294,
+        "lon": 121.4934,
+        "feature": "명청 시대의 아름다운 정원, 고풍스러운 건축물"
+    },
+    {
+        "name": "신천지",
+        "type": "tourist",
+        "lat": 31.2185,
+        "lon": 121.4729,
+        "feature": "상하이 전통 건축물인 스쿠먼을 개조한 상업 지구"
+    },
+    {
+        "name": "티엔즈팡",
+        "type": "tourist",
+        "lat": 31.2057,
+        "lon": 121.4646,
+        "feature": "좁은 골목길과 아기자기한 상점, 갤러리"
+    },
+    {
+        "name": "상하이 박물관",
+        "type": "tourist",
+        "lat": 31.2285,
+        "lon": 121.4754,
+        "feature": "고대 중국 예술품 및 유물 전시"
+    },
+    {
+        "name": "대한민국 임시정부 유적지",
+        "type": "tourist",
+        "lat": 31.2173,
+        "lon": 121.4716,
+        "feature": "한국 독립운동의 역사적 장소"
+    },
+    {
+        "name": "상하이 디즈니랜드",
+        "type": "tourist",
+        "lat": 31.1408,
+        "lon": 121.6669,
+        "feature": "테마파크, 다양한 어트랙션과 쇼"
+    },
+    {
+        "name": "난징루 보행가",
+        "type": "tourist",
+        "lat": 31.2335,
+        "lon": 121.4770,
+        "feature": "상하이 최대의 쇼핑 거리"
+    },
+    {
+        "name": "와이탄 해변 산책로",
+        "type": "tourist",
+        "lat": 31.2400,
+        "lon": 121.4880,
+        "feature": "와이탄 야경 감상에 최적화된 산책로"
+    },
+    {
+        "name": "상하이 과학기술관",
+        "type": "tourist",
+        "lat": 31.2223,
+        "lon": 121.5435,
+        "feature": "과학 교육 및 체험 시설"
+    },
+    {
+        "name": "푸동 빈장 산책로",
+        "type": "tourist",
+        "lat": 31.2380,
+        "lon": 121.5000,
+        "feature": "푸동 마천루를 배경으로 한 강변 산책로"
+    },
+    {
+        "name": "상하이 서커스 월드",
+        "type": "tourist",
+        "lat": 31.2720,
+        "lon": 121.4420,
+        "feature": "화려하고 아크로바틱한 서커스 공연"
+    },
+    {
+        "name": "상하이 동물원",
+        "type": "tourist",
+        "lat": 31.1960,
+        "lon": 121.3650,
+        "feature": "다양한 동물들을 만날 수 있는 도심 속 동물원"
+    },
+    {
+        "name": "징안사",
+        "type": "tourist",
+        "lat": 31.2240,
+        "lon": 121.4480,
+        "feature": "도심 속 고요한 불교 사찰"
+    },
+    {
+        "name": "상하이 도시 계획 전시관",
+        "type": "tourist",
+        "lat": 31.2320,
+        "lon": 121.4760,
+        "feature": "상하이의 과거, 현재, 미래 도시 계획 전시"
+    },
+    {
+        "name": "루자쭈이 금융무역구",
+        "type": "tourist",
+        "lat": 31.2350,
+        "lon": 121.5000,
+        "feature": "초고층 빌딩이 즐비한 상하이의 금융 중심지"
+    },
+    {
+        "name": "상하이 자연사 박물관",
+        "type": "tourist",
+        "lat": 31.2290,
+        "lon": 121.4670,
+        "feature": "다양한 자연사 관련 전시물"
+    },
+    {
+        "name": "M on the Bund",
+        "type": "restaurant",
+        "lat": 31.2385,
+        "lon": 121.4900,
+        "menu": "유럽식 요리, 와이탄 야경"
+    },
+    {
+        "name": "Din Tai Fung (鼎泰豐)",
+        "type": "restaurant",
+        "lat": 31.2330,
+        "lon": 121.4850,
+        "menu": "샤오롱바오 (딤섬)"
+    },
+    {
+        "name": "Lost Heaven (外滩店)",
+        "type": "restaurant",
+        "lat": 31.2360,
+        "lon": 121.4870,
+        "menu": "운남성/미얀마 퓨전 요리"
+    },
+    {
+        "name": "Haidilao Hot Pot (海底捞火锅)",
+        "type": "restaurant",
+        "lat": 31.2300,
+        "lon": 121.4700,
+        "menu": "쓰촨식 훠궈"
+    },
+    {
+        "name": "Jian Guo 328 La Mian Guan (建国328小馆)",
+        "type": "restaurant",
+        "lat": 31.2065,
+        "lon": 121.4590,
+        "menu": "상해 가정식, 라면"
+    },
+    {
+        "name": "Jesse Restaurant (吉士酒家)",
+        "type": "restaurant",
+        "lat": 31.2060,
+        "lon": 121.4650,
+        "menu": "전통 상해 요리"
+    },
+    {
+        "name": "Mr. & Mrs. Bund",
+        "type": "restaurant",
+        "lat": 31.2390,
+        "lon": 121.4910,
+        "menu": "모던 프렌치, 와이탄 뷰"
+    },
+    {
+        "name": " Ultraviolet by Paul Pairet",
+        "type": "restaurant",
+        "lat": 31.2300,
+        "lon": 121.4700,
+        "menu": "몰입형 미식 경험 (예약 필수)"
+    },
+    {
+        "name": "Commune Social",
+        "type": "restaurant",
+        "lat": 31.2210,
+        "lon": 121.4620,
+        "menu": "타파스, 칵테일"
+    },
+    {
+        "name": "Char Bar & Grill",
+        "type": "restaurant",
+        "lat": 31.2405,
+        "lon": 121.4950,
+        "menu": "스테이크, 루프탑 바"
+    },
+    {
+        "name": "Yang's Fried Dumplings (小杨生煎)",
+        "type": "restaurant",
+        "lat": 31.2305,
+        "lon": 121.4905,
+        "menu": "생전 (상하이식 군만두)"
+    },
+    {
+        "name": "Old Jesse (老吉士酒家)",
+        "type": "restaurant",
+        "lat": 31.2062,
+        "lon": 121.4652,
+        "menu": "상해 가정식 요리"
+    },
+    {
+        "name": "Canton Table (粤味轩)",
+        "type": "restaurant",
+        "lat": 31.2250,
+        "lon": 121.4800,
+        "menu": "광동식 딤섬, 요리"
+    },
+    {
+        "name": "Mercato",
+        "type": "restaurant",
+        "lat": 31.2395,
+        "lon": 121.4902,
+        "menu": "이탈리안 피자, 파스타"
+    },
+    {
+        "name": "El Willy",
+        "type": "restaurant",
+        "lat": 31.2398,
+        "lon": 121.4895,
+        "menu": "스페인 타파스"
+    },
+    {
+        "name": "Da Dong Roast Duck (大董烤鸭店)",
+        "type": "restaurant",
+        "lat": 31.2315,
+        "lon": 121.4805,
+        "menu": "베이징 덕"
+    },
+    {
+        "name": "Green Safe Organic (新元素)",
+        "type": "restaurant",
+        "lat": 31.2200,
+        "lon": 121.4680,
+        "menu": "유기농 브런치, 샐러드"
+    },
+    {
+        "name": " Hakkasan Shanghai",
+        "type": "restaurant",
+        "lat": 31.2388,
+        "lon": 121.4898,
+        "menu": "모던 광동식 요리"
+    },
+    {
+        "name": "The Nest",
+        "type": "restaurant",
+        "lat": 31.2387,
+        "lon": 121.4905,
+        "menu": "유럽식 퓨전 요리, 칵테일"
+    },
+    {
+        "name": "Xiaonan Guo (小南国)",
+        "type": "restaurant",
+        "lat": 31.2280,
+        "lon": 121.4750,
+        "menu": "상하이 전통 요리"
+    }
+]
