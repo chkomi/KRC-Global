@@ -72,29 +72,31 @@ body {
 
 /* Custom icon styling for markers */
 .leaflet-div-icon {
-    background-color: #007bff; /* Default blue for tourist spots */
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 25px; /* Adjust width for icons */
+    height: 25px; /* Adjust height for icons */
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-weight: bold;
     font-size: 14px;
-    border: 2px solid white;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    border: 1px solid white; /* Border reduced */
+    box-shadow: 0 0 3px rgba(0,0,0,0.2); /* Shadow reduced */
 }
 
+/* Specific colors for different types */
+.leaflet-div-icon.tourist-spot {
+    background-color: #007bff; /* Blue for tourist spots */
+}
 .leaflet-div-icon.restaurant {
     background-color: #ffc107; /* Yellow for restaurants */
-    color: #333;
+    color: #333; /* Darker text for yellow background */
 }
-
 .leaflet-div-icon.airport {
     background-color: #6f42c1; /* Purple for airport */
 }
 
+/* Popup styling */
 .leaflet-popup-content-wrapper {
     border-radius: 8px;
     padding: 10px;
@@ -110,4 +112,21 @@ body {
     margin-top: 0;
     margin-bottom: 5px;
     color: #333;
+}
+
+/* Label styling */
+.leaflet-marker-label {
+    position: absolute;
+    bottom: -20px; /* Adjust position below the marker */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    pointer-events: none; /* Make sure label doesn't interfere with map interaction */
+    z-index: 600; /* Ensure label is above other map elements if needed */
 }
