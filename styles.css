@@ -95,6 +95,9 @@ body {
 .leaflet-div-icon.airport {
     background-color: #6f42c1; /* Purple for airport */
 }
+.leaflet-div-icon.accommodation { /* NEW: Accommodation type */
+    background-color: #20c997; /* Teal/Green for accommodation */
+}
 
 /* Popup styling */
 .leaflet-popup-content-wrapper {
@@ -117,8 +120,6 @@ body {
 /* Label styling */
 .leaflet-marker-label {
     position: absolute;
-    /* Adjust position relative to the marker's anchor point */
-    /* top: calc(100% + 5px); */ /* This positions it below the marker */
     top: 20px; /* Adjusted to be below the 20px marker */
     left: 50%;
     transform: translateX(-50%);
@@ -131,7 +132,6 @@ body {
     font-weight: bold;
     pointer-events: none; /* Make sure label doesn't interfere with map interaction */
     z-index: 600;
-    /* Remove fixed width/height for dynamic sizing */
     height: auto;
     width: auto;
 }
