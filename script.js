@@ -2,7 +2,7 @@ let map; // Define map globally
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize map (Shanghai coordinates)
-    map = L.map('map').setView([31.2304, 121.4737], 11); // Centered on Shanghai
+    map = L.map('map').setView([31.2304, 121.4737], 12); // Centered on Shanghai, adjusted zoom for better view
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -61,20 +61,25 @@ async function loadShanghaiDataFromJSON() {
 function initializeMapWithData(data) {
     data.forEach(item => {
         if (item.lat && item.lon) {
-            let iconClass = 'default';
+            let iconClass = '';
+            let iconHtml = '';
+
             if (item.type === 'tourist') {
                 iconClass = 'tourist-spot';
+                iconHtml = '<i class="fas fa-camera"></i>'; // Camera icon for tourist spots
             } else if (item.type === 'restaurant') {
                 iconClass = 'restaurant';
+                iconHtml = '<i class="fas fa-utensils"></i>'; // Utensils icon for restaurants
             } else if (item.type === 'airport') {
                 iconClass = 'airport';
+                iconHtml = '<i class="fas fa-plane"></i>'; // Plane icon for airport
             }
 
             const customIcon = L.divIcon({
                 className: `leaflet-div-icon ${iconClass}`,
-                html: item.type === 'tourist' ? 'T' : (item.type === 'restaurant' ? 'R' : (item.type === 'airport' ? 'A' : '')),
-                iconSize: [25, 25],
-                iconAnchor: [12, 12]
+                html: iconHtml,
+                iconSize: [25, 25], // Reduced from 25x25 to allow font awesome to fit
+                iconAnchor: [12.5, 12.5] // Center the icon
             });
 
             let popupContent = `<h4>${item.name}</h4>`;
@@ -86,10 +91,22 @@ function initializeMapWithData(data) {
             }
             popupContent += `<p>(${item.lat}, ${item.lon})</p>`;
 
-
-            L.marker([item.lat, item.lon], { icon: customIcon })
+            const marker = L.marker([item.lat, item.lon], { icon: customIcon })
                 .addTo(map)
                 .bindPopup(popupContent);
+
+            // Add label directly to the marker
+            const label = L.marker([item.lat, item.lon], {
+                icon: L.divIcon({
+                    className: 'leaflet-marker-label',
+                    html: `<span>${item.name}</span>`,
+                    iconAnchor: [0, 0] // Anchor doesn't matter much for this type of label
+                }),
+                interactive: false // Make label non-interactive
+            }).addTo(map);
+
+            // Position the label relative to the marker. You might need to fine-tune this with CSS 'bottom' or 'transform'.
+            // For now, it's positioned using CSS. Leaflet Label plugin would be more robust for complex cases.
         }
     });
 }
