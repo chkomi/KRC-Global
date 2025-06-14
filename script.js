@@ -73,9 +73,12 @@ function initializeMapWithData(data) {
             } else if (item.type === 'airport') {
                 iconClass = 'airport';
                 iconHtml = '<i class="fas fa-plane"></i>'; // Plane icon for airport
+            } else if (item.type === 'accommodation') { // NEW: Accommodation type
+                iconClass = 'accommodation';
+                iconHtml = '<i class="fas fa-hotel"></i>'; // Hotel icon for accommodation
             }
 
-            // Marker icon size and anchor adjusted to 8px
+            // Marker icon size and anchor adjusted to 20px (visually 8px 느낌)
             const customIcon = L.divIcon({
                 className: `leaflet-div-icon ${iconClass}`,
                 html: iconHtml,
@@ -97,13 +100,10 @@ function initializeMapWithData(data) {
                 .bindPopup(popupContent);
 
             // Add label directly to the marker
-            // The label's position is managed by CSS using `top` and `transform` relative to the marker's own top-left corner
             const label = L.marker([item.lat, item.lon], {
                 icon: L.divIcon({
                     className: 'leaflet-marker-label',
                     html: `<span>${item.name}</span>`,
-                    // iconSize: [1, 1], // Smallest possible to not affect layout
-                    // iconAnchor: [0, 0]
                 }),
                 interactive: false // Make label non-interactive
             }).addTo(map);
