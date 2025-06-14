@@ -75,11 +75,12 @@ function initializeMapWithData(data) {
                 iconHtml = '<i class="fas fa-plane"></i>'; // Plane icon for airport
             }
 
+            // Marker icon size and anchor adjusted to 8px
             const customIcon = L.divIcon({
                 className: `leaflet-div-icon ${iconClass}`,
                 html: iconHtml,
-                iconSize: [25, 25], // Reduced from 25x25 to allow font awesome to fit
-                iconAnchor: [12.5, 12.5] // Center the icon
+                iconSize: [20, 20], // Adjusted size for better visual balance with smaller icons
+                iconAnchor: [10, 10] // Center the icon (half of iconSize)
             });
 
             let popupContent = `<h4>${item.name}</h4>`;
@@ -96,17 +97,17 @@ function initializeMapWithData(data) {
                 .bindPopup(popupContent);
 
             // Add label directly to the marker
+            // The label's position is managed by CSS using `top` and `transform` relative to the marker's own top-left corner
             const label = L.marker([item.lat, item.lon], {
                 icon: L.divIcon({
                     className: 'leaflet-marker-label',
                     html: `<span>${item.name}</span>`,
-                    iconAnchor: [0, 0] // Anchor doesn't matter much for this type of label
+                    // iconSize: [1, 1], // Smallest possible to not affect layout
+                    // iconAnchor: [0, 0]
                 }),
                 interactive: false // Make label non-interactive
             }).addTo(map);
 
-            // Position the label relative to the marker. You might need to fine-tune this with CSS 'bottom' or 'transform'.
-            // For now, it's positioned using CSS. Leaflet Label plugin would be more robust for complex cases.
         }
     });
 }
