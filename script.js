@@ -1,148 +1,110 @@
-let map; // Define map globally
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMap();
+});
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize map (Shanghai coordinates)
-    map = L.map('map').setView([31.2304, 121.4737], 12); // Centered on Shanghai, adjusted zoom for better view
+let map;
+let markers = L.featureGroup(); // 마커들을 관리할 레이어 그룹
 
+function initializeMap() {
+    // 지도 초기화: 상해의 대략적인 중심 좌표
+    map = L.map('map').setView([31.2304, 121.4737], 12); // 상해 중심 좌표 및 초기 줌 레벨
+
+    // OpenStreetMap 타일 레이어 추가
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    const tourismData = await loadShanghaiDataFromJSON();
-    if (tourismData.length > 0) {
-        initializeMapWithData(tourismData);
-    }
-});
+    // 마커 레이어 그룹을 지도에 추가
+    markers.addTo(map);
 
-function showLoadingSpinner(message) {
-    const spinner = document.getElementById('loading-spinner');
-    spinner.querySelector('p').textContent = message;
-    spinner.style.display = 'flex';
+    // 데이터 로드
+    loadShanghaiData();
 }
 
-function hideLoadingSpinner() {
-    document.getElementById('loading-spinner').style.display = 'none';
-}
-
-function showFloatingMessage(message, type, duration = 3000) {
-    const msgElem = document.getElementById('floating-message');
-    msgElem.textContent = message;
-    msgElem.className = `floating-message ${type} show`;
-    msgElem.style.display = 'block';
-
-    setTimeout(() => {
-        msgElem.classList.remove('show');
-        setTimeout(() => msgElem.style.display = 'none', 500); // Wait for fade out
-    }, duration);
-}
-
-async function loadShanghaiDataFromJSON() {
+async function loadShanghaiData() {
     try {
-        showLoadingSpinner('상해 여행 데이터를 불러오는 중...');
-
-        const response = await fetch('./data/shanghai-data.json');
+        // 업데이트된 JSON 파일 경로
+        const response = await fetch('./data/shanghai_trip_data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-
-        hideLoadingSpinner();
-        showFloatingMessage(`✅ 상해 여행 데이터 ${data.length}개를 성공적으로 로드했습니다!`, 'success', 4000);
-        return data;
-
+        console.log('상해 데이터 로드 성공:', data); // 디버깅용
+        displayMarkers(data.places); // JSON 구조에 맞게 'places' 배열 사용
     } catch (error) {
-        hideLoadingSpinner();
-        console.error('상해 여행 데이터 로드 실패:', error);
-        showFloatingMessage('⚠️ 상해 여행 데이터 로드에 실패했습니다. 파일을 확인해 주세요.', 'error', 5000);
-        return [];
+        console.error('상해 데이터 로드 실패:', error);
+        document.getElementById('place-details').innerHTML = '<p style="color: red;">데이터 로드에 실패했습니다. 파일을 확인해주세요.</p>';
     }
 }
 
-function initializeMapWithData(data) {
-    data.forEach(item => {
-        // 기존 공항/숙소 데이터 구조와 새로운 데이터 구조를 모두 처리
-        const itemName = item.장소명 || item.name;
-        const itemType = item.카테고리 || item.type; // '카테고리' 또는 'type' 사용
-        const itemLat = item.위도 || item.lat;
-        const itemLon = item.경도 || item.lon;
-        const itemFeature = item['특징 및 설명'] || item.feature;
-        const itemMenu = item['주요 메뉴'] || item.menu; // 기존 맛집 데이터에서 사용
-        const itemAddress = item.주소;
-        const itemVisitDay = item.추천_방문일차; // 필드명 수정 (공백 제거)
-        const itemRating = item.평점;
-        const itemOpeningHours = item.영업시간;
-        const itemPhone = item.전화번호;
+function displayMarkers(places) {
+    markers.clearLayers(); // 기존 마커 모두 제거
 
+    const placeDetailsPanel = document.getElementById('place-details');
 
-        if (itemLat && itemLon) {
-            let iconClass = '';
-            let iconHtml = '';
+    places.forEach(place => {
+        const marker = L.marker([place.latitude, place.longitude], {
+            icon: createCustomIcon(place.type)
+        }).addTo(markers);
 
-            if (itemType === '관광지') {
-                iconClass = 'tourist-spot';
-                iconHtml = '<i class="fas fa-camera"></i>'; // Camera icon for tourist spots
-            } else if (itemType === '맛집') {
-                iconClass = 'restaurant';
-                iconHtml = '<i class="fas fa-utensils"></i>'; // Utensils icon for restaurants
-            } else if (itemType === 'airport') { // 기존 공항 데이터 타입
-                iconClass = 'airport';
-                iconHtml = '<i class="fas fa-plane"></i>'; // Plane icon for airport
-            } else if (itemType === 'accommodation') { // 기존 숙소 데이터 타입
-                iconClass = 'accommodation';
-                iconHtml = '<i class="fas fa-hotel"></i>'; // Hotel icon for accommodation
-            }
+        // 마커에 팝업 대신 툴팁(Label)을 추가하여 항상 표시되도록 설정 (옵션)
+        // .openTooltip()을 사용하지 않으면 마우스 오버 시에만 나타남
+        marker.bindTooltip(place.name, {
+            permanent: false, // 마우스 오버 시에만 표시 (true로 하면 항상 표시)
+            direction: 'top', // 툴팁 위치
+            offset: [0, -10] // 툴팁 위치 조정
+        });
 
-            const customIcon = L.divIcon({
-                className: `leaflet-div-icon ${iconClass}`,
-                html: iconHtml,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
-            });
+        marker.on('click', () => {
+            let detailsHtml = `<h3>${place.name}</h3>`;
+            detailsHtml += `<p><strong>종류:</strong> ${place.type}</p>`;
+            detailsHtml += `<p><strong>주요 특징:</strong> ${place.feature || '정보 없음'}</p>`;
+            if (place.주소) detailsHtml += `<p><strong>주소:</strong> ${place.주소}</p>`;
+            if (place.추천_방문일차) detailsHtml += `<p><strong>추천 방문 일차:</strong> ${place.추천_방문일차}</p>`;
+            if (place.평점) detailsHtml += `<p><strong>평점:</strong> ${place.평점} / 5</p>`;
+            if (place.영업시간) detailsHtml += `<p><strong>영업 시간:</strong> ${place.영업시간}</p>`;
+            if (place.전화번호) detailsHtml += `<p><strong>전화번호:</strong> ${place.전화번호}</p>`;
 
-            // Populate popup content based on new data structure
-            let popupContent = `<h4>${itemName}</h4>`;
-            if (itemType === '관광지' || itemType === 'airport' || itemType === 'accommodation') {
-                if (itemFeature) {
-                    popupContent += `<p><strong>특징:</strong> ${itemFeature}</p>`;
-                }
-            } else if (itemType === '맛집') {
-                if (itemFeature) { // 맛집의 경우에도 '특징 및 설명' 사용
-                    popupContent += `<p><strong>설명:</strong> ${itemFeature}</p>`;
-                } else if (itemMenu) { // 기존 맛집 데이터의 '주요 메뉴' 호환성
-                    popupContent += `<p><strong>주요 메뉴:</strong> ${itemMenu}</p>`;
-                }
-            }
+            placeDetailsPanel.innerHTML = detailsHtml;
+            map.flyTo([place.latitude, place.longitude], 14); // 클릭 시 해당 마커로 이동 및 줌
+        });
+    });
 
-            if (itemAddress) {
-                popupContent += `<p><strong>주소:</strong> ${itemAddress}</p>`;
-            }
-            if (itemVisitDay) {
-                popupContent += `<p><strong>추천 방문 일차:</strong> ${itemVisitDay}</p>`;
-            }
-            if (itemRating) {
-                popupContent += `<p><strong>평점:</strong> ${itemRating} / 5</p>`;
-            }
-            if (itemOpeningHours) {
-                popupContent += `<p><strong>영업시간:</strong> ${itemOpeningHours}</p>`;
-            }
-            if (itemPhone) {
-                popupContent += `<p><strong>전화번호:</strong> ${itemPhone}</p>`;
-            }
-            popupContent += `<p>(${itemLat}, ${itemLon})</p>`;
+    // 모든 마커가 보이도록 지도 뷰 조정
+    if (markers.getLayers().length > 0) {
+        map.fitBounds(markers.getBounds().pad(0.1)); // 모든 마커가 보이도록 지도 범위 조정, 여백 추가
+    }
+}
 
+// 사용자 정의 마커 아이콘 생성 함수
+function createCustomIcon(type) {
+    let markerColor;
+    let borderColor = 'white'; // 기본 테두리 색상
+    let borderWidth = '2px'; // 기본 테두리 두께
 
-            const marker = L.marker([itemLat, itemLon], { icon: customIcon })
-                .addTo(map)
-                .bindPopup(popupContent);
+    switch (type) {
+        case '관광지':
+            markerColor = 'white'; // 관광지: 흰색 배경
+            borderColor = 'tomato'; // 붉은색 테두리
+            break;
+        case '음식점':
+            markerColor = 'mediumseagreen'; // 음식점: 녹색 계열
+            break;
+        case 'airport':
+            markerColor = 'rebeccapurple'; // 공항: 보라색 계열
+            break;
+        case 'accommodation':
+            markerColor = 'royalblue'; // 숙소: 파란색 계열
+            break;
+        default:
+            markerColor = '#3498db'; // 기본: 파랑
+    }
 
-            const label = L.marker([itemLat, itemLon], {
-                icon: L.divIcon({
-                    className: 'leaflet-marker-label',
-                    html: `<span>${itemName}</span>`,
-                }),
-                interactive: false
-            }).addTo(map);
-
-        }
+    return L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: ${markerColor}; width: 25px; height: 25px; border-radius: 50%; border: ${borderWidth} solid ${borderColor}; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+        iconSize: [25, 25],
+        iconAnchor: [12, 12], // 아이콘의 중심이 좌표에 오도록 조정
+        tooltipAnchor: [0, -10] // 툴팁 위치 조정
     });
 }
