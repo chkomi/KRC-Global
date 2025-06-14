@@ -73,15 +73,15 @@ body {
 /* Custom icon styling for markers */
 .leaflet-div-icon {
     border-radius: 50%;
-    width: 25px; /* Adjust width for icons */
-    height: 25px; /* Adjust height for icons */
+    width: 20px; /* Adjusted size for icons */
+    height: 20px; /* Adjusted size for icons */
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 14px;
-    border: 1px solid white; /* Border reduced */
-    box-shadow: 0 0 3px rgba(0,0,0,0.2); /* Shadow reduced */
+    font-size: 10px; /* Font size adjusted for smaller icon */
+    border: 1px solid white;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 
 /* Specific colors for different types */
@@ -117,16 +117,21 @@ body {
 /* Label styling */
 .leaflet-marker-label {
     position: absolute;
-    bottom: -20px; /* Adjust position below the marker */
+    /* Adjust position relative to the marker's anchor point */
+    /* top: calc(100% + 5px); */ /* This positions it below the marker */
+    top: 20px; /* Adjusted to be below the 20px marker */
     left: 50%;
     transform: translateX(-50%);
-    white-space: nowrap;
+    white-space: nowrap; /* Prevent text wrapping */
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 3px 8px;
+    padding: 2px 5px; /* Smaller padding for tighter fit */
     border-radius: 3px;
-    font-size: 10px;
+    font-size: 9px; /* Smaller font size for label */
     font-weight: bold;
     pointer-events: none; /* Make sure label doesn't interfere with map interaction */
-    z-index: 600; /* Ensure label is above other map elements if needed */
+    z-index: 600;
+    /* Remove fixed width/height for dynamic sizing */
+    height: auto;
+    width: auto;
 }
