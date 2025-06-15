@@ -187,7 +187,7 @@
         /* 지도 타일 선택 컨트롤 */
         .map-tile-control {
             position: absolute;
-            top: 15px;
+            bottom: 15px;
             left: 15px;
             background: rgba(255, 255, 255, 0.95);
             padding: 10px;
@@ -268,7 +268,7 @@
         /* 범례 박스 */
         .legend-box {
             position: absolute;
-            top: 80px;
+            bottom: 15px;
             right: 15px;
             background: rgba(255, 255, 255, 0.95);
             padding: 15px;
@@ -320,19 +320,6 @@
         .restaurant-marker { background-color: #27ae60; }
         .airport-marker { background-color: #9b59b6; }
         .accommodation-marker { background-color: #3498db; }
-        .special-location-marker { background-color: #f39c12; }
-
-        /* 특별 위치 라벨 스타일 */
-        .special-location-label {
-            background: rgba(243, 156, 18, 0.95) !important;
-            color: white !important;
-            border: 1px solid rgba(0, 0, 0, 0.2) !important;
-            font-weight: 700 !important;
-        }
-
-        .special-location-label:before {
-            border-right-color: rgba(243, 156, 18, 0.95) !important;
-        }
 
         /* 장소 정보 박스 */
         .info-box {
@@ -471,39 +458,6 @@
         .restaurant-bg { background-color: #27ae60; }
         .airport-bg { background-color: #9b59b6; }
         .accommodation-bg { background-color: #3498db; }
-        .special-location-bg { background-color: #f39c12; }
-
-        /* 특별 위치 마커 스타일 */
-        .special-marker-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            border: 3px solid white;
-            transition: transform 0.2s;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(243, 156, 18, 0.7);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(243, 156, 18, 0.3);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(243, 156, 18, 0);
-            }
-        }
 
         /* Leaflet 툴팁 스타일 */
         .leaflet-tooltip {
@@ -636,7 +590,7 @@
             }
 
             .legend-box {
-                top: 70px;
+                bottom: 10px;
                 right: 10px;
                 padding: 12px;
                 max-width: 160px;
@@ -666,7 +620,7 @@
 
             /* 모바일에서 지도 타일 컨트롤 조정 */
             .map-tile-control {
-                top: 10px;
+                bottom: 10px;
                 left: 10px;
                 padding: 8px;
                 max-width: 120px;
@@ -681,6 +635,13 @@
                 font-size: 0.75em;
                 margin: 2px 0;
                 padding: 2px 4px;
+            }
+
+            .legend-box {
+                bottom: 10px;
+                right: 10px;
+                padding: 12px;
+                max-width: 160px;
             }
 
             /* 모바일에서 좌표 팝업 조정 */
@@ -785,17 +746,7 @@
                 </div>
                 호텔
             </li>
-            <li>
-                <div class="marker-icon special-location-marker">
-                    <i class="fas fa-star"></i>
-                </div>
-                특별 위치
-            </li>
         </ul>
-        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ddd; font-size: 0.75em; color: #666;">
-            <i class="fas fa-info-circle"></i> 지도를 0.5초간 길게 누르면 좌표 확인<br>
-            <small style="color: #999;">※ 구글지도와 OSM간 약간의 오차 있을 수 있음</small>
-        </div>
     </div>
 
     <!-- 장소 정보 박스 -->
@@ -1045,8 +996,6 @@
 
         let map;
         let markers = L.featureGroup();
-        let clickTimeout;
-        let isLongPress = false;
         let currentTileLayer;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1117,9 +1066,6 @@
 
             // 마커 표시
             displayMarkers();
-
-            // 지도 클릭/길게 누르기 이벤트 추가
-            setupMapEvents();
         }
 
         function displayMarkers() {
@@ -1149,23 +1095,6 @@
                     displayPlaceDetails(place);
                     map.flyTo([place.latitude, place.longitude], 15);
                 });
-            });
-
-            // 특별 위치 마커 추가 (31.2275456, 121.4847685)
-            const specialMarker = L.marker([31.2275456, 121.4847685], {
-                icon: createSpecialLocationIcon()
-            }).addTo(markers);
-
-            specialMarker.bindTooltip('📍 특별 위치', {
-                permanent: true,
-                direction: 'right',
-                offset: [20, 0],
-                className: 'place-label special-location-label'
-            });
-
-            specialMarker.on('click', () => {
-                displaySpecialLocationDetails();
-                map.flyTo([31.2275456, 121.4847685], 16);
             });
 
             // 모든 마커가 보이도록 지도 뷰 조정
