@@ -60,9 +60,11 @@ function initializeMap() {
         })
     };
 
-    // 기본 심플 타일 레이어 추가
+    // 기본 심플 타일 레이어 추가 (실제로 cartodb 적용)
     currentTileLayer = tileLayers.cartodb;
     currentTileLayer.addTo(map);
+
+    console.log('기본 지도 타일:', 'cartodb'); // 디버깅용
 
     // 타일 레이어 변경 이벤트 리스너
     document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
