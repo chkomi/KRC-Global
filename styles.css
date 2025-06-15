@@ -173,8 +173,8 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
     max-width: 350px;
-    max-height: 300px;
-    overflow-y: auto;
+    max-height: 300px; /* 여러 정보 표시를 위한 높이 제한 및 스크롤 활성화 */
+    overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
     display: none;
 }
 
@@ -193,6 +193,19 @@ body {
         transform: translateY(0);
     }
 }
+
+/* 여러 장소 정보를 구분하기 위한 스타일 */
+.place-info-item {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #eee; /* 각 장소 정보 사이에 구분선 */
+}
+.place-info-item:last-child {
+    border-bottom: none; /* 마지막 항목에는 구분선 없음 */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 
 .info-box h3 {
     margin: 0 0 12px 0;
@@ -292,9 +305,9 @@ body {
 .airport-bg { background-color: #9b59b6; }
 .accommodation-bg { background-color: #3498db; }
 
-/* Leaflet 툴팁 스타일 (기존 팝업/일반 툴팁용) */
+/* Leaflet 툴팁 스타일 (기본 툴팁 및 place-label 공통) */
 .leaflet-tooltip {
-    padding: 6px 12px !important;
+    /* 툴팁의 padding, background, color, border, shadow 등 기본 모양 정의 */
     background-color: rgba(0, 0, 0, 0.8) !important;
     color: white !important;
     border: none !important;
@@ -302,43 +315,36 @@ body {
     font-weight: bold;
     font-size: 0.9em;
     white-space: nowrap;
-    pointer-events: none; /* 기본 툴팁도 클릭 방지 */
+    pointer-events: none; /* 툴팁 자체는 클릭 방지 */
     border-radius: 4px;
-}
 
-.leaflet-tooltip.leaflet-tooltip-bottom:before {
-    border-top-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-/* 장소 라벨 스타일 (JS 로직과 연동) */
-.place-label {
-    background: rgba(0, 0, 0, 0.75) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
-    font-weight: 600 !important;
-    font-size: 0.8em !important; /* JS의 estimatedLabelHeight에 영향을 줌 */
-    padding: 4px 8px !important; /* JS의 estimatedLabelWidth/Height에 영향을 줌 */
-    border-radius: 4px !important;
-    white-space: nowrap !important;
-    pointer-events: none !important; /* 라벨 클릭 방지 */
-    z-index: 1000 !important;
-    opacity: 0 !important; /* JS에서 제어할 것이므로 초기에는 0으로 설정 */
-    transition: opacity 0.3s ease !important;
-    transform: translate(-50%, -50%); /* 라벨의 기준점을 중앙으로 이동 */
-
-    /* Leaflet 툴팁의 기본 margin을 초기화하여 offset이 직접 적용되도록 함 */
+    /* Leaflet이 툴팁을 배치할 때 사용하는 마진을 초기화 */
+    /* JS에서 계산된 offset과 CSS transform을 활용하여 위치를 제어하기 위함 */
     margin-left: 0 !important;
     margin-top: 0 !important;
 }
 
-/* 툴팁 화살표 숨기기 */
-.place-label.leaflet-tooltip-left:before,
-.place-label.leaflet-tooltip-right:before,
-.place-label.leaflet-tooltip-top:before,
-.place-label.leaflet-tooltip-bottom:before {
+/* Leaflet 툴팁의 화살표 제거 (place-label에만 적용) */
+/* .leaflet-tooltip-bottom:before 등은 place-label에 필요 없는 화살표를 그림 */
+.leaflet-tooltip.place-label:before {
     display: none !important;
 }
+
+/* 장소 라벨 스타일 (JS 로직과 연동) */
+.place-label {
+    /* 툴팁 기본 스타일을 오버라이드 및 중앙 정렬 */
+    background: rgba(0, 0, 0, 0.75) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 0.8em !important; /* JS의 estimatedLabelHeight에 영향 */
+    padding: 4px 8px !important; /* JS의 estimatedLabelWidth/Height에 영향 */
+    opacity: 0 !important; /* 초기에는 숨김 (JS에서 제어) */
+    transition: opacity 0.3s ease !important; /* 부드러운 표시/숨김 효과 */
+    transform: translate(-50%, -50%); /* 라벨의 기준점을 중앙으로 이동 */
+    /* z-index를 높여 다른 요소 위에 표시 */
+    z-index: 1000 !important;
+}
+
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
