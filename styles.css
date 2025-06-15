@@ -1,4 +1,4 @@
-/* 기본 스타일 (이전 코드와 동일) */
+/* 기본 스타일 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -9,7 +9,7 @@ body {
     overflow: hidden;
 }
 
-/* 지도 타일 선택 컨트롤 (이전 코드와 동일) */
+/* 지도 타일 선택 컨트롤 */
 .map-tile-control {
     position: absolute;
     bottom: 15px;
@@ -53,7 +53,7 @@ body {
     color: white;
 }
 
-/* 상단 타이틀 박스 (이전 코드와 동일) */
+/* 상단 타이틀 박스 */
 .title-box {
     position: absolute;
     top: 15px;
@@ -78,14 +78,14 @@ body {
     gap: 8px;
 }
 
-/* 전체 화면 지도 (이전 코드와 동일) */
+/* 전체 화면 지도 */
 #map {
     width: 100vw;
     height: 100vh;
     z-index: 1;
 }
 
-/* 범례 박스 (이전 코드와 동일) */
+/* 범례 박스 */
 .legend-box {
     position: absolute;
     bottom: 15px;
@@ -160,7 +160,7 @@ body {
 .airport-marker { background-color: #9b59b6; }
 .accommodation-marker { background-color: #3498db; }
 
-/* 장소 정보 박스 (이전 코드와 동일) */
+/* 장소 정보 박스 */
 .info-box {
     position: absolute;
     bottom: 15px;
@@ -192,17 +192,6 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.place-info-item {
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px dashed #eee;
-}
-.place-info-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
 }
 
 .info-box h3 {
@@ -272,7 +261,7 @@ body {
     color: #2c3e50;
 }
 
-/* 커스텀 마커 스타일 (이전 코드와 동일) */
+/* 커스텀 마커 스타일 */
 .custom-marker-icon {
     background: transparent;
     border: none;
@@ -303,50 +292,46 @@ body {
 .airport-bg { background-color: #9b59b6; }
 .accommodation-bg { background-color: #3498db; }
 
-/* Leaflet 툴팁 스타일 (이전 코드와 동일, 약간의 주석 추가) */
+/* Leaflet 툴팁 스타일 */
 .leaflet-tooltip {
-    /* 툴팁의 padding, background, color, border, shadow 등 기본 모양 정의 */
-    background-color: rgba(0, 0, 0, 0.8) !important; /* 배경색 */
-    color: white !important; /* 텍스트 색상 */
-    border: none !important; /* 테두리 제거 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important; /* 그림자 */
+    padding: 6px 12px !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
     font-weight: bold;
     font-size: 0.9em;
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-    pointer-events: none; /* 툴팁 클릭 방지 */
+    white-space: nowrap;
+    pointer-events: none;
     border-radius: 4px;
-
-    /* Leaflet이 툴팁을 배치할 때 사용하는 마진을 초기화 */
-    /* JS에서 계산된 offset과 CSS transform을 활용하여 위치를 제어하기 위함 */
-    margin-left: 0 !important;
-    margin-top: 0 !important;
 }
 
-/* Leaflet 툴팁의 화살표 제거 (place-label에만 적용) */
-/* .leaflet-tooltip-bottom:before 등은 place-label에 필요 없는 화살표를 그림 */
-.leaflet-tooltip.place-label:before {
+.leaflet-tooltip.leaflet-tooltip-bottom:before {
+    border-top-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* 장소 라벨 스타일 */
+.place-label {
+    background: rgba(0, 0, 0, 0.75) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+    font-weight: 600 !important;
+    font-size: 0.8em !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    z-index: 1000 !important;
+    opacity: 0.9 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.place-label:before {
     display: none !important;
 }
 
-/* 장소 라벨 스타일 (JS 로직과 연동) */
-.place-label {
-    /* 툴팁 기본 스타일을 오버라이드 및 중앙 정렬 */
-    background: rgba(0, 0, 0, 0.75) !important; /* 배경색 */
-    color: white !important; /* 텍스트 색상 */
-    font-weight: 600 !important; /* 텍스트 굵게 */
-    font-size: 0.8em !important; /* 글자 크기 (JS의 estimatedLabelHeight에 영향) */
-    padding: 4px 8px !important; /* 패딩 (JS의 estimatedLabelWidth/Height에 영향) */
-    opacity: 0 !important; /* 초기에는 숨김 (JS에서 제어) */
-    transition: opacity 0.3s ease !important; /* 부드러운 표시/숨김 효과 */
-    transform: translate(-50%, 0); /* X축은 중앙, Y축은 상단 기준 */
-    /* z-index를 높여 다른 요소 위에 표시 */
-    z-index: 1000 !important;
-}
-
-/* 경로 정보 표시를 위한 커스텀 컨트롤 스타일 (제거됨) */
-/* .route-info-control 및 .route-info-content 스타일 제거 */
-
-/* 반응형 디자인 (이전 코드와 동일) */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
     .title-box {
         top: 10px;
@@ -408,11 +393,121 @@ body {
         margin: 2px 0;
         padding: 2px 4px;
     }
-
-    /* 모바일 반응형에서 경로 정보 컨트롤 스타일 조정 (제거됨) */
-    /* .route-info-control 스타일 제거 */
 }
 
-/* 스크롤바 스타일 (이전 코드와 동일) */
-.info-box::-webkit
-http://googleusercontent.com/map_content/2
+/* 스크롤바 스타일 */
+.info-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.info-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.info-box::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 3px;
+}
+
+.info-box::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+/* 그룹화된 장소 스타일 */
+.place-group-item {
+    margin-bottom: 15px !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-left: 4px solid #3498db !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.place-group-item:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.place-group-item h4 {
+    margin: 5px 0 8px 0 !important;
+    color: #2c3e50 !important;
+    font-size: 1em !important;
+    font-weight: 600 !important;
+}
+
+.place-group-item p {
+    margin: 4px 0 !important;
+    font-size: 0.85em !important;
+    line-height: 1.4 !important;
+    color: #555 !important;
+}
+
+.place-group-item .place-type-badge {
+    margin-bottom: 6px !important;
+    font-size: 0.7em !important;
+}
+
+/* 그룹 제목 스타일 */
+.info-box h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.1em;
+    border-left: 4px solid #3498db;
+    padding-left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 그룹화된 장소의 타입별 테두리 색상 */
+.place-group-item.type-attractions {
+    border-left-color: #e74c3c !important;
+}
+
+.place-group-item.type-restaurants {
+    border-left-color: #27ae60 !important;
+}
+
+.place-group-item.type-hotels {
+    border-left-color: #3498db !important;
+}
+
+.place-group-item.type-airports {
+    border-left-color: #9b59b6 !important;
+}
+
+/* 여러 장소 표시용 구분선 */
+.place-separator {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
+    margin: 10px 0;
+}
+
+/* 그룹 정보 강조 */
+.group-header {
+    background: rgba(52, 152, 219, 0.1);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border-left: 3px solid #3498db;
+}
+
+.group-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1em;
+    border: none;
+    padding: 0;
+}
+
+/* 장소 카운트 뱃지 */
+.place-count-badge {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-left: 8px;
+}
