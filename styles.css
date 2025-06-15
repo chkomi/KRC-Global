@@ -1,4 +1,4 @@
-/* 기본 스타일 */
+/* 기본 스타일 (이전 코드와 동일) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -9,7 +9,7 @@ body {
     overflow: hidden;
 }
 
-/* 지도 타일 선택 컨트롤 */
+/* 지도 타일 선택 컨트롤 (이전 코드와 동일) */
 .map-tile-control {
     position: absolute;
     bottom: 15px;
@@ -53,7 +53,7 @@ body {
     color: white;
 }
 
-/* 상단 타이틀 박스 */
+/* 상단 타이틀 박스 (이전 코드와 동일) */
 .title-box {
     position: absolute;
     top: 15px;
@@ -78,14 +78,14 @@ body {
     gap: 8px;
 }
 
-/* 전체 화면 지도 */
+/* 전체 화면 지도 (이전 코드와 동일) */
 #map {
     width: 100vw;
     height: 100vh;
     z-index: 1;
 }
 
-/* 범례 박스 */
+/* 범례 박스 (이전 코드와 동일) */
 .legend-box {
     position: absolute;
     bottom: 15px;
@@ -160,7 +160,7 @@ body {
 .airport-marker { background-color: #9b59b6; }
 .accommodation-marker { background-color: #3498db; }
 
-/* 장소 정보 박스 */
+/* 장소 정보 박스 (이전 코드와 동일) */
 .info-box {
     position: absolute;
     bottom: 15px;
@@ -173,8 +173,8 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
     max-width: 350px;
-    max-height: 300px; /* 여러 정보 표시를 위한 높이 제한 및 스크롤 활성화 */
-    overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+    max-height: 300px;
+    overflow-y: auto;
     display: none;
 }
 
@@ -194,18 +194,16 @@ body {
     }
 }
 
-/* 여러 장소 정보를 구분하기 위한 스타일 */
 .place-info-item {
     padding-bottom: 15px;
     margin-bottom: 15px;
-    border-bottom: 1px dashed #eee; /* 각 장소 정보 사이에 구분선 */
+    border-bottom: 1px dashed #eee;
 }
 .place-info-item:last-child {
-    border-bottom: none; /* 마지막 항목에는 구분선 없음 */
+    border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
-
 
 .info-box h3 {
     margin: 0 0 12px 0;
@@ -274,7 +272,7 @@ body {
     color: #2c3e50;
 }
 
-/* 커스텀 마커 스타일 */
+/* 커스텀 마커 스타일 (이전 코드와 동일) */
 .custom-marker-icon {
     background: transparent;
     border: none;
@@ -305,17 +303,17 @@ body {
 .airport-bg { background-color: #9b59b6; }
 .accommodation-bg { background-color: #3498db; }
 
-/* Leaflet 툴팁 스타일 (기본 툴팁 및 place-label 공통) */
+/* Leaflet 툴팁 스타일 (이전 코드와 동일, 약간의 주석 추가) */
 .leaflet-tooltip {
     /* 툴팁의 padding, background, color, border, shadow 등 기본 모양 정의 */
-    background-color: rgba(0, 0, 0, 0.8) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    background-color: rgba(0, 0, 0, 0.8) !important; /* 배경색 */
+    color: white !important; /* 텍스트 색상 */
+    border: none !important; /* 테두리 제거 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important; /* 그림자 */
     font-weight: bold;
     font-size: 0.9em;
-    white-space: nowrap;
-    pointer-events: none; /* 툴팁 자체는 클릭 방지 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    pointer-events: none; /* 툴팁 클릭 방지 */
     border-radius: 4px;
 
     /* Leaflet이 툴팁을 배치할 때 사용하는 마진을 초기화 */
@@ -333,11 +331,11 @@ body {
 /* 장소 라벨 스타일 (JS 로직과 연동) */
 .place-label {
     /* 툴팁 기본 스타일을 오버라이드 및 중앙 정렬 */
-    background: rgba(0, 0, 0, 0.75) !important;
-    color: white !important;
-    font-weight: 600 !important;
-    font-size: 0.8em !important; /* JS의 estimatedLabelHeight에 영향 */
-    padding: 4px 8px !important; /* JS의 estimatedLabelWidth/Height에 영향 */
+    background: rgba(0, 0, 0, 0.75) !important; /* 배경색 */
+    color: white !important; /* 텍스트 색상 */
+    font-weight: 600 !important; /* 텍스트 굵게 */
+    font-size: 0.8em !important; /* 글자 크기 (JS의 estimatedLabelHeight에 영향) */
+    padding: 4px 8px !important; /* 패딩 (JS의 estimatedLabelWidth/Height에 영향) */
     opacity: 0 !important; /* 초기에는 숨김 (JS에서 제어) */
     transition: opacity 0.3s ease !important; /* 부드러운 표시/숨김 효과 */
     transform: translate(-50%, 0); /* X축은 중앙, Y축은 상단 기준 */
@@ -345,27 +343,10 @@ body {
     z-index: 1000 !important;
 }
 
-/* 경로 정보 표시를 위한 커스텀 컨트롤 스타일 */
-.route-info-control {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    font-size: 0.9em;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-    min-width: 120px;
-    /* topright에 배치되지만, 약간의 마진을 주어 보기 좋게 조정 */
-    margin-top: 15px; /* 상단 타이틀 박스와 겹치지 않게 */
-    margin-right: 15px;
-}
+/* 경로 정보 표시를 위한 커스텀 컨트롤 스타일 (제거됨) */
+/* .route-info-control 및 .route-info-content 스타일 제거 */
 
-.route-info-content {
-    /* 내부 콘텐츠 스타일 */
-}
-
-/* 반응형 디자인 */
+/* 반응형 디자인 (이전 코드와 동일) */
 @media (max-width: 768px) {
     .title-box {
         top: 10px;
@@ -428,31 +409,10 @@ body {
         padding: 2px 4px;
     }
 
-    /* 모바일 반응형에서 경로 정보 컨트롤 스타일 조정 */
-    .route-info-control {
-        padding: 6px 10px;
-        font-size: 0.8em;
-        min-width: 100px;
-        margin-top: 10px;
-        margin-right: 10px;
-    }
+    /* 모바일 반응형에서 경로 정보 컨트롤 스타일 조정 (제거됨) */
+    /* .route-info-control 스타일 제거 */
 }
 
-/* 스크롤바 스타일 */
-.info-box::-webkit-scrollbar {
-    width: 6px;
-}
-
-.info-box::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.info-box::-webkit-scrollbar-thumb {
-    background: #bdc3c7;
-    border-radius: 3px;
-}
-
-.info-box::-webkit-scrollbar-thumb:hover {
-    background: #95a5a6;
-}
+/* 스크롤바 스타일 (이전 코드와 동일) */
+.info-box::-webkit
+http://googleusercontent.com/map_content/2
