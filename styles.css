@@ -312,14 +312,14 @@ body {
 
 /* 장소 라벨 스타일 */
 .place-label {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: #2c3e50 !important;
-    border: 1px solid rgba(0, 0, 0, 0.2) !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
     font-weight: 600 !important;
     font-size: 0.8em !important;
     padding: 4px 8px !important;
-    border-radius: 12px !important;
+    border-radius: 4px !important;
     white-space: nowrap !important;
     pointer-events: none !important;
     z-index: 1000 !important;
@@ -328,10 +328,7 @@ body {
 }
 
 .place-label:before {
-    border-right-color: rgba(255, 255, 255, 0.95) !important;
-    border-top-color: rgba(255, 255, 255, 0.95) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.95) !important;
-    border-left-color: rgba(255, 255, 255, 0.95) !important;
+    display: none !important;
 }
 
 /* 반응형 디자인 */
