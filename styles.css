@@ -123,6 +123,25 @@ body {
     font-size: 0.85em;
 }
 
+.legend-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.legend-item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.legend-item input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
 .marker-icon {
     display: inline-flex;
     align-items: center;
