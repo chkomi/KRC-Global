@@ -1,532 +1,213 @@
 {
-  "places": [
-    {
-      "name": "상하이 푸동 국제공항 (PVG)",
-      "type": "airport",
-      "latitude": 31.1443,
-      "longitude": 121.8058,
-      "feature": "상하이의 주요 국제 관문",
-      "주소": "Shanghai, Pudong, China",
-      "추천_방문일차": "도착/출발",
-      "평점": 4.0,
-      "영업시간": "24시간",
-      "전화번호": "+86 21 96990"
-    },
-    {
-      "name": "상하이 인민로 839호 숙소 1안",
-      "type": "accommodation",
-      "latitude": 31.2275837,
-      "longitude": 121.4847172,
-      "feature": "상하이 시내 중심 황푸구 위치, 접근성 좋음",
-      "주소": "No. 839 Renmin Road, Huangpu District, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "체크인/아웃 기준",
-      "전화번호": "확인 필요"
-    },
-    {
-      "name": "와이탄 (The Bund)",
-      "type": "관광지",
-      "latitude": 31.2386,
-      "longitude": 121.4903,
-      "feature": "황푸강을 따라 펼쳐진 상하이의 상징적인 스카이라인과 유럽풍 건축물이 어우러진 야경 명소",
-      "주소": "Zhongshan East 1st Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.7,
-      "영업시간": "24시간",
-      "전화번호": "없음"
-    },
-    {
-      "name": "동방명주 타워 (Oriental Pearl Tower)",
-      "type": "관광지",
-      "latitude": 31.2418,
-      "longitude": 121.4951,
-      "feature": "상하이의 랜드마크로, 360도 전망대와 투명 스카이워크가 인기",
-      "주소": "1 Century Ave, Pudong, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.5,
-      "영업시간": "08:00-22:00",
-      "전화번호": "+86 21 5879 1888"
-    },
-    {
-      "name": "예원 (Yu Garden)",
-      "type": "관광지",
-      "latitude": 31.2278,
-      "longitude": 121.4925,
-      "feature": "명나라 시대의 고전 정원으로, 전통 중국 건축과 정원을 감상 가능",
-      "주소": "279 Yuyuan Old St, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.6,
-      "영업시간": "08:30-17:00",
-      "전화번호": "+86 21 6326 0830"
-    },
-    {
-      "name": "상하이 타워 (Shanghai Tower)",
-      "type": "관광지",
-      "latitude": 31.2356,
-      "longitude": 121.5010,
-      "feature": "세계에서 두 번째로 높은 마천루로, 118층 전망대에서 상하이 전경 조망",
-      "주소": "501 Yincheng Middle Rd, Pudong, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.6,
-      "영업시간": "08:30-22:00",
-      "전화번호": "+86 21 2065 6999"
-    },
-    {
-      "name": "난징루 보행자 거리 (Nanjing Road Pedestrian Street)",
-      "type": "관광지",
-      "latitude": 31.2349,
-      "longitude": 121.4750,
-      "feature": "상하이 최대의 쇼핑 거리로, 현대와 전통이 공존하는 분위기",
-      "주소": "Nanjing Rd Pedestrian St, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.4,
-      "영업시간": "24시간",
-      "전화번호": "없음"
-    },
-    {
-      "name": "신천지 (Xintiandi)",
-      "type": "관광지",
-      "latitude": 31.2234,
-      "longitude": 121.4708,
-      "feature": "1920년대 석쿠먼 건축을 현대적으로 재현한 트렌디한 거리",
-      "주소": "Lane 181, Taicang Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.5,
-      "영업시간": "24시간",
-      "전화번호": "없음"
-    },
-    {
-      "name": "대한민국 임시정부 (Provisional Government of the Republic of Korea)",
-      "type": "관광지",
-      "latitude": 31.2217,
-      "longitude": 121.4684,
-      "feature": "한국 독립운동의 역사적 장소로, 상하이 방문 시 필수 코스",
-      "주소": "306 Madang Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "3일차",
-      "평점": 4.3,
-      "영업시간": "09:00-17:00",
-      "전화번호": "+86 21 5382 6505"
-    },
-    {
-      "name": "상하이 디즈니랜드 (Shanghai Disneyland)",
-      "type": "관광지",
-      "latitude": 31.1440,
-      "longitude": 121.6570,
-      "feature": "중국 유일의 디즈니랜드로, 주토피아 테마파크가 인기",
-      "주소": "310 Huangzhao Rd, Pudong, Shanghai, China",
-      "추천_방문일차": "4일차",
-      "평점": 4.8,
-      "영업시간": "08:30-22:00",
-      "전화번호": "+86 21 3158 0000"
-    },
-    {
-      "name": "주가각 수향마을 (Zhujiajiao Water Town)",
-      "type": "관광지",
-      "latitude": 31.1125,
-      "longitude": 121.0570,
-      "feature": "상하이 근교의 베니스라 불리는 전통 수향 마을",
-      "주소": "Zhujiajiao, Qingpu, Shanghai, China",
-      "추천_방문일차": "5일차",
-      "평점": 4.4,
-      "영업시간": "08:00-17:00",
-      "전화번호": "확인 필요"
-    },
-    {
-      "name": "상하이 해양수족관 (Shanghai Ocean Aquarium)",
-      "type": "관광지",
-      "latitude": 31.2423,
-      "longitude": 121.4968,
-      "feature": "루자쭈이 금융구에 위치한 대규모 수족관",
-      "주소": "1388 Lujiazui Ring Rd, Pudong, Shanghai, China",
-      "추천_방문일차": "3일차",
-      "평점": 4.3,
-      "영업시간": "09:00-18:00",
-      "전화번호": "+86 21 5878 9988"
-    },
-    {
-      "name": "진마오 타워 (Jin Mao Tower)",
-      "type": "관광지",
-      "latitude": 31.2373,
-      "longitude": 121.5015,
-      "feature": "88층 전망대에서 상하이의 스카이라인을 감상",
-      "주소": "88 Century Ave, Pudong, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.4,
-      "영업시간": "08:30-22:00",
-      "전화번호": "+86 21 5047 5101"
-    },
-    {
-      "name": "티엔즈팡 (Tianzifang)",
-      "type": "관광지",
-      "latitude": 31.2094,
-      "longitude": 121.4637,
-      "feature": "예술적인 골목길에 갤러리, 부티크, 카페가 즐비",
-      "주소": "Lane 210, Taikang Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "3일차",
-      "평점": 4.5,
-      "영업시간": "24시간",
-      "전화번호": "없음"
-    },
-    {
-      "name": "청황먀오 관광지 (City God Temple of Shanghai)",
-      "type": "관광지",
-      "latitude": 31.2271,
-      "longitude": 121.4906,
-      "feature": "전통 시장과 사당이 있는 구시가지 관광지",
-      "주소": "249 Fangbang Middle Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.3,
-      "영업시간": "08:30-16:30",
-      "전화번호": "+86 21 6328 4494"
-    },
-    {
-      "name": "상하이 박물관 (Shanghai Museum)",
-      "type": "관광지",
-      "latitude": 31.2304,
-      "longitude": 121.4705,
-      "feature": "중국의 청동기, 도자기, 서예 등 유물을 전시",
-      "주소": "201 Renmin Ave, Huangpu, Shanghai, China",
-      "추천_방문일차": "3일차",
-      "평점": 4.5,
-      "영업시간": "09:00-17:00",
-      "전화번호": "+86 21 6372 3500"
-    },
-    {
-      "name": "황푸강 크루즈 (Huangpu River Cruise)",
-      "type": "관광지",
-      "latitude": 31.2248,
-      "longitude": 121.4932,
-      "feature": "상하이의 야경을 감상할 수 있는 유람선 투어",
-      "주소": "Shiliupu Wharf, 171 Zhongshan South Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.6,
-      "영업시간": "11:00-21:30",
-      "전화번호": "+86 21 6374 4446"
-    },
-    {
-      "name": "치바오 수향마을 (Qibao Water Town)",
-      "type": "관광지",
-      "latitude": 31.1506,
-      "longitude": 121.3492,
-      "feature": "상하이 도심에서 가까운 전통 마을로, 로컬 먹거리가 풍부",
-      "주소": "Qibao Old St, Minhang, Shanghai, China",
-      "추천_방문일차": "5일차",
-      "평점": 4.2,
-      "영업시간": "08:00-17:00",
-      "전화번호": "확인 필요"
-    },
-    {
-      "name": "상하이 세계금융센터 (Shanghai World Financial Center)",
-      "type": "관광지",
-      "latitude": 31.2368,
-      "longitude": 121.5027,
-      "feature": "101층 전망대에서 동방명주와 함께 야경 감상 가능",
-      "주소": "100 Century Ave, Pudong, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.5,
-      "영업시간": "08:00-23:00",
-      "전화번호": "+86 21 5878 0101"
-    },
-    {
-      "name": "인민광장 (People’s Square)",
-      "type": "관광지",
-      "latitude": 31.2323,
-      "longitude": 121.4750,
-      "feature": "상하이 도심의 중심 광장으로, 박물관과 공원이 인접",
-      "주소": "Renmin Ave, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.3,
-      "영업시간": "24시간",
-      "전화번호": "없음"
-    },
-    {
-      "name": "상하이 야생동물원 (Shanghai Wild Animal Park)",
-      "type": "관광지",
-      "latitude": 31.0560,
-      "longitude": 121.7175,
-      "feature": "판다와 희귀 동물을 볼 수 있는 대규모 동물원",
-      "주소": "178 Nanliu Hwy, Pudong, Shanghai, China",
-      "추천_방문일차": "4일차",
-      "평점": 4.4,
-      "영업시간": "08:00-17:00",
-      "전화번호": "+86 21 6118 0000"
-    },
-    {
-      "name": "우전마을 (Wuzhen Water Town)",
-      "type": "관광지",
-      "latitude": 30.7454,
-      "longitude": 120.4951,
-      "feature": "상하이 근교의 고풍스러운 수향 마을로, 야경이 아름다움",
-      "주소": "1 Zhaoming Rd, Tongxiang, Jiaxing, Zhejiang, China",
-      "추천_방문일차": "5일차",
-      "평점": 4.5,
-      "영업시간": "07:00-18:00",
-      "전화번호": "+86 573 8873 1088"
-    },
-    {
-      "name": "하이디라오 훠궈 (Hai Di Lao Hot Pot)",
-      "type": "음식점",
-      "latitude": 31.2356,
-      "longitude": 121.4790,
-      "feature": "한국인에게도 익숙한 중국식 샤브샤브 훠궈 체인점",
-      "주소": "6F, 299 Nanjing East Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.6,
-      "영업시간": "10:00-02:00",
-      "전화번호": "+86 21 6328 2298"
-    },
-    {
-      "name": "와이포지아 (Grandma’s Home)",
-      "type": "음식점",
-      "latitude": 31.2451,
-      "longitude": 121.4710,
-      "feature": "항저우 요리를 기반으로 한 가성비 좋은 중식 레스토랑",
-      "주소": "7F, Joy City, 166 Xizang North Rd, Jing’an, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.4,
-      "영업시간": "10:00-22:00",
-      "전화번호": "+86 21 6358 3999"
-    },
-    {
-      "name": "동베이런지아 (Dong Bei Ren Jia)",
-      "type": "음식점",
-      "latitude": 31.2190,
-      "longitude": 121.4580,
-      "feature": "저렴하고 현지식 동북 요리를 제공하는 식당",
-      "주소": "605 Huaihai Middle Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.3,
-      "영업시간": "11:00-22:00",
-      "전화번호": "+86 21 5306 9966"
-    },
-    {
-      "name": "예상하이 (Ye Shanghai)",
-      "type": "음식점",
-      "latitude": 31.2225,
-      "longitude": 121.4742,
-      "feature": "미슐랭 2년 연속 선정된 고급 상하이 요리 레스토랑",
-      "주소": "338 Huangpi South Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.7,
-      "영업시간": "11:30-14:30, 17:30-22:30",
-      "전화번호": "+86 21 6311 2323"
-    },
-    {
-      "name": "소양생전 (Yang’s Dumpling)",
-      "type": "음식점",
-      "latitude": 31.2370,
-      "longitude": 121.4745,
-      "feature": "상하이 대표 생煎만두 전문점",
-      "주소": "97 Huanghe Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "10:00-21:00",
-      "전화번호": "+86 21 5375 1793"
-    },
-    {
-      "name": "차찬팅 (Cha’s Restaurant)",
-      "type": "음식점",
-      "latitude": 31.2185,
-      "longitude": 121.4660,
-      "feature": "홍콩 스타일의 중식 다이너로, 서양식 메뉴도 제공",
-      "주소": "30 Sinan Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.4,
-      "영업시간": "11:00-23:00",
-      "전화번호": "+86 21 6093 2062"
-    },
-    {
-      "name": "하카산 (Hakkasan)",
-      "type": "음식점",
-      "latitude": 31.2379,
-      "longitude": 121.4900,
-      "feature": "고급 광둥 요리와 현대적인 분위기의 미슐랭 스타 레스토랑",
-      "주소": "5F, Bund 18, 18 Zhongshan East 1st Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.8,
-      "영업시간": "11:30-14:30, 17:30-23:00",
-      "전화번호": "+86 21 6321 5888"
-    },
-    {
-      "name": "딘타이펑 (Din Tai Fung)",
-      "type": "음식점",
-      "latitude": 31.2368,
-      "longitude": 121.5027,
-      "feature": "세계적으로 유명한 샤오롱바오 체인점",
-      "주소": "2F, Shanghai World Financial Center, 100 Century Ave, Pudong, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.6,
-      "영업시간": "10:00-22:00",
-      "전화번호": "+86 21 6877 6888"
-    },
-    {
-      "name": "Jia Jia Tang Bao",
-      "type": "음식점",
-      "latitude": 31.2375,
-      "longitude": 121.4748,
-      "feature": "현지인에게 사랑받는 샤오롱바오 전문점",
-      "주소": "90 Huanghe Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "07:30-20:00",
-      "전화번호": "확인 필요"
-    },
-    {
-      "name": "Fu 1088",
-      "type": "음식점",
-      "latitude": 31.2230,
-      "longitude": 121.4415,
-      "feature": "전통 상하이 요리를 고급스럽게 제공하는 레스토랑",
-      "주소": "375 Zhenning Rd, Changning, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.6,
-      "영업시간": "11:00-14:00, 17:00-22:00",
-      "전화번호": "+86 21 5239 7878"
-    },
-    {
-      "name": "Lost Heaven",
-      "type": "음식점",
-      "latitude": 31.2085,
-      "longitude": 121.4370,
-      "feature": "윈난성 요리를 기반으로 한 독특한 중식 레스토랑",
-      "주소": "38 Gaoyou Rd, Xuhui, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "11:30-14:00, 17:30-22:30",
-      "전화번호": "+86 21 6433 5126"
-    },
-    {
-      "name": "Nan Xiang Steamed Bun Restaurant",
-      "type": "음식점",
-      "latitude": 31.2275,
-      "longitude": 121.4920,
-      "feature": "예원 근처의 유명 샤오롱바오 식당",
-      "주소": "85 Yuyuan Old St, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.4,
-      "영업시간": "07:30-20:00",
-      "전화번호": "+86 21 6355 4206"
-    },
-    {
-      "name": "Jesse Restaurant",
-      "type": "음식점",
-      "latitude": 31.2010,
-      "longitude": 121.4400,
-      "feature": "전통 상하이 요리를 제공하는 현지 맛집",
-      "주소": "41 Tianping Rd, Xuhui, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "11:00-14:00, 17:00-22:00",
-      "전화번호": "+86 21 6282 9260"
-    },
-    {
-      "name": "The Commune Social",
-      "type": "음식점",
-      "latitude": 31.2380,
-      "longitude": 121.4515,
-      "feature": "스페인 스타일의 타파스와 중식이 결합된 트렌디한 식당",
-      "주소": "511 Jiangning Rd, Jing’an, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.6,
-      "영업시간": "11:30-14:30, 17:30-22:30",
-      "전화번호": "+86 21 6047 8838"
-    },
-    {
-      "name": "Mercato",
-      "type": "음식점",
-      "latitude": 31.2380,
-      "longitude": 121.4905,
-      "feature": "이탈리안 요리와 상하이의 세련된 분위기를 제공",
-      "주소": "6F, 3 Zhongshan East 1st Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.5,
-      "영업시간": "11:30-14:30, 17:30-22:30",
-      "전화번호": "+86 21 6321 9922"
-    },
-    {
-      "name": "M on the Bund",
-      "type": "음식점",
-      "latitude": 31.2382,
-      "longitude": 121.4902,
-      "feature": "와이탄의 야경을 감상하며 즐기는 서양식 레스토랑",
-      "주소": "7F, 5 Zhongshan East 1st Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "1일차",
-      "평점": 4.7,
-      "영업시간": "11:30-14:30, 17:30-22:30",
-      "전화번호": "+86 21 6350 9988"
-    },
-    {
-      "name": "Yong Yi Ting",
-      "type": "음식점",
-      "latitude": 31.2390,
-      "longitude": 121.5070,
-      "feature": "만다린 오리엔탈 호텔 내의 미슐랭 스타 중식 레스토랑",
-      "주소": "111 Pudong South Rd, Pudong, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.8,
-      "영업시간": "11:30-14:30, 17:30-22:30",
-      "전화번호": "+86 21 2082 9888"
-    },
-    {
-      "name": "Pelikan",
-      "type": "음식점",
-      "latitude": 31.2230,
-      "longitude": 121.4705,
-      "feature": "신천지에 위치한 세련된 스칸디나비아 스타일 레스토랑",
-      "주소": "225 Xintiandi South Block, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.4,
-      "영업시간": "11:30-14:30, 17:30-22:00",
-      "전화번호": "+86 21 6386 8181"
-    },
-    {
-      "name": "Xibo Grill",
-      "type": "음식점",
-      "latitude": 31.2235,
-      "longitude": 121.4470,
-      "feature": "신장 지역의 이국적인 요리를 제공하는 독특한 레스토랑",
-      "주소": "3F, 83 Changshu Rd, Jing’an, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.4,
-      "영업시간": "11:30-14:30, 17:30-22:00",
-      "전화번호": "+86 21 5403 8330"
-    },
-    {
-      "name": "Old Shanghai Restaurant",
-      "type": "음식점",
-      "latitude": 31.2270,
-      "longitude": 121.4910,
-      "feature": "예원 근처의 전통 상하이 요리와 현지 간식을 제공",
-      "주소": "242 Fuyou Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.3,
-      "영업시간": "10:00-21:00",
-      "전화번호": "+86 21 6355 5101"
-    },
-    {
-      "name": "사계민복 (Siji Minfu)",
-      "type": "음식점",
-      "latitude": 31.2276,
-      "longitude": 121.4923,
-      "feature": "베이징덕과 정통 북경 요리로 유명한 레스토랑",
-      "주소": "3F, 269 Yuyuan Old St, Huangpu, Shanghai, China",
-      "추천_방문일차": "2일차",
-      "평점": 4.6,
-      "영업시간": "11:00-14:00, 17:00-21:30",
-      "전화번호": "+86 21 6355 0222"
-    },
-    {
-      "name": "금정헌 (Jin Ding Xuan)",
-      "type": "음식점",
-      "latitude": 31.2365,
-      "longitude": 121.4752,
-      "feature": "24시간 운영되는 광둥식 딤섬과 중식 레스토랑",
-      "주소": "77 Huanghe Rd, Huangpu, Shanghai, China",
-      "추천_방문일차": "매일",
-      "평점": 4.4,
-      "영업시간": "24시간",
-      "전화번호": "+86 21 6326 8888"
-    }
-  ]
+  "shanghai_tourism": {
+    "attractions": [
+      {
+        "name": "와이탄 (The Bund)",
+        "address": "황푸강 외백도교부터 진링동루까지의 거리",
+        "latitude": 31.2366,
+        "longitude": 121.4856,
+        "description": "번영과 역사의 흔적이 공존하는 야경 명소",
+        "features": ["풍경", "음식", "문화", "역사"]
+      },
+      {
+        "name": "동방명주",
+        "address": "푸동신구 세기대로 1호",
+        "latitude": 31.2420,
+        "longitude": 121.4950,
+        "description": "황푸강 양쪽 전경을 감상할 수 있는 대표적인 전망대",
+        "features": ["전망대", "독특한 건축"]
+      },
+      {
+        "name": "상하이 박물관",
+        "address": "N/A",
+        "latitude": 31.2248,
+        "longitude": 121.4690,
+        "description": "풍부한 중국 예술품과 역사 컬렉션을 전시하는 문화시설",
+        "features": ["무료 입장", "문화시설"]
+      },
+      {
+        "name": "예원",
+        "address": "예원로 218호",
+        "latitude": 31.229078,
+        "longitude": 121.487846,
+        "description": "중국 전통 정원이 잘 보존된 휴식처",
+        "features": ["역사적 전통정원"]
+      },
+      {
+        "name": "난징동루",
+        "address": "난징동루 보행자 거리",
+        "latitude": 31.23658,
+        "longitude": 121.48486,
+        "description": "쇼핑과 문화가 공존하는 도심 보행자 거리",
+        "features": ["쇼핑", "문화"]
+      },
+      {
+        "name": "신천지",
+        "address": "신천지 지역",
+        "latitude": 31.21935,
+        "longitude": 121.47523,
+        "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역",
+        "features": ["트렌디 레스토랑"]
+      },
+      {
+        "name": "상하이 타워",
+        "address": "501 Yincheng Rd (M), Lujiazui, Pudong, Shanghai, 중국 200120",
+        "latitude": 31.2336,
+        "longitude": 121.50545,
+        "description": "현대 상하이의 랜드마크 건물",
+        "features": ["현대", "전망"]
+      },
+      {
+        "name": "상하이 세계금융센터",
+        "address": "100 Shiji Blvd, Lujiazui, Pudong, Shanghai, 중국 200120",
+        "latitude": 31.23489,
+        "longitude": 121.5074,
+        "description": "비즈니스와 금융 중심의 상징적 랜드마크",
+        "features": ["현대", "비즈니스"]
+      },
+      {
+        "name": "톈즈팡",
+        "address": "210弄 Taikang Rd, Huangpu, 중국 200023",
+        "latitude": 31.20881,
+        "longitude": 121.46887,
+        "description": "예술, 문화, 쇼핑이 결합된 독특한 공간",
+        "features": ["예술", "문화"]
+      },
+      {
+        "name": "대한민국 상하이 임시정부",
+        "address": "중국 상하이 시 황푸 구 邮政编码: 200020",
+        "latitude": 31.219137,
+        "longitude": 121.470138,
+        "description": "한국 독립운동의 역사적 장소",
+        "features": ["역사", "문화"]
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "맛지 아랑면관",
+        "address": "36 Sinan Rd, Huangpu, Shanghai, 중국 200041",
+        "latitude": 31.21759,
+        "longitude": 121.46648,
+        "description": "정통 중식 면요리 전문점",
+        "menu": []
+      },
+      {
+        "name": "사계민복",
+        "address": "중국 Shanghai, Huangpu, 淮海中路282",
+        "latitude": 31.22381,
+        "longitude": 121.47493,
+        "description": "북경오리 전문 레스토랑",
+        "menu": ["북경오리"]
+      },
+      {
+        "name": "퀘이문룽",
+        "address": "Hongqiao World Shopping Center 4층",
+        "latitude": 31.21859,
+        "longitude": 121.41709,
+        "description": "대표 메뉴: 叫化鸡 (거지닭)",
+        "menu": ["叫化鸡"]
+      },
+      {
+        "name": "许留山",
+        "address": "중국 Shanghai, Huangpu, Nanjing Rd (E), 300号恒基名人购物중심 邮政编码: 200002",
+        "latitude": 31.23812,
+        "longitude": 121.48409,
+        "description": "홍콩 스타일 디저트 전문점",
+        "menu": []
+      },
+      {
+        "name": "蟹小友",
+        "address": "南京东路588号丝绸商厦负一楼",
+        "latitude": 31.23577,
+        "longitude": 121.47916,
+        "description": "게요리 전문점",
+        "menu": ["게살떡국 (58위안)", "게살비빔면 (128위안)"]
+      },
+      {
+        "name": "예마",
+        "address": "Shanghai IFC Mall 내",
+        "latitude": 31.21569,
+        "longitude": 121.45845,
+        "description": "전통 중식 요리 레스토랑",
+        "menu": [
+          "Classic Braised Yellow Croaker with Rice Cake (198위안)",
+          "Home Style Turnip in Bone Soup (48위안)",
+          "Braised Pork and Abalone with Bamboo Shoots (138위안)",
+          "Sautéed Seasonal Vegetable (36위안)",
+          "Fried Rice with Beef and Salty Vegetable (42위안)"
+        ]
+      },
+      {
+        "name": "라오지스",
+        "address": "Shanghai IFC Mall",
+        "latitude": 31.21569,
+        "longitude": 121.45845,
+        "description": "중식 전통 요리",
+        "menu": ["芦蒿炒干丝", "葱油拌면"]
+      },
+      {
+        "name": "리위안",
+        "address": "Shanghai IFC Mall",
+        "latitude": 31.21569,
+        "longitude": 121.45845,
+        "description": "중식 고급 요리",
+        "menu": [
+          "龙虾汤贵妃泡饭 (¥160/¥218)",
+          "山西枣皇糕 (35위안)"
+        ]
+      }
+    ],
+    "hotels": [
+      {
+        "name": "SSAW 부티크 호텔 상하이 번드",
+        "address": "No.839 Renmin Road, Huangpu District",
+        "latitude": 31.229514,
+        "longitude": 121.480127,
+        "description": "예원역 근처, 가족 단위 및 비즈니스 여행객 추천",
+        "features": ["고급 호텔", "반려동물 불가"]
+      },
+      {
+        "name": "크리스탈 오렌지 호텔 와이탄 지점",
+        "address": "No.511 Jinling East Road",
+        "latitude": 31.2387,
+        "longitude": 121.492,
+        "description": "와이탄 근처 편리한 위치",
+        "features": ["고급 시설", "비즈니스 추천"]
+      },
+      {
+        "name": "아투어 호텔 신천지 지점",
+        "address": "Building 7, No. 199, Hefei Road",
+        "latitude": 31.2197,
+        "longitude": 121.4755,
+        "description": "신천지 지하철역 근처",
+        "features": ["모던한 시설", "편리한 교통"]
+      },
+      {
+        "name": "JI 호텔 인민광장 지점",
+        "address": "황푸구 풍양로 사원상가",
+        "latitude": 31.2304,
+        "longitude": 121.4737,
+        "description": "인민광장 도보 5분",
+        "features": ["가성비 좋음", "중심가 위치"]
+      },
+      {
+        "name": "리젠트 상하이 푸동",
+        "address": "210 Century Avenue, Pudong District, Shanghai 200120",
+        "latitude": 31.2335,
+        "longitude": 121.5089,
+        "description": "루자쭈이 금융지구 중심의 럭셔리 호텔, 41층 인피니티 풀과 파노라마 시티뷰 제공",
+        "features": ["럭셔리 호텔", "인피니티 풀", "스카이라인 전망", "푸동국제공항 39km", "아트데코 디자인"]
+      }
+    ],
+    "airports": [
+      {
+        "name": "상하이 푸동국제공항",
+        "address": "Shanghai Pudong International Airport",
+        "latitude": 31.143333,
+        "longitude": 121.805275,
+        "description": "국제 항공의 중요한 허브",
+        "features": ["대형 터미널", "항공 허브"]
+      }
+    ]
+  }
 }
