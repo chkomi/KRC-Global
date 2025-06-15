@@ -340,11 +340,30 @@ body {
     padding: 4px 8px !important; /* JS의 estimatedLabelWidth/Height에 영향 */
     opacity: 0 !important; /* 초기에는 숨김 (JS에서 제어) */
     transition: opacity 0.3s ease !important; /* 부드러운 표시/숨김 효과 */
-    transform: translate(-50%, -50%); /* 라벨의 기준점을 중앙으로 이동 */
+    transform: translate(-50%, 0); /* X축은 중앙, Y축은 상단 기준 */
     /* z-index를 높여 다른 요소 위에 표시 */
     z-index: 1000 !important;
 }
 
+/* 경로 정보 표시를 위한 커스텀 컨트롤 스타일 */
+.route-info-control {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    min-width: 120px;
+    /* topright에 배치되지만, 약간의 마진을 주어 보기 좋게 조정 */
+    margin-top: 15px; /* 상단 타이틀 박스와 겹치지 않게 */
+    margin-right: 15px;
+}
+
+.route-info-content {
+    /* 내부 콘텐츠 스타일 */
+}
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
@@ -407,6 +426,15 @@ body {
         font-size: 0.75em;
         margin: 2px 0;
         padding: 2px 4px;
+    }
+
+    /* 모바일 반응형에서 경로 정보 컨트롤 스타일 조정 */
+    .route-info-control {
+        padding: 6px 10px;
+        font-size: 0.8em;
+        min-width: 100px;
+        margin-top: 10px;
+        margin-right: 10px;
     }
 }
 
