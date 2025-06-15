@@ -738,6 +738,18 @@
             <input type="radio" name="tile-layer" value="terrain">
             🏔️ 지형
         </label>
+        <label class="tile-option" id="google-style-option">
+            <input type="radio" name="tile-layer" value="google-style">
+            🇫🇷 프랑스OSM
+        </label>
+        <label class="tile-option" id="cartodb-option">
+            <input type="radio" name="tile-layer" value="cartodb">
+            🎨 심플
+        </label>
+        <label class="tile-option" id="dark-option">
+            <input type="radio" name="tile-layer" value="dark">
+            🌙 다크
+        </label>
     </div>
 
     <!-- 상단 타이틀 박스 -->
@@ -1045,7 +1057,7 @@
             // 지도 초기화
             map = L.map('map').setView([31.2304, 121.4737], 12);
 
-            // 다양한 타일 레이어 정의
+            // 다양한 타일 레이어 정의 (XYZ 타일 서비스들)
             const tileLayers = {
                 satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                     attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
@@ -1057,6 +1069,21 @@
                 }),
                 terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
                     attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, USGS, NOAA',
+                    maxZoom: 19
+                }),
+                'google-style': L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.openstreetmap.fr/">OSM France</a>',
+                    maxZoom: 20,
+                    subdomains: ['a', 'b', 'c']
+                }),
+                cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }),
+                dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: 'abcd',
                     maxZoom: 19
                 })
             };
