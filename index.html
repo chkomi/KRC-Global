@@ -184,6 +184,50 @@
             }
         }
 
+        /* 지도 타일 선택 컨트롤 */
+        .map-tile-control {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .map-tile-control h4 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .tile-option {
+            display: block;
+            margin: 4px 0;
+            font-size: 0.8em;
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            user-select: none;
+        }
+
+        .tile-option input[type="radio"] {
+            display: none;
+        }
+
+        .tile-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .tile-option.active {
+            background-color: #3498db;
+            color: white;
+        }
+
         /* 상단 타이틀 박스 */
         .title-box {
             position: absolute;
@@ -620,6 +664,25 @@
                 padding: 3px 6px !important;
             }
 
+            /* 모바일에서 지도 타일 컨트롤 조정 */
+            .map-tile-control {
+                top: 10px;
+                left: 10px;
+                padding: 8px;
+                max-width: 120px;
+            }
+
+            .map-tile-control h4 {
+                font-size: 0.8em;
+                margin-bottom: 6px;
+            }
+
+            .tile-option {
+                font-size: 0.75em;
+                margin: 2px 0;
+                padding: 2px 4px;
+            }
+
             /* 모바일에서 좌표 팝업 조정 */
             .coordinate-popup {
                 width: 90%;
@@ -660,6 +723,23 @@
     </style>
 </head>
 <body>
+    <!-- 지도 타일 선택 컨트롤 -->
+    <div class="map-tile-control">
+        <h4>🗺️ 지도 종류</h4>
+        <label class="tile-option active" id="satellite-option">
+            <input type="radio" name="tile-layer" value="satellite" checked>
+            🛰️ 위성
+        </label>
+        <label class="tile-option" id="street-option">
+            <input type="radio" name="tile-layer" value="street">
+            🛣️ 도로
+        </label>
+        <label class="tile-option" id="terrain-option">
+            <input type="radio" name="tile-layer" value="terrain">
+            🏔️ 지형
+        </label>
+    </div>
+
     <!-- 상단 타이틀 박스 -->
     <div class="title-box">
         <h1><i class="fas fa-map-marked-alt"></i> 상하이 여행 지도</h1>
@@ -908,8 +988,8 @@
                     {
                         "name": "SSAW 부티크 호텔 상하이 번드",
                         "address": "No.839 Renmin Road, Huangpu District",
-                        "latitude": 31.229486,
-                        "longitude": 121.480159,
+                        "latitude": 31.22753,
+                        "longitude": 121.48461,
                         "description": "예원역 근처, 가족 단위 및 비즈니스 여행객 추천",
                         "features": ["고급 호텔", "반려동물 불가"]
                     },
@@ -955,6 +1035,7 @@
         let markers = L.featureGroup();
         let clickTimeout;
         let isLongPress = false;
+        let currentTileLayer;
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeMap();
@@ -964,10 +1045,45 @@
             // 지도 초기화
             map = L.map('map').setView([31.2304, 121.4737], 12);
 
-            // 지도 타일 레이어 추가
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            // 다양한 타일 레이어 정의
+            const tileLayers = {
+                satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
+                    maxZoom: 19
+                }),
+                street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19
+                }),
+                terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, USGS, NOAA',
+                    maxZoom: 19
+                })
+            };
+
+            // 기본 위성 타일 레이어 추가
+            currentTileLayer = tileLayers.satellite;
+            currentTileLayer.addTo(map);
+
+            // 타일 레이어 변경 이벤트 리스너
+            document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        // 기존 타일 레이어 제거
+                        map.removeLayer(currentTileLayer);
+                        
+                        // 새 타일 레이어 추가
+                        currentTileLayer = tileLayers[this.value];
+                        currentTileLayer.addTo(map);
+                        
+                        // 활성 상태 업데이트
+                        document.querySelectorAll('.tile-option').forEach(option => {
+                            option.classList.remove('active');
+                        });
+                        this.parentElement.classList.add('active');
+                    }
+                });
+            });
 
             // 마커 레이어 그룹을 지도에 추가
             markers.addTo(map);
