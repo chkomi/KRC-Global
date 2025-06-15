@@ -171,15 +171,26 @@
             margin-bottom: 8px;
         }
 
-        .type-관광지 { background-color: #e74c3c; }
-        .type-음식점 { background-color: #27ae60; }
-        .type-airport { background-color: #9b59b6; }
-        .type-accommodation { background-color: #3498db; }
+        .type-attractions { background-color: #e74c3c; }
+        .type-restaurants { background-color: #27ae60; }
+        .type-airports { background-color: #9b59b6; }
+        .type-hotels { background-color: #3498db; }
 
         .rating-stars {
             color: #f39c12;
             margin-left: 5px;
             font-size: 0.9em;
+        }
+
+        .info-box ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .info-box li {
+            margin: 4px 0;
+            font-size: 0.85em;
+            color: #555;
         }
 
         .close-btn {
@@ -341,7 +352,7 @@
                 <div class="marker-icon accommodation-marker">
                     <i class="fas fa-bed"></i>
                 </div>
-                숙소
+                호텔
             </li>
         </ul>
     </div>
@@ -361,154 +372,211 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        // 상하이 데이터
+        // 상하이 관광 데이터
         const shanghaiData = {
-            "places": [
-                {
-                    "name": "상하이 푸동 국제공항 (PVG)",
-                    "type": "airport",
-                    "latitude": 31.1443,
-                    "longitude": 121.8058,
-                    "feature": "상하이의 주요 국제 관문",
-                    "주소": "Shanghai, Pudong, China",
-                    "추천_방문일차": "도착/출발",
-                    "평점": 4.0,
-                    "영업시간": "24시간",
-                    "전화번호": "+86 21 96990"
-                },
-                {
-                    "name": "상하이 인민로 839호 숙소 1안",
-                    "type": "accommodation",
-                    "latitude": 31.2275837,
-                    "longitude": 121.4847172,
-                    "feature": "상하이 시내 중심 황푸구 위치, 접근성 좋음",
-                    "주소": "No. 839 Renmin Road, Huangpu District, Shanghai, China",
-                    "추천_방문일차": "매일",
-                    "평점": 4.5,
-                    "영업시간": "체크인/아웃 기준",
-                    "전화번호": "확인 필요"
-                },
-                {
-                    "name": "와이탄 (The Bund)",
-                    "type": "관광지",
-                    "latitude": 31.2386,
-                    "longitude": 121.4903,
-                    "feature": "황푸강을 따라 펼쳐진 상하이의 상징적인 스카이라인과 유럽풍 건축물이 어우러진 야경 명소",
-                    "주소": "Zhongshan East 1st Rd, Huangpu, Shanghai, China",
-                    "추천_방문일차": "1일차",
-                    "평점": 4.7,
-                    "영업시간": "24시간",
-                    "전화번호": "없음"
-                },
-                {
-                    "name": "동방명주 타워 (Oriental Pearl Tower)",
-                    "type": "관광지",
-                    "latitude": 31.2418,
-                    "longitude": 121.4951,
-                    "feature": "상하이의 랜드마크로, 360도 전망대와 투명 스카이워크가 인기",
-                    "주소": "1 Century Ave, Pudong, Shanghai, China",
-                    "추천_방문일차": "1일차",
-                    "평점": 4.5,
-                    "영업시간": "08:00-22:00",
-                    "전화번호": "+86 21 5879 1888"
-                },
-                {
-                    "name": "예원 (Yu Garden)",
-                    "type": "관광지",
-                    "latitude": 31.2278,
-                    "longitude": 121.4925,
-                    "feature": "명나라 시대의 고전 정원으로, 전통 중국 건축과 정원을 감상 가능",
-                    "주소": "279 Yuyuan Old St, Huangpu, Shanghai, China",
-                    "추천_방문일차": "2일차",
-                    "평점": 4.6,
-                    "영업시간": "08:30-17:00",
-                    "전화번호": "+86 21 6326 0830"
-                },
-                {
-                    "name": "상하이 타워 (Shanghai Tower)",
-                    "type": "관광지",
-                    "latitude": 31.2356,
-                    "longitude": 121.5010,
-                    "feature": "세계에서 두 번째로 높은 마천루로, 118층 전망대에서 상하이 전경 조망",
-                    "주소": "501 Yincheng Middle Rd, Pudong, Shanghai, China",
-                    "추천_방문일차": "1일차",
-                    "평점": 4.6,
-                    "영업시간": "08:30-22:00",
-                    "전화번호": "+86 21 2065 6999"
-                },
-                {
-                    "name": "난징루 보행자 거리 (Nanjing Road Pedestrian Street)",
-                    "type": "관광지",
-                    "latitude": 31.2349,
-                    "longitude": 121.4750,
-                    "feature": "상하이 최대의 쇼핑 거리로, 현대와 전통이 공존하는 분위기",
-                    "주소": "Nanjing Rd Pedestrian St, Huangpu, Shanghai, China",
-                    "추천_방문일차": "2일차",
-                    "평점": 4.4,
-                    "영업시간": "24시간",
-                    "전화번호": "없음"
-                },
-                {
-                    "name": "신천지 (Xintiandi)",
-                    "type": "관광지",
-                    "latitude": 31.2234,
-                    "longitude": 121.4708,
-                    "feature": "1920년대 석쿠먼 건축을 현대적으로 재현한 트렌디한 거리",
-                    "주소": "Lane 181, Taicang Rd, Huangpu, Shanghai, China",
-                    "추천_방문일차": "2일차",
-                    "평점": 4.5,
-                    "영업시간": "24시간",
-                    "전화번호": "없음"
-                },
-                {
-                    "name": "대한민국 임시정부 (Provisional Government of the Republic of Korea)",
-                    "type": "관광지",
-                    "latitude": 31.2217,
-                    "longitude": 121.4684,
-                    "feature": "한국 독립운동의 역사적 장소로, 상하이 방문 시 필수 코스",
-                    "주소": "306 Madang Rd, Huangpu, Shanghai, China",
-                    "추천_방문일차": "3일차",
-                    "평점": 4.3,
-                    "영업시간": "09:00-17:00",
-                    "전화번호": "+86 21 5382 6505"
-                },
-                {
-                    "name": "하이디라오 훠궈 (Hai Di Lao Hot Pot)",
-                    "type": "음식점",
-                    "latitude": 31.2356,
-                    "longitude": 121.4790,
-                    "feature": "한국인에게도 익숙한 중국식 샤브샤브 훠궈 체인점",
-                    "주소": "6F, 299 Nanjing East Rd, Huangpu, Shanghai, China",
-                    "추천_방문일차": "매일",
-                    "평점": 4.6,
-                    "영업시간": "10:00-02:00",
-                    "전화번호": "+86 21 6328 2298"
-                },
-                {
-                    "name": "와이포지아 (Grandma's Home)",
-                    "type": "음식점",
-                    "latitude": 31.2451,
-                    "longitude": 121.4710,
-                    "feature": "항저우 요리를 기반으로 한 가성비 좋은 중식 레스토랑",
-                    "주소": "7F, Joy City, 166 Xizang North Rd, Jing'an, Shanghai, China",
-                    "추천_방문일차": "매일",
-                    "평점": 4.4,
-                    "영업시간": "10:00-22:00",
-                    "전화번호": "+86 21 6358 3999"
-                },
-                {
-                    "name": "딘타이펑 (Din Tai Fung)",
-                    "type": "음식점",
-                    "latitude": 31.2368,
-                    "longitude": 121.5027,
-                    "feature": "세계적으로 유명한 샤오롱바오 체인점",
-                    "주소": "2F, Shanghai World Financial Center, 100 Century Ave, Pudong, Shanghai, China",
-                    "추천_방문일차": "매일",
-                    "평점": 4.6,
-                    "영업시간": "10:00-22:00",
-                    "전화번호": "+86 21 6877 6888"
-                }
-            ]
+            "shanghai_tourism": {
+                "attractions": [
+                    {
+                        "name": "와이탄 (The Bund)",
+                        "address": "황푸강 외백도교부터 진링동루까지의 거리",
+                        "latitude": 31.24026,
+                        "longitude": 121.49062,
+                        "description": "번영과 역사의 흔적이 공존하는 야경 명소",
+                        "features": ["풍경", "음식", "문화", "역사"]
+                    },
+                    {
+                        "name": "동방명주",
+                        "address": "푸동신구 세기대로 1호",
+                        "latitude": 31.2398,
+                        "longitude": 121.49971,
+                        "description": "황푸강 양쪽 전경을 감상할 수 있는 대표적인 전망대",
+                        "features": ["전망대", "독특한 건축"]
+                    },
+                    {
+                        "name": "상하이 박물관",
+                        "address": "N/A",
+                        "latitude": 31.22842,
+                        "longitude": 121.47556,
+                        "description": "풍부한 중국 예술품과 역사 컬렉션을 전시하는 문화시설",
+                        "features": ["무료 입장", "문화시설"]
+                    },
+                    {
+                        "name": "예원",
+                        "address": "예원로 218호",
+                        "latitude": 31.22727,
+                        "longitude": 121.49207,
+                        "description": "중국 전통 정원이 잘 보존된 휴식처",
+                        "features": ["역사적 전통정원"]
+                    },
+                    {
+                        "name": "난징동루",
+                        "address": "난징동루 보행자 거리",
+                        "latitude": 31.23658,
+                        "longitude": 121.48486,
+                        "description": "쇼핑과 문화가 공존하는 도심 보행자 거리",
+                        "features": ["쇼핑", "문화"]
+                    },
+                    {
+                        "name": "신천지",
+                        "address": "신천지 지역",
+                        "latitude": 31.21935,
+                        "longitude": 121.47523,
+                        "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역",
+                        "features": ["트렌디 레스토랑"]
+                    },
+                    {
+                        "name": "상하이 타워",
+                        "address": "501 Yincheng Rd (M), Lujiazui, Pudong, Shanghai, 중국 200120",
+                        "latitude": 31.2336,
+                        "longitude": 121.50545,
+                        "description": "현대 상하이의 랜드마크 건물",
+                        "features": ["현대", "전망"]
+                    },
+                    {
+                        "name": "상하이 세계금융센터",
+                        "address": "100 Shiji Blvd, Lujiazui, Pudong, Shanghai, 중국 200120",
+                        "latitude": 31.23489,
+                        "longitude": 121.5074,
+                        "description": "비즈니스와 금융 중심의 상징적 랜드마크",
+                        "features": ["현대", "비즈니스"]
+                    },
+                    {
+                        "name": "톈즈팡",
+                        "address": "210弄 Taikang Rd, Huangpu, 중국 200023",
+                        "latitude": 31.20881,
+                        "longitude": 121.46887,
+                        "description": "예술, 문화, 쇼핑이 결합된 독특한 공간",
+                        "features": ["예술", "문화"]
+                    },
+                    {
+                        "name": "대한민국 상하이 임시정부",
+                        "address": "중국 상하이 시 황푸 구 邮政编码: 200020",
+                        "latitude": 31.21725,
+                        "longitude": 121.47469,
+                        "description": "한국 독립운동의 역사적 장소",
+                        "features": ["역사", "문화"]
+                    }
+                ],
+                "restaurants": [
+                    {
+                        "name": "맛지 아랑면관",
+                        "address": "36 Sinan Rd, Huangpu, Shanghai, 중국 200041",
+                        "latitude": 31.21759,
+                        "longitude": 121.46648,
+                        "description": "정통 중식 면요리 전문점",
+                        "menu": []
+                    },
+                    {
+                        "name": "사계민복",
+                        "address": "중국 Shanghai, Huangpu, 淮海中路282",
+                        "latitude": 31.22381,
+                        "longitude": 121.47493,
+                        "description": "북경오리 전문 레스토랑",
+                        "menu": ["북경오리"]
+                    },
+                    {
+                        "name": "퀘이문룽",
+                        "address": "Hongqiao World Shopping Center 4층",
+                        "latitude": 31.21859,
+                        "longitude": 121.41709,
+                        "description": "대표 메뉴: 叫化鸡 (거지닭)",
+                        "menu": ["叫化鸡"]
+                    },
+                    {
+                        "name": "许留山",
+                        "address": "중국 Shanghai, Huangpu, Nanjing Rd (E), 300号恒基名人购物中심 邮政编码: 200002",
+                        "latitude": 31.23812,
+                        "longitude": 121.48409,
+                        "description": "홍콩 스타일 디저트 전문점",
+                        "menu": []
+                    },
+                    {
+                        "name": "蟹小友",
+                        "address": "南京东路588号丝绸商厦负一楼",
+                        "latitude": 31.23577,
+                        "longitude": 121.47916,
+                        "description": "게요리 전문점",
+                        "menu": ["게살떡국 (58위안)", "게살비빔면 (128위안)"]
+                    },
+                    {
+                        "name": "예마",
+                        "address": "Shanghai IFC Mall 내",
+                        "latitude": 31.21569,
+                        "longitude": 121.45845,
+                        "description": "전통 중식 요리 레스토랑",
+                        "menu": [
+                            "Classic Braised Yellow Croaker with Rice Cake (198위안)",
+                            "Home Style Turnip in Bone Soup (48위안)",
+                            "Braised Pork and Abalone with Bamboo Shoots (138위안)",
+                            "Sautéed Seasonal Vegetable (36위안)",
+                            "Fried Rice with Beef and Salty Vegetable (42위안)"
+                        ]
+                    },
+                    {
+                        "name": "라오지스",
+                        "address": "Shanghai IFC Mall",
+                        "latitude": 31.21569,
+                        "longitude": 121.45845,
+                        "description": "중식 전통 요리",
+                        "menu": ["芦蒿炒干丝", "葱油拌면"]
+                    },
+                    {
+                        "name": "리위안",
+                        "address": "Shanghai IFC Mall",
+                        "latitude": 31.21569,
+                        "longitude": 121.45845,
+                        "description": "중식 고급 요리",
+                        "menu": [
+                            "龙虾汤贵妃泡饭 (¥160/¥218)",
+                            "山西枣皇糕 (35위안)"
+                        ]
+                    }
+                ],
+                "hotels": [
+                    {
+                        "name": "SSAW 부티크 호텔 상하이 번드",
+                        "address": "No.839 Renmin Road, Huangpu District",
+                        "latitude": 31.22753,
+                        "longitude": 121.48461,
+                        "description": "예원역 근처, 가족 단위 및 비즈니스 여행객 추천",
+                        "features": ["고급 호텔", "반려동물 불가"]
+                    },
+                    {
+                        "name": "크리스탈 오렌지 호텔 와이탄 지점",
+                        "address": "No.511 Jinling East Road",
+                        "latitude": 31.2387,
+                        "longitude": 121.492,
+                        "description": "와이탄 근처 편리한 위치",
+                        "features": ["고급 시설", "비즈니스 추천"]
+                    },
+                    {
+                        "name": "아투어 호텔 신천지 지점",
+                        "address": "Building 7, No. 199, Hefei Road",
+                        "latitude": 31.2197,
+                        "longitude": 121.4755,
+                        "description": "신천지 지하철역 근처",
+                        "features": ["모던한 시설", "편리한 교통"]
+                    },
+                    {
+                        "name": "JI 호텔 인민광장 지점",
+                        "address": "황푸구 풍양로 사원상가",
+                        "latitude": 31.2304,
+                        "longitude": 121.4737,
+                        "description": "인민광장 도보 5분",
+                        "features": ["가성비 좋음", "중심가 위치"]
+                    }
+                ],
+                "airports": [
+                    {
+                        "name": "상하이 푸동국제공항",
+                        "address": "Shanghai Pudong International Airport",
+                        "latitude": 31.143333,
+                        "longitude": 121.805275,
+                        "description": "국제 항공의 중요한 허브",
+                        "features": ["대형 터미널", "항공 허브"]
+                    }
+                ]
+            }
         };
 
         let map;
@@ -531,13 +599,21 @@
             markers.addTo(map);
 
             // 마커 표시
-            displayMarkers(shanghaiData.places);
+            displayMarkers();
         }
 
-        function displayMarkers(places) {
+        function displayMarkers() {
             markers.clearLayers();
 
-            places.forEach(place => {
+            // 모든 장소 데이터를 하나의 배열로 합치기
+            const allPlaces = [
+                ...shanghaiData.shanghai_tourism.attractions.map(place => ({...place, type: 'attractions'})),
+                ...shanghaiData.shanghai_tourism.restaurants.map(place => ({...place, type: 'restaurants'})),
+                ...shanghaiData.shanghai_tourism.hotels.map(place => ({...place, type: 'hotels'})),
+                ...shanghaiData.shanghai_tourism.airports.map(place => ({...place, type: 'airports'}))
+            ];
+
+            allPlaces.forEach(place => {
                 const marker = L.marker([place.latitude, place.longitude], {
                     icon: createCustomIcon(place.type)
                 }).addTo(markers);
@@ -564,19 +640,19 @@
             let iconClass, bgClass;
 
             switch (type) {
-                case '관광지':
+                case 'attractions':
                     iconClass = 'fas fa-camera';
                     bgClass = 'tourism-bg';
                     break;
-                case '음식점':
+                case 'restaurants':
                     iconClass = 'fas fa-utensils';
                     bgClass = 'restaurant-bg';
                     break;
-                case 'airport':
+                case 'airports':
                     iconClass = 'fas fa-plane';
                     bgClass = 'airport-bg';
                     break;
-                case 'accommodation':
+                case 'hotels':
                     iconClass = 'fas fa-bed';
                     bgClass = 'accommodation-bg';
                     break;
@@ -605,28 +681,26 @@
                     ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
                 </div>
                 <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
-                <p><strong>🎯 특징:</strong> ${place.feature || '정보 없음'}</p>
             `;
             
-            if (place.주소) {
-                detailsHtml += `<p><strong>📍 주소:</strong> ${place.주소}</p>`;
+            if (place.description) {
+                detailsHtml += `<p><strong>🎯 설명:</strong> ${place.description}</p>`;
             }
             
-            if (place.추천_방문일차) {
-                detailsHtml += `<p><strong>📅 추천:</strong> ${place.추천_방문일차}</p>`;
+            if (place.address && place.address !== "N/A") {
+                detailsHtml += `<p><strong>📍 주소:</strong> ${place.address}</p>`;
             }
             
-            if (place.평점) {
-                const stars = '★'.repeat(Math.floor(place.평점)) + '☆'.repeat(5 - Math.floor(place.평점));
-                detailsHtml += `<p><strong>⭐ 평점:</strong> ${place.평점}/5 <span class="rating-stars">${stars}</span></p>`;
+            if (place.features && place.features.length > 0) {
+                detailsHtml += `<p><strong>✨ 특징:</strong> ${place.features.join(', ')}</p>`;
             }
             
-            if (place.영업시간) {
-                detailsHtml += `<p><strong>🕒 영업:</strong> ${place.영업시간}</p>`;
-            }
-            
-            if (place.전화번호 && place.전화번호 !== "없음" && place.전화번호 !== "확인 필요") {
-                detailsHtml += `<p><strong>📞 연락:</strong> ${place.전화번호}</p>`;
+            if (place.menu && place.menu.length > 0) {
+                detailsHtml += `<p><strong>🍽️ 메뉴:</strong></p><ul>`;
+                place.menu.forEach(item => {
+                    detailsHtml += `<li>${item}</li>`;
+                });
+                detailsHtml += `</ul>`;
             }
 
             placeContent.innerHTML = detailsHtml;
@@ -640,20 +714,20 @@
 
         function getTypeIcon(type) {
             switch (type) {
-                case '관광지': return '📷';
-                case '음식점': return '🍴';
-                case 'airport': return '✈️';
-                case 'accommodation': return '🏨';
+                case 'attractions': return '📷';
+                case 'restaurants': return '🍴';
+                case 'airports': return '✈️';
+                case 'hotels': return '🏨';
                 default: return '📍';
             }
         }
 
         function getTypeDisplayName(type) {
             switch (type) {
-                case '관광지': return '관광지';
-                case '음식점': return '음식점';
-                case 'airport': return '공항';
-                case 'accommodation': return '숙소';
+                case 'attractions': return '관광지';
+                case 'restaurants': return '음식점';
+                case 'airports': return '공항';
+                case 'hotels': return '호텔';
                 default: return '기타';
             }
         }
