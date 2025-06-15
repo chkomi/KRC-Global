@@ -7,12 +7,6 @@ body {
     color: #333;
     height: 100vh;
     overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 /* 지도 타일 선택 컨트롤 */
@@ -89,11 +83,6 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
 }
 
 /* 범례 박스 */
@@ -223,12 +212,6 @@ body {
 .type-airports { background-color: #9b59b6; }
 .type-hotels { background-color: #3498db; }
 
-.rating-stars {
-    color: #f39c12;
-    margin-left: 5px;
-    font-size: 0.9em;
-}
-
 .info-box ul {
     margin: 8px 0;
     padding-left: 20px;
@@ -306,85 +289,6 @@ body {
 
 .leaflet-tooltip.leaflet-tooltip-bottom:before {
     border-top-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-/* 좌표 표시 팝업 스타일 */
-.coordinate-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.98);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    z-index: 2000;
-    min-width: 300px;
-    max-width: 90vw;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    display: none;
-}
-
-.coordinate-popup h3 {
-    margin: 0 0 15px 0;
-    color: #2c3e50;
-    font-size: 1.1em;
-}
-
-.coordinate-info {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 10px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-    color: #2c3e50;
-}
-
-.coordinate-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    justify-content: center;
-}
-
-.coord-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.2s;
-}
-
-.coord-btn.copy {
-    background-color: #3498db;
-    color: white;
-}
-
-.coord-btn.copy:hover {
-    background-color: #2980b9;
-}
-
-.coord-btn.close {
-    background-color: #95a5a6;
-    color: white;
-}
-
-.coord-btn.close:hover {
-    background-color: #7f8c8d;
-}
-
-.coordinate-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1999;
-    display: none;
 }
 
 /* 장소 라벨 스타일 */
@@ -466,31 +370,6 @@ body {
         font-size: 0.75em;
         margin: 2px 0;
         padding: 2px 4px;
-    }
-
-    .legend-box {
-        bottom: 10px;
-        right: 10px;
-        padding: 12px;
-        max-width: 160px;
-    }
-
-    /* 모바일에서 좌표 팝업 조정 */
-    .coordinate-popup {
-        width: 90%;
-        max-width: 300px;
-        min-width: unset;
-        padding: 15px;
-    }
-
-    .coordinate-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .coord-btn {
-        width: 100%;
-        margin: 3px 0;
     }
 }
 
