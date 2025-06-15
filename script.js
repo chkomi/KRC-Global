@@ -169,14 +169,18 @@ function displayMarkers() {
             }).addTo(markerGroups[type]);
 
             // 라벨 생성 (항상 표시되지만 처음에는 숨김)
+            // 툴팁을 마커에 바인딩하되, 초기에는 opacity를 0으로 설정하여 숨김
             const tooltip = L.tooltip({
                 permanent: true,
-                direction: 'center',
+                direction: 'auto', // direction은 아래 updateLabelVisibility에서 동적으로 설정
                 offset: [0, 0],
                 className: 'place-label',
-                opacity: 0
-            }).setContent(place.name);
+                opacity: 0,
+                interactive: false // 툴팁이 클릭 이벤트에 반응하지 않도록
+            });
 
+            marker.bindTooltip(tooltip); // 툴팁을 마커에 바인딩
+            
             marker.on('click', () => {
                 displayPlaceDetails({...place, type: type});
                 map.flyTo([place.latitude, place.longitude], 15);
@@ -187,7 +191,7 @@ function displayMarkers() {
                 marker: marker,
                 tooltip: tooltip,
                 place: {...place, type: type},
-                visible: false,
+                // visible 속성은 더 이상 사용하지 않음. 툴팁의 opacity로 제어
                 group: type
             });
         });
@@ -211,102 +215,153 @@ function displayMarkers() {
     }, 500);
 }
 
-// 라벨 가시성 업데이트 함수 (개선된 버전)
+// 라벨 가시성 및 배치 업데이트 함수 (개선된 버전)
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     const bounds = map.getBounds();
-    
-    // 모든 라벨 숨기기
+    const mapSize = map.getSize();
+
+    // 이전에 표시된 모든 라벨 숨기기
     allMarkers.forEach(markerData => {
-        if (markerData.visible) {
-            markerData.tooltip.removeFrom(map);
-            markerData.visible = false;
-        }
+        markerData.tooltip.setOpacity(0);
+        markerData.tooltip.options.direction = 'auto'; // 초기화
     });
 
-    // 현재 보이는 마커 그룹의 마커들만 필터링
-    const visibleMarkers = allMarkers.filter(markerData => {
+    // 현재 보이는 마커 그룹에 속하고, 지도 범위 내에 있는 마커들만 필터링
+    let visibleMarkersInBounds = allMarkers.filter(markerData => {
         const latLng = markerData.marker.getLatLng();
         const isInBounds = bounds.contains(latLng);
         const isGroupVisible = map.hasLayer(markerGroups[markerData.group]);
         return isInBounds && isGroupVisible;
     });
 
-    if (visibleMarkers.length === 0) return;
+    // 우선순위 정렬 (예: 줌 레벨이 높을수록 모든 라벨 표시, 낮을수록 중요한 라벨만 표시)
+    // 여기서는 간단히 모든 마커를 대상으로 하되, 복잡한 겹침 제거 로직을 적용합니다.
+    // 필요에 따라 중요도나 이름 길이에 따라 정렬하여 라벨 표시 우선순위를 줄 수 있습니다.
+    visibleMarkersInBounds.sort((a, b) => {
+        // 예를 들어, 이름 길이에 따라 정렬하여 짧은 이름을 가진 라벨이 먼저 배치되도록 할 수 있습니다.
+        return a.place.name.length - b.place.name.length;
+    });
 
-    // 각 마커에 대해 최적의 라벨 위치 찾기
-    visibleMarkers.forEach(markerData => {
-        const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-        const directions = ['right', 'left', 'top', 'bottom', 'topright', 'topleft', 'bottomright', 'bottomleft'];
-        
-        let bestDirection = 'right'; // 기본값
+    const displayedLabelRects = []; // 이미 배치된 라벨의 경계 상자를 저장
+
+    // 가능한 툴팁 방향 및 오프셋 정의 (우선순위 부여 가능)
+    const labelDirections = [
+        { name: 'right', offset: [15, 0] },
+        { name: 'left', offset: [-15, 0] },
+        { name: 'bottom', offset: [0, 15] },
+        { name: 'top', offset: [0, -15] },
+        { name: 'topright', offset: [10, -10] },
+        { name: 'topleft', offset: [-10, -10] },
+        { name: 'bottomright', offset: [10, 10] },
+        { name: 'bottomleft', offset: [-10, 10] }
+    ];
+
+    visibleMarkersInBounds.forEach(markerData => {
+        const markerLatLng = markerData.marker.getLatLng();
+        const markerPixel = map.latLngToContainerPoint(markerLatLng);
+
+        let bestFit = null;
         let bestScore = -1;
 
-        // 각 방향에 대해 점수 계산
-        for (const direction of directions) {
-            const offset = getTooltipOffset(direction);
-            const labelPos = {
-                x: markerPos.x + offset[0],
-                y: markerPos.y + offset[1]
+        // 라벨의 대략적인 크기 (글자 수에 비례하여 추정)
+        // 실제 렌더링된 너비를 얻기 어렵기 때문에 추정치를 사용합니다.
+        // CSS에서 .place-label 스타일을 보고 조정해야 합니다.
+        const estimatedLabelWidth = markerData.place.name.length * 7 + 10; // 폰트 크기 고려
+        const estimatedLabelHeight = 20; // 폰트 높이 고려
+
+        for (const dir of labelDirections) {
+            const proposedLabelX = markerPixel.x + dir.offset[0];
+            const proposedLabelY = markerPixel.y + dir.offset[1];
+
+            // 라벨의 경계 상자 계산
+            const labelRect = {
+                x1: proposedLabelX - estimatedLabelWidth / 2,
+                y1: proposedLabelY - estimatedLabelHeight / 2,
+                x2: proposedLabelX + estimatedLabelWidth / 2,
+                y2: proposedLabelY + estimatedLabelHeight / 2
             };
 
-            let score = 100; // 기본 점수
+            let currentScore = 100; // 초기 점수
+            let overlaps = false;
 
-            // 화면 경계 체크 (경계를 벗어나면 점수 감소)
-            const mapSize = map.getSize();
-            const labelWidth = markerData.place.name.length * 7; // 라벨 너비 추정
-            const labelHeight = 20;
-            
-            if (labelPos.x - labelWidth/2 < 10) score -= 50;
-            if (labelPos.x + labelWidth/2 > mapSize.x - 10) score -= 50;
-            if (labelPos.y - labelHeight/2 < 10) score -= 50;
-            if (labelPos.y + labelHeight/2 > mapSize.y - 10) score -= 50;
+            // 지도 경계 밖으로 나가는지 확인
+            if (labelRect.x1 < 0 || labelRect.x2 > mapSize.x || labelRect.y1 < 0 || labelRect.y2 > mapSize.y) {
+                currentScore -= 50; // 경계 밖이면 점수 크게 감소
+            }
 
-            // 마커와의 거리 체크 (너무 가까우면 점수 감소)
-            const distanceToMarker = Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
-            if (distanceToMarker < 20) score -= 30;
+            // 마커와의 거리 유지 (너무 가까우면 점수 감소)
+            const distanceToMarker = Math.sqrt(dir.offset[0] * dir.offset[0] + dir.offset[1] * dir.offset[1]);
+            if (distanceToMarker < 10) currentScore -= 30; // 마커에 너무 붙으면 점수 감소
 
-            // 우선순위 방향 (오른쪽과 왼쪽을 선호)
-            if (direction === 'right') score += 10;
-            if (direction === 'left') score += 8;
-            if (direction === 'top' || direction === 'bottom') score += 5;
+            // 기존에 배치된 라벨들과 겹치는지 확인
+            for (const existingRect of displayedLabelRects) {
+                if (
+                    labelRect.x1 < existingRect.x2 &&
+                    labelRect.x2 > existingRect.x1 &&
+                    labelRect.y1 < existingRect.y2 &&
+                    labelRect.y2 > existingRect.y1
+                ) {
+                    overlaps = true;
+                    currentScore -= 100; // 겹치면 점수 크게 감소
+                    break;
+                }
+            }
 
-            if (score > bestScore) {
-                bestScore = score;
-                bestDirection = direction;
+            // 겹치지 않는 방향에 가산점
+            if (!overlaps) {
+                // 선호하는 방향에 추가 가산점 (예: right, bottom)
+                if (dir.name === 'right') currentScore += 10;
+                else if (dir.name === 'bottom') currentScore += 8;
+                else if (dir.name === 'left' || dir.name === 'top') currentScore += 5;
+            }
+
+            if (currentScore > bestScore) {
+                bestScore = currentScore;
+                bestFit = {
+                    direction: dir.name,
+                    offset: dir.offset,
+                    labelRect: labelRect // 이 위치에 배치될 경우의 경계 상자
+                };
             }
         }
 
-        // 최소 점수 이상이면 라벨 표시
-        if (bestScore >= 0) {
-            const offset = getTooltipOffset(bestDirection);
-            
-            // 툴팁 설정 및 표시
-            markerData.tooltip.options.direction = bestDirection;
-            markerData.tooltip.options.offset = offset;
-            markerData.tooltip.options.opacity = 0.9;
-            
-            markerData.marker.bindTooltip(markerData.tooltip);
-            markerData.visible = true;
+        // 최적의 위치를 찾았다면 라벨을 표시하고, 해당 라벨의 경계 상자를 저장
+        if (bestFit && bestScore > 0) { // 최소 점수 이상이어야 표시
+            markerData.tooltip.options.direction = bestFit.direction;
+            markerData.tooltip.options.offset = bestFit.offset;
+            markerData.tooltip.setOpacity(0.9); // 라벨 표시
+            displayedLabelRects.push(bestFit.labelRect); // 배치된 라벨의 경계 상자 추가
+        } else {
+            markerData.tooltip.setOpacity(0); // 표시하지 않음
         }
     });
-}
 
-// 툴팁 오프셋 계산 함수 (마커와 적절한 거리 유지)
-function getTooltipOffset(direction) {
-    const baseOffset = 22; // 마커와의 기본 거리
-    switch (direction) {
-        case 'top': return [0, -baseOffset];
-        case 'bottom': return [0, baseOffset];
-        case 'right': return [baseOffset, 0];
-        case 'left': return [-baseOffset, 0];
-        case 'topright': return [baseOffset * 0.8, -baseOffset * 0.8];
-        case 'topleft': return [-baseOffset * 0.8, -baseOffset * 0.8];
-        case 'bottomright': return [baseOffset * 0.8, baseOffset * 0.8];
-        case 'bottomleft': return [-baseOffset * 0.8, baseOffset * 0.8];
-        default: return [baseOffset, 0];
+    // 줌 레벨에 따라 라벨 표시 여부 결정 (옵션)
+    // 예를 들어, 줌 레벨 14 미만에서는 모든 라벨을 숨길 수 있습니다.
+    if (currentZoom < 14) { // 이 값은 조정 가능
+        allMarkers.forEach(markerData => {
+            markerData.tooltip.setOpacity(0);
+        });
     }
 }
+
+
+// 툴팁 오프셋 계산 함수 (더 이상 사용되지 않지만, 다른 곳에서 필요할 경우를 대비)
+// function getTooltipOffset(direction) {
+//     const baseOffset = 22; // 마커와의 기본 거리
+//     switch (direction) {
+//         case 'top': return [0, -baseOffset];
+//         case 'bottom': return [0, baseOffset];
+//         case 'right': return [baseOffset, 0];
+//         case 'left': return [-baseOffset, 0];
+//         case 'topright': return [baseOffset * 0.8, -baseOffset * 0.8];
+//         case 'topleft': return [-baseOffset * 0.8, -baseOffset * 0.8];
+//         case 'bottomright': return [baseOffset * 0.8, baseOffset * 0.8];
+//         case 'bottomleft': return [-baseOffset * 0.8, baseOffset * 0.8];
+//         default: return [baseOffset, 0];
+//     }
+// }
 
 // 커스텀 아이콘 생성 함수
 function createCustomIcon(type) {
@@ -341,7 +396,7 @@ function createCustomIcon(type) {
                </div>`,
         iconSize: [18, 18],
         iconAnchor: [9, 9],
-        tooltipAnchor: [0, -15]
+        tooltipAnchor: [0, -15] // 툴팁 앵커는 기본값으로 둔다. offset으로 조절
     });
 }
 
