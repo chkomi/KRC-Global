@@ -267,6 +267,19 @@
         .restaurant-marker { background-color: #27ae60; }
         .airport-marker { background-color: #9b59b6; }
         .accommodation-marker { background-color: #3498db; }
+        .special-location-marker { background-color: #f39c12; }
+
+        /* 특별 위치 라벨 스타일 */
+        .special-location-label {
+            background: rgba(243, 156, 18, 0.95) !important;
+            color: white !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            font-weight: 700 !important;
+        }
+
+        .special-location-label:before {
+            border-right-color: rgba(243, 156, 18, 0.95) !important;
+        }
 
         /* 장소 정보 박스 */
         .info-box {
@@ -405,6 +418,39 @@
         .restaurant-bg { background-color: #27ae60; }
         .airport-bg { background-color: #9b59b6; }
         .accommodation-bg { background-color: #3498db; }
+        .special-location-bg { background-color: #f39c12; }
+
+        /* 특별 위치 마커 스타일 */
+        .special-marker-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 3px solid white;
+            transition: transform 0.2s;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(243, 156, 18, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(243, 156, 18, 0.3);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(243, 156, 18, 0);
+            }
+        }
 
         /* Leaflet 툴팁 스타일 */
         .leaflet-tooltip {
@@ -636,6 +682,12 @@
                     <i class="fas fa-bed"></i>
                 </div>
                 호텔
+            </li>
+            <li>
+                <div class="marker-icon special-location-marker">
+                    <i class="fas fa-star"></i>
+                </div>
+                특별 위치
             </li>
         </ul>
         <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ddd; font-size: 0.75em; color: #666;">
@@ -936,6 +988,23 @@
                 });
             });
 
+            // 특별 위치 마커 추가 (31.2275456, 121.4847685)
+            const specialMarker = L.marker([31.2275456, 121.4847685], {
+                icon: createSpecialLocationIcon()
+            }).addTo(markers);
+
+            specialMarker.bindTooltip('📍 특별 위치', {
+                permanent: true,
+                direction: 'right',
+                offset: [20, 0],
+                className: 'place-label special-location-label'
+            });
+
+            specialMarker.on('click', () => {
+                displaySpecialLocationDetails();
+                map.flyTo([31.2275456, 121.4847685], 16);
+            });
+
             // 모든 마커가 보이도록 지도 뷰 조정
             if (markers.getLayers().length > 0) {
                 map.fitBounds(markers.getBounds().pad(0.1));
@@ -976,6 +1045,36 @@
                 iconAnchor: [9, 9],
                 tooltipAnchor: [0, -15]
             });
+        }
+
+        function createSpecialLocationIcon() {
+            return L.divIcon({
+                className: 'custom-marker-icon',
+                html: `<div class="special-marker-content special-location-bg">
+                         <i class="fas fa-star"></i>
+                       </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                tooltipAnchor: [0, -25]
+            });
+        }
+
+        function displaySpecialLocationDetails() {
+            const infoBox = document.getElementById('place-details');
+            const placeContent = document.getElementById('place-content');
+            
+            let detailsHtml = `
+                <div class="place-type-badge" style="background-color: #f39c12;">
+                    ⭐ 특별 위치
+                </div>
+                <h3><i class="fas fa-star"></i> 확인된 좌표 위치</h3>
+                <p><strong>📍 정확한 좌표:</strong> 31.2275456, 121.4847685</p>
+                <p><strong>🎯 설명:</strong> 사용자가 확인한 실제 위치입니다.</p>
+                <p><strong>✨ 특징:</strong> GPS로 확인된 정확한 좌표</p>
+            `;
+
+            placeContent.innerHTML = detailsHtml;
+            infoBox.classList.add('show');
         }
 
         function displayPlaceDetails(place) {
