@@ -91,12 +91,12 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             margin-right: 8px;
             color: white;
-            font-size: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
 
@@ -223,14 +223,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 35px;
-            height: 35px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             color: white;
-            font-size: 16px;
+            font-size: 10px;
             font-weight: bold;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
             transition: transform 0.2s;
         }
 
@@ -259,6 +259,24 @@
 
         .leaflet-tooltip.leaflet-tooltip-bottom:before {
             border-top-color: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* 장소 라벨 스타일 */
+        .place-label {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #2c3e50 !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+            font-weight: 600 !important;
+            font-size: 0.8em !important;
+            padding: 4px 8px !important;
+            border-radius: 12px !important;
+            white-space: nowrap !important;
+            pointer-events: none !important;
+        }
+
+        .place-label:before {
+            border-right-color: rgba(255, 255, 255, 0.95) !important;
         }
 
         /* 반응형 디자인 */
@@ -297,6 +315,12 @@
                 right: 10px;
                 max-width: none;
                 padding: 15px;
+            }
+
+            /* 모바일에서 라벨 크기 조정 */
+            .place-label {
+                font-size: 0.7em !important;
+                padding: 3px 6px !important;
             }
         }
 
@@ -619,9 +643,10 @@
                 }).addTo(markers);
 
                 marker.bindTooltip(place.name, {
-                    permanent: false,
-                    direction: 'top',
-                    offset: [0, -10]
+                    permanent: true,
+                    direction: 'right',
+                    offset: [12, 0],
+                    className: 'place-label'
                 });
 
                 marker.on('click', () => {
@@ -666,9 +691,9 @@
                 html: `<div class="marker-content ${bgClass}">
                          <i class="${iconClass}"></i>
                        </div>`,
-                iconSize: [35, 35],
-                iconAnchor: [17, 17],
-                tooltipAnchor: [0, -20]
+                iconSize: [18, 18],
+                iconAnchor: [9, 9],
+                tooltipAnchor: [0, -15]
             });
         }
 
