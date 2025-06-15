@@ -17,6 +17,123 @@
             overflow: hidden;
         }
 
+        function setupMapEvents() {
+            // PC에서 우클릭으로 좌표 표시
+            map.on('contextmenu', function(e) {
+                showCoordinates(e.latlng.lat, e.latlng.lng);
+                L.DomEvent.preventDefault(e);
+            });
+
+            // 모바일 길게 누르기 이벤트 처리
+            let pressTimer;
+            let startPoint = null;
+            let moved = false;
+            
+            map.on('mousedown touchstart', function(e) {
+                isLongPress = false;
+                moved = false;
+                
+                // 시작 지점 저장 (터치 이동 감지용)
+                if (e.originalEvent.touches) {
+                    startPoint = {
+                        x: e.originalEvent.touches[0].clientX,
+                        y: e.originalEvent.touches[0].clientY
+                    };
+                } else if (e.originalEvent) {
+                    startPoint = {
+                        x: e.originalEvent.clientX,
+                        y: e.originalEvent.clientY
+                    };
+                }
+                
+                pressTimer = setTimeout(function() {
+                    if (!moved && e.latlng) {
+                        isLongPress = true;
+                        showCoordinates(e.latlng.lat, e.latlng.lng);
+                        
+                        // 햅틱 피드백 (지원되는 기기에서)
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                    }
+                }, 600); // 600ms 길게 누르기
+            });
+
+            map.on('mousemove touchmove', function(e) {
+                if (startPoint) {
+                    let currentPoint;
+                    if (e.originalEvent.touches) {
+                        currentPoint = {
+                            x: e.originalEvent.touches[0].clientX,
+                            y: e.originalEvent.touches[0].clientY
+                        };
+                    } else if (e.originalEvent) {
+                        currentPoint = {
+                            x: e.originalEvent.clientX,
+                            y: e.originalEvent.clientY
+                        };
+                    }
+                    
+                    if (currentPoint) {
+                        const distance = Math.sqrt(
+                            Math.pow(currentPoint.x - startPoint.x, 2) + 
+                            Math.pow(currentPoint.y - startPoint.y, 2)
+                        );
+                        
+                        // 10픽셀 이상 움직이면 이동으로 간주
+                        if (distance > 10) {
+                            moved = true;
+                        }
+                    }
+                }
+            });
+
+            map.on('mouseup touchend', function() {
+                clearTimeout(pressTimer);
+                startPoint = null;
+            });
+        }
+
+        function showCoordinates(lat, lng) {
+            document.getElementById('coord-lat').textContent = lat.toFixed(6);
+            document.getElementById('coord-lng').textContent = lng.toFixed(6);
+            document.getElementById('coordinate-overlay').style.display = 'block';
+            document.getElementById('coordinate-popup').style.display = 'block';
+        }
+
+        function closeCoordinatePopup() {
+            document.getElementById('coordinate-overlay').style.display = 'none';
+            document.getElementById('coordinate-popup').style.display = 'none';
+        }
+
+        function copyCoordinates() {
+            const lat = document.getElementById('coord-lat').textContent;
+            const lng = document.getElementById('coord-lng').textContent;
+            const coordinates = `${lat}, ${lng}`;
+            
+            // 클립보드에 복사
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(coordinates).then(function() {
+                    // 복사 성공 피드백
+                    const copyBtn = document.querySelector('.coord-btn.copy');
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '✅ 복사됨!';
+                    copyBtn.style.backgroundColor = '#27ae60';
+                    
+                    setTimeout(function() {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.style.backgroundColor = '#3498db';
+                    }, 1500);
+                }).catch(function() {
+                    // 복사 실패시 알림
+                    alert(`좌표: ${coordinates}\n(수동으로 복사해주세요)`);
+                });
+            } else {
+                // 구형 브라우저 지원
+                alert(`좌표: ${coordinates}\n(수동으로 복사해주세요)`);
+            }
+        }
+
         /* 상단 타이틀 박스 */
         .title-box {
             position: absolute;
@@ -261,6 +378,84 @@
             border-top-color: rgba(0, 0, 0, 0.8) !important;
         }
 
+        /* 좌표 표시 팝업 스타일 */
+        .coordinate-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            min-width: 280px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .coordinate-popup h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .coordinate-info {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+
+        .coordinate-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .coord-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .coord-btn.copy {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .coord-btn.copy:hover {
+            background-color: #2980b9;
+        }
+
+        .coord-btn.close {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .coord-btn.close:hover {
+            background-color: #7f8c8d;
+        }
+
+        .coordinate-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+        }
+
         /* 장소 라벨 스타일 */
         .place-label {
             background: rgba(255, 255, 255, 0.95) !important;
@@ -322,6 +517,24 @@
                 font-size: 0.7em !important;
                 padding: 3px 6px !important;
             }
+
+            /* 모바일에서 좌표 팝업 조정 */
+            .coordinate-popup {
+                width: 90%;
+                max-width: 300px;
+                min-width: unset;
+                padding: 15px;
+            }
+
+            .coordinate-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .coord-btn {
+                width: 100%;
+                margin: 3px 0;
+            }
         }
 
         /* 스크롤바 스타일 */
@@ -379,6 +592,9 @@
                 호텔
             </li>
         </ul>
+        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ddd; font-size: 0.75em; color: #666;">
+            <i class="fas fa-info-circle"></i> 지도를 길게 누르면 좌표 확인
+        </div>
     </div>
 
     <!-- 장소 정보 박스 -->
@@ -388,6 +604,20 @@
         </button>
         <div id="place-content">
             <!-- 장소 정보가 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <!-- 좌표 표시 팝업 -->
+    <div class="coordinate-overlay" id="coordinate-overlay"></div>
+    <div class="coordinate-popup" id="coordinate-popup">
+        <h3>📍 위치 좌표</h3>
+        <div class="coordinate-info">
+            <div><strong>위도:</strong> <span id="coord-lat"></span></div>
+            <div><strong>경도:</strong> <span id="coord-lng"></span></div>
+        </div>
+        <div class="coordinate-actions">
+            <button class="coord-btn copy" onclick="copyCoordinates()">📋 복사</button>
+            <button class="coord-btn close" onclick="closeCoordinatePopup()">❌ 닫기</button>
         </div>
     </div>
 
@@ -403,32 +633,32 @@
                     {
                         "name": "와이탄 (The Bund)",
                         "address": "황푸강 외백도교부터 진링동루까지의 거리",
-                        "latitude": 31.24026,
-                        "longitude": 121.49062,
+                        "latitude": 31.2366,
+                        "longitude": 121.4856,
                         "description": "번영과 역사의 흔적이 공존하는 야경 명소",
                         "features": ["풍경", "음식", "문화", "역사"]
                     },
                     {
                         "name": "동방명주",
                         "address": "푸동신구 세기대로 1호",
-                        "latitude": 31.2398,
-                        "longitude": 121.49971,
+                        "latitude": 31.2420,
+                        "longitude": 121.4950,
                         "description": "황푸강 양쪽 전경을 감상할 수 있는 대표적인 전망대",
                         "features": ["전망대", "독특한 건축"]
                     },
                     {
                         "name": "상하이 박물관",
                         "address": "N/A",
-                        "latitude": 31.22842,
-                        "longitude": 121.47556,
+                        "latitude": 31.2248,
+                        "longitude": 121.4690,
                         "description": "풍부한 중국 예술품과 역사 컬렉션을 전시하는 문화시설",
                         "features": ["무료 입장", "문화시설"]
                     },
                     {
                         "name": "예원",
                         "address": "예원로 218호",
-                        "latitude": 31.22727,
-                        "longitude": 121.49207,
+                        "latitude": 31.2242,
+                        "longitude": 121.4858,
                         "description": "중국 전통 정원이 잘 보존된 휴식처",
                         "features": ["역사적 전통정원"]
                     },
@@ -483,7 +713,7 @@
                 ],
                 "restaurants": [
                     {
-                        "name": "아랑면관",
+                        "name": "맛지 아랑면관",
                         "address": "36 Sinan Rd, Huangpu, Shanghai, 중국 200041",
                         "latitude": 31.21759,
                         "longitude": 121.46648,
@@ -560,10 +790,10 @@
                     {
                         "name": "SSAW 부티크 호텔 상하이 번드",
                         "address": "No.839 Renmin Road, Huangpu District",
-                        "latitude": 31.2275496,
-                        "longitude": 121.4846837,
+                        "latitude": 31.22753,
+                        "longitude": 121.48461,
                         "description": "예원역 근처, 가족 단위 및 비즈니스 여행객 추천",
-                        "features": ["고급 호텔"]
+                        "features": ["고급 호텔", "반려동물 불가"]
                     },
                     {
                         "name": "크리스탈 오렌지 호텔 와이탄 지점",
@@ -605,6 +835,8 @@
 
         let map;
         let markers = L.featureGroup();
+        let clickTimeout;
+        let isLongPress = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeMap();
@@ -624,6 +856,9 @@
 
             // 마커 표시
             displayMarkers();
+
+            // 지도 클릭/길게 누르기 이벤트 추가
+            setupMapEvents();
         }
 
         function displayMarkers() {
@@ -757,19 +992,24 @@
             }
         }
 
-        // ESC 키로 정보 박스 닫기
+        // ESC 키로 정보 박스와 좌표 팝업 닫기
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeInfoBox();
+                closeCoordinatePopup();
             }
         });
 
-        // 지도 클릭 시 정보 박스 닫기
+        // 오버레이 클릭시 팝업 닫기
+        document.getElementById('coordinate-overlay').addEventListener('click', closeCoordinatePopup);
+
+        // 지도 클릭 시 정보 박스 닫기 (길게 누르기가 아닌 경우만)
         map.on('click', (e) => {
-            // 마커가 아닌 지도 영역을 클릭했을 때만 닫기
-            if (e.originalEvent.target === e.originalEvent.currentTarget) {
+            // 길게 누르기가 아니고, 마커가 아닌 지도 영역을 클릭했을 때만 정보 박스 닫기
+            if (!isLongPress && e.originalEvent && e.originalEvent.target === e.originalEvent.currentTarget) {
                 closeInfoBox();
             }
+            isLongPress = false; // 클릭 후 플래그 리셋
         });
     </script>
 </body>
