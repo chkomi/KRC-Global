@@ -45,6 +45,11 @@ function initializeMap() {
 
     // 다양한 타일 레이어 정의
     const tileLayers = {
+        cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }),
         street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
@@ -52,21 +57,11 @@ function initializeMap() {
         satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
             maxZoom: 19
-        }),
-        'google-style': L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.openstreetmap.fr/">OSM France</a>',
-            maxZoom: 20,
-            subdomains: ['a', 'b', 'c']
-        }),
-        cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
         })
     };
 
-    // 기본 도로 타일 레이어 추가
-    currentTileLayer = tileLayers.street;
+    // 기본 심플 타일 레이어 추가
+    currentTileLayer = tileLayers.cartodb;
     currentTileLayer.addTo(map);
 
     // 타일 레이어 변경 이벤트 리스너
@@ -219,20 +214,6 @@ function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     const bounds = map.getBounds();
     
-    // 줌 레벨에 따른 최소 거리 설정
-    let minDistance;
-    if (currentZoom >= 16) {
-        minDistance = 50;
-    } else if (currentZoom >= 14) {
-        minDistance = 80;
-    } else if (currentZoom >= 12) {
-        minDistance = 120;
-    } else if (currentZoom >= 10) {
-        minDistance = 160;
-    } else {
-        minDistance = 200;
-    }
-
     // 모든 라벨 숨기기
     allMarkers.forEach(markerData => {
         if (markerData.visible) {
@@ -251,23 +232,15 @@ function updateLabelVisibility() {
 
     if (visibleMarkers.length === 0) return;
 
-    // 우선순위에 따라 정렬
-    const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-    visibleMarkers.sort((a, b) => {
-        const priorityA = priorityOrder[a.place.type] || 5;
-        const priorityB = priorityOrder[b.place.type] || 5;
-        return priorityA - priorityB;
-    });
-
-    const displayedPositions = [];
-    const directions = ['top', 'bottom', 'right', 'left', 'topright', 'topleft', 'bottomright', 'bottomleft'];
-
+    // 각 마커에 대해 최적의 라벨 위치 찾기
     visibleMarkers.forEach(markerData => {
         const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-        let bestDirection = null;
-        let bestDistance = 0;
+        const directions = ['right', 'left', 'top', 'bottom', 'topright', 'topleft', 'bottomright', 'bottomleft'];
+        
+        let bestDirection = 'right'; // 기본값
+        let bestScore = -1;
 
-        // 각 방향에 대해 최적의 위치 찾기
+        // 각 방향에 대해 점수 계산
         for (const direction of directions) {
             const offset = getTooltipOffset(direction);
             const labelPos = {
@@ -275,42 +248,37 @@ function updateLabelVisibility() {
                 y: markerPos.y + offset[1]
             };
 
-            // 화면 경계 체크
+            let score = 100; // 기본 점수
+
+            // 화면 경계 체크 (경계를 벗어나면 점수 감소)
             const mapSize = map.getSize();
-            const labelWidth = markerData.place.name.length * 8;
+            const labelWidth = markerData.place.name.length * 7; // 라벨 너비 추정
             const labelHeight = 20;
             
-            if (labelPos.x - labelWidth/2 < 0 || 
-                labelPos.x + labelWidth/2 > mapSize.x ||
-                labelPos.y - labelHeight/2 < 0 || 
-                labelPos.y + labelHeight/2 > mapSize.y) {
-                continue;
-            }
+            if (labelPos.x - labelWidth/2 < 10) score -= 50;
+            if (labelPos.x + labelWidth/2 > mapSize.x - 10) score -= 50;
+            if (labelPos.y - labelHeight/2 < 10) score -= 50;
+            if (labelPos.y + labelHeight/2 > mapSize.y - 10) score -= 50;
 
-            // 다른 라벨들과의 최소 거리 계산
-            let minDistanceToOthers = Infinity;
-            for (const displayedPos of displayedPositions) {
-                const distance = Math.sqrt(
-                    Math.pow(labelPos.x - displayedPos.x, 2) + 
-                    Math.pow(labelPos.y - displayedPos.y, 2)
-                );
-                minDistanceToOthers = Math.min(minDistanceToOthers, distance);
-            }
+            // 마커와의 거리 체크 (너무 가까우면 점수 감소)
+            const distanceToMarker = Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
+            if (distanceToMarker < 20) score -= 30;
 
-            if (minDistanceToOthers > bestDistance) {
-                bestDistance = minDistanceToOthers;
+            // 우선순위 방향 (오른쪽과 왼쪽을 선호)
+            if (direction === 'right') score += 10;
+            if (direction === 'left') score += 8;
+            if (direction === 'top' || direction === 'bottom') score += 5;
+
+            if (score > bestScore) {
+                bestScore = score;
                 bestDirection = direction;
             }
         }
 
-        // 충분한 거리가 확보되면 라벨 표시
-        if (bestDirection && bestDistance >= minDistance) {
+        // 최소 점수 이상이면 라벨 표시
+        if (bestScore >= 0) {
             const offset = getTooltipOffset(bestDirection);
-            const labelPos = {
-                x: markerPos.x + offset[0],
-                y: markerPos.y + offset[1]
-            };
-
+            
             // 툴팁 설정 및 표시
             markerData.tooltip.options.direction = bestDirection;
             markerData.tooltip.options.offset = offset;
@@ -318,23 +286,22 @@ function updateLabelVisibility() {
             
             markerData.marker.bindTooltip(markerData.tooltip);
             markerData.visible = true;
-            displayedPositions.push(labelPos);
         }
     });
 }
 
-// 툴팁 오프셋 계산 함수
+// 툴팁 오프셋 계산 함수 (마커와 적절한 거리 유지)
 function getTooltipOffset(direction) {
-    const baseOffset = 30;
+    const baseOffset = 22; // 마커와의 기본 거리
     switch (direction) {
         case 'top': return [0, -baseOffset];
         case 'bottom': return [0, baseOffset];
         case 'right': return [baseOffset, 0];
         case 'left': return [-baseOffset, 0];
-        case 'topright': return [baseOffset * 0.7, -baseOffset * 0.7];
-        case 'topleft': return [-baseOffset * 0.7, -baseOffset * 0.7];
-        case 'bottomright': return [baseOffset * 0.7, baseOffset * 0.7];
-        case 'bottomleft': return [-baseOffset * 0.7, baseOffset * 0.7];
+        case 'topright': return [baseOffset * 0.8, -baseOffset * 0.8];
+        case 'topleft': return [-baseOffset * 0.8, -baseOffset * 0.8];
+        case 'bottomright': return [baseOffset * 0.8, baseOffset * 0.8];
+        case 'bottomleft': return [-baseOffset * 0.8, baseOffset * 0.8];
         default: return [baseOffset, 0];
     }
 }
