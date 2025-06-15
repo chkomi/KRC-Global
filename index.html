@@ -76,35 +76,11 @@
         </div>
     </div>
 
-    <!-- 좌표 표시 팝업 -->
-    <div class="coordinate-overlay" id="coordinate-overlay"></div>
-    <div class="coordinate-popup" id="coordinate-popup">
-        <h3>📍 위치 좌표</h3>
-        <div class="coordinate-info">
-            <div><strong>위도:</strong> <span id="coord-lat"></span></div>
-            <div><strong>경도:</strong> <span id="coord-lng"></span></div>
-        </div>
-        <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 0.85em;">
-            <strong>🗺️ 다른 지도에서 확인:</strong><br>
-            <a id="google-maps-link" href="#" target="_blank" style="color: #4285f4; text-decoration: none; margin-right: 15px;">
-                📍 구글 지도로 보기
-            </a>
-            <a id="amap-link" href="#" target="_blank" style="color: #00a6fb; text-decoration: none;">
-                🗺️ 가오더 지도로 보기
-            </a>
-        </div>
-        <div class="coordinate-actions">
-            <button class="coord-btn copy" onclick="copyCoordinates()">📋 복사</button>
-            <button class="coord-btn close" onclick="closeCoordinatePopup()">❌ 닫기</button>
-        </div>
-    </div>
-
     <!-- 전체 화면 지도 -->
     <div id="map"></div>
 
     <!-- JavaScript 파일들 -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
