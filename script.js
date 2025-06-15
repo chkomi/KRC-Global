@@ -1,4 +1,4 @@
-// 전역 변수 (기존과 동일)
+// 전역 변수
 let map;
 let markers = L.featureGroup();
 let currentTileLayer;
@@ -6,7 +6,7 @@ let shanghaiData = null;
 let allMarkers = []; // 모든 마커를 저장할 배열
 let markerGroups = {
     attractions: L.featureGroup(),
-    restaurants: L.featureGroups(),
+    restaurants: L.featureGroup(),
     hotels: L.featureGroup(),
     airports: L.featureGroup()
 };
@@ -16,7 +16,7 @@ let clickedMarkers = []; // 클릭된 마커들을 저장할 배열
 let routePolyline = null;
 let routeInfoControl = null;
 
-// 문서 로드 완료 시 초기화 (기존과 동일)
+// 문서 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     initializeMap();
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     drawRouteAndInfo(); // 경로 그리기 함수 호출 추가
 });
 
-// 데이터 로드 함수 (기존과 동일)
+// 데이터 로드 함수
 async function loadData() {
     try {
         const response = await fetch('data/shanghai-data.json');
@@ -32,6 +32,7 @@ async function loadData() {
         console.log('데이터 로드 완료:', shanghaiData);
     } catch (error) {
         console.error('데이터 로드 실패:', error);
+        // 로드 실패 시 빈 데이터로 초기화
         shanghaiData = {
             shanghai_tourism: {
                 attractions: [],
@@ -43,10 +44,12 @@ async function loadData() {
     }
 }
 
-// 지도 초기화 함수 (기존과 동일)
+// 지도 초기화 함수
 function initializeMap() {
+    // 지도 초기화 (상하이 중심)
     map = L.map('map').setView([31.2304, 121.4737], 12);
 
+    // 다양한 타일 레이어 정의
     const tileLayers = {
         cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -63,18 +66,24 @@ function initializeMap() {
         })
     };
 
+    // 기본 심플 타일 레이어 추가 (실제로 cartodb 적용)
     currentTileLayer = tileLayers.cartodb;
     currentTileLayer.addTo(map);
 
-    console.log('기본 지도 타일:', 'cartodb');
+    console.log('기본 지도 타일:', 'cartodb'); // 디버깅용
 
+    // 타일 레이어 변경 이벤트 리스너
     document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.checked) {
+                // 기존 타일 레이어 제거
                 map.removeLayer(currentTileLayer);
+                
+                // 새 타일 레이어 추가
                 currentTileLayer = tileLayers[this.value];
                 currentTileLayer.addTo(map);
                 
+                // 활성 상태 업데이트
                 document.querySelectorAll('.tile-option').forEach(option => {
                     option.classList.remove('active');
                 });
@@ -83,31 +92,36 @@ function initializeMap() {
         });
     });
 
+    // 마커 그룹들을 지도에 추가
     Object.values(markerGroups).forEach(group => {
         group.addTo(map);
     });
 
+    // 마커 표시
     displayMarkers();
 
+    // 줌 레벨 변경 시 라벨 가시성 업데이트
     map.on('zoomend moveend', () => {
         updateLabelVisibility();
         // 줌/이동 시 경로 정보 위치도 업데이트 (필요하다면)
         if (routeInfoControl) {
-            map.removeControl(routeInfoControl);
-            routeInfoControl = null; // 컨트롤 삭제 후 재생성 (간단한 방법)
+            map.removeControl(routeInfoControl); // 기존 컨트롤 삭제
+            routeInfoControl = null; // 참조 초기화
             drawRouteInfo(); // 경로 정보 다시 그리기
         }
     });
 }
 
-// 이벤트 리스너 설정 (기존과 동일, 지도 클릭 이벤트 수정 포함)
+// 이벤트 리스너 설정
 function setupEventListeners() {
+    // ESC 키로 정보 박스 닫기
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeInfoBox();
         }
     });
 
+    // 지도 클릭 시 정보 박스 닫기
     map.on('click', (e) => {
         // 마커나 정보 박스 내부 클릭이 아닌 경우에만 정보 박스 닫기
         if (!e.originalEvent || !e.originalEvent.target || (!e.originalEvent.target.closest('.info-box') && !e.originalEvent.target.closest('.custom-marker-icon'))) {
@@ -115,6 +129,7 @@ function setupEventListeners() {
         }
     });
 
+    // 범례 체크박스 이벤트 리스너
     document.getElementById('attractions-toggle').addEventListener('change', function() {
         toggleMarkerGroup('attractions', this.checked);
     });
@@ -129,33 +144,40 @@ function setupEventListeners() {
     });
 }
 
-// 마커 그룹 토글 함수 (기존과 동일)
+// 마커 그룹 토글 함수
 function toggleMarkerGroup(type, show) {
     if (show) {
         markerGroups[type].addTo(map);
     } else {
         map.removeLayer(markerGroups[type]);
     }
+    // 라벨 가시성 업데이트
+    // 그룹 토글 후 약간의 지연을 주어 지도 렌더링이 완료된 후 라벨을 재배치
     setTimeout(() => {
         updateLabelVisibility();
     }, 100);
 }
 
-// 마커 표시 함수 (기존과 동일, tooltipAnchor 수정)
+// 마커 표시 함수
 function displayMarkers() {
     if (!shanghaiData || !shanghaiData.shanghai_tourism) {
         console.error('데이터가 없습니다.');
         return;
     }
 
+    // 기존 마커들 제거
     Object.values(markerGroups).forEach(group => {
         group.clearLayers();
     });
     allMarkers = [];
 
-    const locationsMap = new Map(); 
+    // 각 타입별로 마커 생성
+    const types = ['attractions', 'restaurants', 'hotels', 'airports'];
+    
+    // 위치별로 마커를 그룹화하여 같은 좌표에 여러 장소가 있는 경우를 처리
+    const locationsMap = new Map(); // Key: "lat,lng", Value: Array of places
 
-    ['attractions', 'restaurants', 'hotels', 'airports'].forEach(type => {
+    types.forEach(type => {
         const places = shanghaiData.shanghai_tourism[type];
         places.forEach(place => {
             const key = `${place.latitude},${place.longitude}`;
@@ -167,37 +189,40 @@ function displayMarkers() {
     });
 
     locationsMap.forEach((placesAtLocation, key) => {
+        // 같은 위치에 있는 첫 번째 장소를 대표로 마커를 생성
         const representativePlace = placesAtLocation[0]; 
         const marker = L.marker([representativePlace.latitude, representativePlace.longitude], {
-            icon: createCustomIcon(representativePlace.type)
-        }).addTo(markerGroups[representativePlace.type]);
+            icon: createCustomIcon(representativePlace.type) // 첫 번째 장소의 타입으로 아이콘 생성
+        }).addTo(markerGroups[representativePlace.type]); // 첫 번째 장소의 그룹에 추가
 
-        // 라벨 생성: permanent: true, opacity: 0 (JS가 제어)
+        // 라벨 생성 (permanent: true, opacity: 0 (JS에서 제어))
         const tooltip = L.tooltip({
             permanent: true,
             direction: 'bottom', // 기본 방향 (JS에서 변경 가능)
             offset: [0, 0], // CSS transform과 JS 로직으로 제어
             className: 'place-label',
-            opacity: 0, 
-            interactive: false
+            opacity: 0, // 초기에는 숨김 (JS에서 제어)
+            interactive: false // 툴팁이 클릭 이벤트에 반응하지 않도록
         });
 
-        marker.bindTooltip(tooltip); 
+        marker.bindTooltip(tooltip); // 툴팁을 마커에 바인딩
         
         marker.on('click', () => {
-            displayPlaceDetails(placesAtLocation); 
+            displayPlaceDetails(placesAtLocation); // 해당 위치의 모든 장소 정보를 전달
             map.flyTo([representativePlace.latitude, representativePlace.longitude], 15);
         });
 
+        // 마커 정보를 배열에 저장 (대표 장소와 해당 위치의 모든 장소 정보를 포함)
         allMarkers.push({
             marker: marker,
             tooltip: tooltip,
-            places: placesAtLocation, 
-            representativePlace: representativePlace, 
+            places: placesAtLocation, // 해당 위치의 모든 장소 정보
+            representativePlace: representativePlace, // 라벨 표시에 사용될 대표 장소
             group: representativePlace.type
         });
     });
-    
+
+    // 지도 뷰 조정
     const allMarkersLayer = L.featureGroup();
     Object.values(markerGroups).forEach(group => {
         group.getLayers().forEach(layer => {
@@ -215,7 +240,7 @@ function displayMarkers() {
     }, 500);
 }
 
-// 라벨 가시성 및 배치 업데이트 함수 (더욱 안정적인 버전)
+// 라벨 가시성 및 배치 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     const bounds = map.getBounds();
@@ -260,16 +285,16 @@ function updateLabelVisibility() {
 
         // 라벨의 대략적인 크기 추정 (CSS의 .place-label 스타일에 맞춰 조정 필요)
         // font-size: 0.8em (약 12.8px), padding: 4px 8px
-        // 높이: 12.8px (폰트) + 4px*2 (상하 패딩) = 약 20.8px -> 22px
-        // 너비: 글자수 * 7px + 8px*2 (좌우 패딩) = 글자수 * 7 + 16px
+        // 높이: 12.8px (폰트) + 4px*2 (상하 패딩) = 약 20.8px -> 22px (대략적인 값, CSS에 따라 조정)
+        // 너비: 글자수 * 7px + 8px*2 (좌우 패딩) = 글자수 * 7 + 16px (대략적인 값, CSS에 따라 조정)
         const estimatedLabelWidth = labelText.length * 7 + 16; 
         const estimatedLabelHeight = 22; 
 
         // 가능한 툴팁 방향 및 오프셋 정의 (선호하는 방향을 위에 배치)
-        // offset은 마커 앵커 기준 (iconAnchor) 라벨의 중앙까지의 거리 (픽셀)
+        // offset은 마커 앵커 기준 (iconAnchor: [9,9]) 라벨의 중앙까지의 거리 (픽셀)
         const labelPlacementOptions = [
             // [방향, X오프셋, Y오프셋]
-            { direction: 'bottom', xOffset: 0, yOffset: 18 + estimatedLabelHeight / 2 }, // 마커 바로 아래
+            { direction: 'bottom', xOffset: 0, yOffset: 9 + estimatedLabelHeight / 2 + 5 }, // 마커 바로 아래 (마커 중심 + 마커 반지름 + 라벨 높이 절반 + 여백)
             { direction: 'right', xOffset: 9 + estimatedLabelWidth / 2 + 5, yOffset: 0 },  // 마커 오른쪽
             { direction: 'left', xOffset: -(9 + estimatedLabelWidth / 2 + 5), yOffset: 0 }, // 마커 왼쪽
             { direction: 'top', xOffset: 0, yOffset: -(9 + estimatedLabelHeight / 2 + 5) },// 마커 위쪽
@@ -358,11 +383,12 @@ function updateLabelVisibility() {
             displayedLabelRects.push(bestFit.labelRect); // 배치된 라벨의 경계 상자 추가
         } else {
             markerData.tooltip.setOpacity(0); // 표시하지 않음
+            // console.log(`라벨 숨김: ${labelText}, bestScore: ${bestScore}`); // 디버깅용
         }
     });
 }
 
-// 커스텀 아이콘 생성 함수 (tooltipAnchor 수정)
+// 커스텀 아이콘 생성 함수
 function createCustomIcon(type) {
     let iconClass, bgClass;
 
@@ -399,7 +425,7 @@ function createCustomIcon(type) {
     });
 }
 
-// 장소 상세 정보 표시 함수 (기존과 동일)
+// 장소 상세 정보 표시 함수 (여러 장소 처리)
 function displayPlaceDetails(places) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
@@ -434,20 +460,20 @@ function displayPlaceDetails(places) {
             });
             detailsHtml += `</ul>`;
         }
-        detailsHtml += `</div>`; 
+        detailsHtml += `</div>`; // .place-info-item 닫기
     });
 
     placeContent.innerHTML = detailsHtml;
     infoBox.classList.add('show');
 }
 
-// 정보 박스 닫기 함수 (기존과 동일)
+// 정보 박스 닫기 함수
 function closeInfoBox() {
     const infoBox = document.getElementById('place-details');
     infoBox.classList.remove('show');
 }
 
-// 타입별 아이콘 반환 함수 (기존과 동일)
+// 타입별 아이콘 반환 함수
 function getTypeIcon(type) {
     switch (type) {
         case 'attractions': return '📷';
@@ -458,7 +484,7 @@ function getTypeIcon(type) {
     }
 }
 
-// 타입별 한국어 이름 반환 함수 (기존과 동일)
+// 타입별 한국어 이름 반환 함수
 function getTypeDisplayName(type) {
     switch (type) {
         case 'attractions': return '관광지';
@@ -468,7 +494,6 @@ function getTypeDisplayName(type) {
         default: return '기타';
     }
 }
-
 
 // --- 푸동 공항 - 동방명주 경로 관련 기능 ---
 
@@ -480,14 +505,13 @@ function drawRouteAndInfo() {
     const orientalPearlTower = [31.2393, 121.4996]; 
 
     // 두 지점 사이의 간단한 직선 경로 (API를 사용하지 않는 경우)
+    // 실제 경로 API를 사용하면 더 정확한 중간 지점들이 포함되어 곡선 형태가 됩니다.
     const routeCoordinates = [
         pudongAirport,
+        // 필요하다면 중간 지점을 추가하여 경로를 더 사실적으로 만들 수 있습니다. 예:
+        // [31.18, 121.7], // 임의의 중간 지점
         orientalPearlTower
     ];
-
-    // 실제 경로 API를 사용하면 더 정확한 중간 지점들이 포함됨
-    // 여기서는 간단한 시뮬레이션용 가상의 중간 지점을 추가하여 곡선처럼 보이게 할 수 있음
-    // 예: [pudongAirport, [31.2, 121.6], orientalPearlTower]
 
     // 경로 선 그리기
     if (routePolyline) {
@@ -496,7 +520,8 @@ function drawRouteAndInfo() {
     routePolyline = L.polyline(routeCoordinates, {
         color: 'red',
         weight: 3, // 굵지 않게
-        opacity: 0.7
+        opacity: 0.7,
+        dashArray: '5, 5' // 점선 효과 (선택 사항)
     }).addTo(map);
 
     // 경로 전체가 보이도록 지도 뷰 조정
@@ -513,28 +538,25 @@ function drawRouteInfo() {
     const estimatedDistance = "약 40km"; 
     const infoText = `${estimatedTime} / ${estimatedDistance}`;
 
-    // 경로의 중앙 지점 계산
-    if (!routePolyline) return;
-    const centerLatLng = routePolyline.getCenter();
-
     // 기존 컨트롤이 있다면 제거
     if (routeInfoControl) {
         map.removeControl(routeInfoControl);
     }
 
     // Leaflet 커스텀 컨트롤 생성
-    routeInfoControl = L.control({position: 'topleft'});
+    // topright 위치에 고정하고, CSS로 추가 조정
+    routeInfoControl = L.control({position: 'topright'});
 
     routeInfoControl.onAdd = function (map) {
         const div = L.DomUtil.create('div', 'route-info-control');
         div.innerHTML = `<div class="route-info-content">${infoText}</div>`;
+        L.DomEvent.disableClickPropagation(div); // 컨트롤 내 클릭 이벤트가 지도에 전파되지 않도록
         return div;
     };
 
     routeInfoControl.addTo(map);
 
-    // 컨트롤의 위치를 경로 중앙으로 이동 (약간의 조정 필요)
-    // Leaflet 컨트롤은 직접 픽셀 위치를 지정하기 어렵고, 미리 정의된 위치(topleft, bottomright 등)에 붙습니다.
-    // 경로 위에 직접 텍스트를 오버레이 하려면 Leaflet DivIcon + Marker, 또는 Custom Control의 CSS position을 정교하게 제어해야 합니다.
-    // 여기서는 간단히 topleft에 표시하고 CSS로 미세 조정하는 방식을 사용합니다.
+    // 참고: L.control은 지도 모서리에 고정되므로, 경로 위에 정확히 배치하려면
+    // L.marker에 DivIcon을 사용하거나, L.control의 CSS position을 매우 정교하게 조정해야 합니다.
+    // 여기서는 TopRight에 배치하고 스타일로 보기 좋게 만듭니다.
 }
