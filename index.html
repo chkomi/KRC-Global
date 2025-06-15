@@ -687,17 +687,13 @@
     <!-- 지도 타일 선택 컨트롤 -->
     <div class="map-tile-control">
         <h4>🗺️ 지도 종류</h4>
-        <label class="tile-option active" id="satellite-option">
-            <input type="radio" name="tile-layer" value="satellite" checked>
-            🛰️ 위성
-        </label>
-        <label class="tile-option" id="street-option">
-            <input type="radio" name="tile-layer" value="street">
+        <label class="tile-option active" id="street-option">
+            <input type="radio" name="tile-layer" value="street" checked>
             🛣️ 도로
         </label>
-        <label class="tile-option" id="terrain-option">
-            <input type="radio" name="tile-layer" value="terrain">
-            🏔️ 지형
+        <label class="tile-option" id="satellite-option">
+            <input type="radio" name="tile-layer" value="satellite">
+            🛰️ 위성
         </label>
         <label class="tile-option" id="google-style-option">
             <input type="radio" name="tile-layer" value="google-style">
@@ -706,10 +702,6 @@
         <label class="tile-option" id="cartodb-option">
             <input type="radio" name="tile-layer" value="cartodb">
             🎨 심플
-        </label>
-        <label class="tile-option" id="dark-option">
-            <input type="radio" name="tile-layer" value="dark">
-            🌙 다크
         </label>
     </div>
 
@@ -1008,16 +1000,12 @@
 
             // 다양한 타일 레이어 정의 (XYZ 타일 서비스들)
             const tileLayers = {
-                satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
-                    maxZoom: 19
-                }),
                 street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                     maxZoom: 19
                 }),
-                terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, USGS, NOAA',
+                satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
                     maxZoom: 19
                 }),
                 'google-style': L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
@@ -1029,16 +1017,11 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                     subdomains: 'abcd',
                     maxZoom: 19
-                }),
-                dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                    subdomains: 'abcd',
-                    maxZoom: 19
                 })
             };
 
-            // 기본 위성 타일 레이어 추가
-            currentTileLayer = tileLayers.satellite;
+            // 기본 도로 타일 레이어 추가
+            currentTileLayer = tileLayers.street;
             currentTileLayer.addTo(map);
 
             // 타일 레이어 변경 이벤트 리스너
