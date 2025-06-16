@@ -1,9 +1,8 @@
 // 전역 변수
 let map;
-let markers = L.featureGroup();
 let currentTileLayer;
 let shanghaiData = null;
-let allMarkers = []; // 모든 마커를 저장할 배열
+let allMarkers = [];
 let markerGroups = {
     attractions: L.featureGroup(),
     restaurants: L.featureGroup(),
@@ -26,7 +25,6 @@ async function loadData() {
         console.log('데이터 로드 완료:', shanghaiData);
     } catch (error) {
         console.error('데이터 로드 실패:', error);
-        // 로드 실패 시 빈 데이터로 초기화
         shanghaiData = {
             shanghai_tourism: {
                 attractions: [],
@@ -36,6 +34,24 @@ async function loadData() {
             }
         };
     }
+}
+
+// 한글 추출 함수
+function extractKorean(text) {
+    // 괄호 안의 한글 부분을 먼저 찾기
+    const koreanInParentheses = text.match(/\(([가-힣\s]+)/);
+    if (koreanInParentheses) {
+        return koreanInParentheses[1].trim();
+    }
+    
+    // 괄호가 없다면 전체 텍스트에서 한글 부분 추출
+    const koreanParts = text.match(/[가-힣\s]+/g);
+    if (koreanParts && koreanParts.length > 0) {
+        return koreanParts[0].trim();
+    }
+    
+    // 한글이 없다면 원본 텍스트 반환
+    return text;
 }
 
 // 지도 초기화 함수
@@ -60,24 +76,18 @@ function initializeMap() {
         })
     };
 
-    // 기본 심플 타일 레이어 추가 (실제로 cartodb 적용)
+    // 기본 심플 타일 레이어 추가
     currentTileLayer = tileLayers.cartodb;
     currentTileLayer.addTo(map);
-
-    console.log('기본 지도 타일:', 'cartodb'); // 디버깅용
 
     // 타일 레이어 변경 이벤트 리스너
     document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.checked) {
-                // 기존 타일 레이어 제거
                 map.removeLayer(currentTileLayer);
-                
-                // 새 타일 레이어 추가
                 currentTileLayer = tileLayers[this.value];
                 currentTileLayer.addTo(map);
                 
-                // 활성 상태 업데이트
                 document.querySelectorAll('.tile-option').forEach(option => {
                     option.classList.remove('active');
                 });
@@ -95,7 +105,7 @@ function initializeMap() {
     displayMarkers();
 
     // 줌 레벨 변경 시 라벨 가시성 업데이트
-    map.on('zoomend moveend', () => {
+    map.on('zoomend', () => {
         updateLabelVisibility();
     });
 }
@@ -111,7 +121,6 @@ function setupEventListeners() {
 
     // 지도 클릭 시 정보 박스 닫기
     map.on('click', (e) => {
-        // 마커가 아닌 지도 영역을 클릭했을 때만 정보 박스 닫기
         if (e.originalEvent && e.originalEvent.target === e.originalEvent.currentTarget) {
             closeInfoBox();
         }
@@ -139,13 +148,12 @@ function toggleMarkerGroup(type, show) {
     } else {
         map.removeLayer(markerGroups[type]);
     }
-    // 라벨 가시성 업데이트
     setTimeout(() => {
         updateLabelVisibility();
     }, 100);
 }
 
-// 마커 표시 함수 (같은 위치 장소 그룹화)
+// 마커 표시 함수
 function displayMarkers() {
     if (!shanghaiData || !shanghaiData.shanghai_tourism) {
         console.error('데이터가 없습니다.');
@@ -156,7 +164,6 @@ function displayMarkers() {
     Object.values(markerGroups).forEach(group => {
         group.clearLayers();
     });
-    
     allMarkers = [];
 
     // 모든 장소 데이터 합치기
@@ -210,12 +217,13 @@ function displayMarkers() {
             labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
+        // 마커 클릭 이벤트
         marker.on('click', () => {
             displayGroupDetails(group);
             map.flyTo([group.latitude, group.longitude], 15);
         });
 
-        // Leaflet 기본 툴팁 사용 (부드러운 이동을 위해)
+        // Leaflet 툴팁을 사용하여 라벨 생성 (부드러운 이동)
         marker.bindTooltip(labelText, {
             permanent: true,
             direction: 'top',
@@ -224,7 +232,7 @@ function displayMarkers() {
             opacity: 1
         });
         
-        // 마커 정보를 배열에 저장 (간소화)
+        // 마커 정보를 배열에 저장
         allMarkers.push({
             marker: marker,
             labelText: labelText,
@@ -252,36 +260,7 @@ function displayMarkers() {
     }, 500);
 }
 
-// 한글 추출 함수
-function extractKorean(text) {
-    // 괄호 안의 한글 부분을 먼저 찾기
-    const koreanInParentheses = text.match(/\(([가-힣\s]+)/);
-    if (koreanInParentheses) {
-        return koreanInParentheses[1].trim();
-    }
-    
-    // 괄호가 없다면 전체 텍스트에서 한글 부분 추출
-    const koreanParts = text.match(/[가-힣\s]+/g);
-    if (koreanParts && koreanParts.length > 0) {
-        return koreanParts[0].trim();
-    }
-    
-    // 한글이 없다면 원본 텍스트 반환
-    return text;
-}
-function createGoogleStyleLabel(text) {
-    const labelElement = document.createElement('div');
-    labelElement.className = 'google-style-label';
-    labelElement.textContent = text;
-    labelElement.style.display = 'none'; // 초기에는 숨김
-    
-    // 지도 컨테이너에 추가
-    map.getContainer().appendChild(labelElement);
-    
-    return labelElement;
-}
-
-// 라벨 가시성 업데이트 함수 (간소화)
+// 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     
@@ -304,17 +283,43 @@ function updateLabelVisibility() {
     });
 }
 
-// 라벨 위치 업데이트 함수
-function updateLabelPosition(markerData) {
-    if (!markerData.labelElement) return;
-    
-    const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-    // 구글 지도 스타일: 마커 오른쪽 상단에 약간 떨어져서 배치
-    markerData.labelElement.style.left = (markerPos.x + 15) + 'px';
-    markerData.labelElement.style.top = (markerPos.y - 25) + 'px';
+// 커스텀 아이콘 생성 함수 (구글 지도 스타일 원형 마커)
+function createCustomIcon(type) {
+    let iconClass, bgClass;
+
+    switch (type) {
+        case 'attractions':
+            iconClass = 'fas fa-camera';
+            bgClass = 'tourism-bg';
+            break;
+        case 'restaurants':
+            iconClass = 'fas fa-utensils';
+            bgClass = 'restaurant-bg';
+            break;
+        case 'airports':
+            iconClass = 'fas fa-plane';
+            bgClass = 'airport-bg';
+            break;
+        case 'hotels':
+            iconClass = 'fas fa-bed';
+            bgClass = 'accommodation-bg';
+            break;
+        default:
+            iconClass = 'fas fa-map-marker-alt';
+            bgClass = 'tourism-bg';
+    }
+
+    return L.divIcon({
+        className: 'google-circle-marker',
+        html: `<div class="circle-marker ${bgClass}">
+                 <i class="${iconClass}"></i>
+               </div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+    });
 }
 
-// 그룹 상세 정보 표시 함수 (지도 연결 버튼 추가)
+// 그룹 상세 정보 표시 함수
 function displayGroupDetails(group) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
@@ -322,7 +327,7 @@ function displayGroupDetails(group) {
     let detailsHtml = '';
     
     if (group.places.length === 1) {
-        // 단일 장소인 경우 기존 방식대로 표시
+        // 단일 장소인 경우
         const place = group.places[0];
         detailsHtml = `
             <div class="place-type-badge type-${place.type}">
@@ -351,7 +356,7 @@ function displayGroupDetails(group) {
             detailsHtml += `</ul>`;
         }
 
-        // 지도 연결 버튼 추가
+        // 지도 연결 버튼
         detailsHtml += `
             <div class="map-links">
                 <h4><i class="fas fa-external-link-alt"></i> 외부 지도에서 보기</h4>
@@ -366,7 +371,7 @@ function displayGroupDetails(group) {
             </div>
         `;
     } else {
-        // 여러 장소인 경우 그룹으로 표시
+        // 여러 장소인 경우
         detailsHtml = `
             <div class="group-header">
                 <h3>
@@ -416,7 +421,6 @@ function displayGroupDetails(group) {
             
             detailsHtml += `</div>`;
             
-            // 마지막 항목이 아니면 구분선 추가
             if (index < group.places.length - 1) {
                 detailsHtml += `<div class="place-separator"></div>`;
             }
@@ -450,95 +454,11 @@ function openGoogleMaps(address, lat, lng) {
     window.open(googleMapsUrl, '_blank');
 }
 
-// 가오더지도(Amap) 열기 함수 (주소 기반)
+// 가오더지도 열기 함수 (주소 기반)
 function openAmapSearch(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // 가오더지도 웹 검색 URL
     const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
     window.open(amapUrl, '_blank');
-}
-
-// 타입별 색상 반환 함수
-function getTypeColor(type) {
-    switch (type) {
-        case 'attractions': return '#e74c3c';
-        case 'restaurants': return '#27ae60';
-        case 'airports': return '#9b59b6';
-        case 'hotels': return '#3498db';
-        default: return '#95a5a6';
-    }
-}
-
-// 커스텀 아이콘 생성 함수 (구글 지도 스타일 - 원형 마커)
-function createCustomIcon(type) {
-    let iconClass, bgClass;
-
-    switch (type) {
-        case 'attractions':
-            iconClass = 'fas fa-camera';
-            bgClass = 'tourism-bg';
-            break;
-        case 'restaurants':
-            iconClass = 'fas fa-utensils';
-            bgClass = 'restaurant-bg';
-            break;
-        case 'airports':
-            iconClass = 'fas fa-plane';
-            bgClass = 'airport-bg';
-            break;
-        case 'hotels':
-            iconClass = 'fas fa-bed';
-            bgClass = 'accommodation-bg';
-            break;
-        default:
-            iconClass = 'fas fa-map-marker-alt';
-            bgClass = 'tourism-bg';
-    }
-
-    return L.divIcon({
-        className: 'google-circle-marker',
-        html: `<div class="circle-marker ${bgClass}">
-                 <i class="${iconClass}"></i>
-               </div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-    });
-}
-
-// 장소 상세 정보 표시 함수
-function displayPlaceDetails(place) {
-    const infoBox = document.getElementById('place-details');
-    const placeContent = document.getElementById('place-content');
-    
-    let detailsHtml = `
-        <div class="place-type-badge type-${place.type}">
-            ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
-        </div>
-        <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
-    `;
-    
-    if (place.description) {
-        detailsHtml += `<p><strong>🎯 설명:</strong> ${place.description}</p>`;
-    }
-    
-    if (place.address && place.address !== "N/A") {
-        detailsHtml += `<p><strong>📍 주소:</strong> ${place.address}</p>`;
-    }
-    
-    if (place.features && place.features.length > 0) {
-        detailsHtml += `<p><strong>✨ 특징:</strong> ${place.features.join(', ')}</p>`;
-    }
-    
-    if (place.menu && place.menu.length > 0) {
-        detailsHtml += `<p><strong>🍽️ 메뉴:</strong></p><ul>`;
-        place.menu.forEach(item => {
-            detailsHtml += `<li>${item}</li>`;
-        });
-        detailsHtml += `</ul>`;
-    }
-
-    placeContent.innerHTML = detailsHtml;
-    infoBox.classList.add('show');
 }
 
 // 정보 박스 닫기 함수
