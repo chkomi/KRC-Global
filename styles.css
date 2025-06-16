@@ -284,11 +284,12 @@ body {
     font-weight: 500 !important;
     color: #333 !important;
     white-space: nowrap !important;
-    opacity: 0; /* 초기에는 투명하게 설정 */
+    opacity: 0 !important; /* 초기에는 투명하게 설정 */
     transition: opacity 0.3s ease-out !important; /* 나타나고 사라지는 애니메이션만 유지 */
-    pointer-events: none; /* 지도 클릭 시 라벨을 통과하도록 설정 */
+    pointer-events: none !important; /* 지도 클릭 시 라벨을 통과하도록 설정 */
     font-size: 8px !important; /* 이전 10px 에서 더 줄여서 라벨 폰트 크기 50% 효과 (시각적) */
-    line-height: 1.2; /* 줄 높이 조정 */
+    line-height: 1.2 !important; /* 줄 높이 조정 */
+    visibility: hidden !important; /* 초기에는 보이지 않게 설정 */
 }
 
 /* Leaflet의 기본 툴팁 움직임 관련 transition을 강제적으로 제거 */
@@ -298,7 +299,6 @@ body {
     margin-top: 5px !important; /* 마커 아래로 5px 이동 */
 }
 
-
 /* Override Leaflet's default tooltip pointer */
 .leaflet-tooltip:before {
     display: none !important;
@@ -306,7 +306,8 @@ body {
 
 /* 라벨이 보일 때 적용되는 클래스 */
 .leaflet-tooltip.show-label {
-    opacity: 1; /* 나타날 때 불투명하게 */
+    opacity: 1 !important; /* 나타날 때 불투명하게 */
+    visibility: visible !important; /* 가시성 명시적으로 설정 */
 }
 
 /* Current Location Label */
@@ -318,8 +319,8 @@ body {
     opacity: 1 !important; /* 현재 위치 라벨은 항상 보이도록 설정 */
     font-size: 10px !important; /* 현재 위치 라벨은 다른 라벨보다 조금 크게 */
     padding: 5px 8px !important;
+    visibility: visible !important; /* 현재 위치 라벨은 항상 보이도록 */
 }
-
 
 /* Place Info Box */
 .info-box {
