@@ -1,618 +1,712 @@
-// Global Variables
-let map;
-let markers = L.featureGroup(); // This is not strictly used as a group, but rather markerGroups
-let currentTileLayer;
-let shanghaiData = null;
-let allMarkers = []; // Array to store all marker data including label visibility
-let currentLocationMarker = null; // Current location marker
-let markerGroups = {
-    attractions: L.featureGroup(),
-    restaurants: L.featureGroup(),
-    hotels: L.featureGroup(),
-    airports: L.featureGroup()
-};
+/* Basic Styles */
+body {
+    font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
 
-// Map marker background colors for dynamic label border
-const markerColors = {
-    attractions: '#ea4335',
-    restaurants: '#34a853',
-    airports: '#9b59b6',
-    hotels: '#1a73e8'
-};
+/* Fullscreen Map */
+#map {
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
 
+/* Top Title Box */
+.title-box {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
 
-// Initialize on document load
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadData();
-    initializeMap();
-    setupEventListeners();
-});
+.title-box h1 {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-// Function to load data
-async function loadData() {
-    try {
-        const response = await fetch('data/shanghai-data.json');
-        shanghaiData = await response.json();
-        console.log('Data loaded successfully:', shanghaiData);
-    } catch (error) {
-        console.error('Failed to load data:', error);
-        // Initialize with empty data on failure
-        shanghaiData = {
-            shanghai_tourism: {
-                attractions: [],
-                restaurants: [],
-                hotels: [],
-                airports: []
-            }
-        };
+/* Location Button */
+.location-control {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+}
+
+.locate-button {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #5f6368;
+}
+
+.locate-button:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+.locate-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.locate-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.locate-button i {
+    font-size: 16px;
+}
+
+/* Current Location Marker */
+.current-location-marker {
+    background: transparent;
+    border: none;
+}
+
+.location-pulse {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.location-dot {
+    width: 12px;
+    height: 12px;
+    background: #4285f4;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+    animation: locationPulse 2s infinite;
+}
+
+@keyframes locationPulse {
+    0% {
+        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(66, 133, 244, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
     }
 }
 
-// Function to extract Korean text
-function extractKorean(text) {
-    // Find Korean part within parentheses first
-    const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
-    if (koreanInParentheses && koreanInParentheses[1].trim() !== '') {
-        return koreanInParentheses[1].trim();
+/* Map Tile Selection Control */
+.map-tile-control {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.map-tile-control h4 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.tile-option {
+    display: block;
+    margin: 4px 0;
+    font-size: 0.8em;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.tile-option input[type="radio"] {
+    display: none;
+}
+
+.tile-option:hover {
+    background-color: #f8f9fa;
+}
+
+.tile-option.active {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Legend Box */
+.legend-box {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 12px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+}
+
+.legend-box h3 {
+    margin: 0 0 12px 0;
+    color: #2c3e50;
+    font-size: 1em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-box li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85em;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.legend-item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.legend-item input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.marker-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+}
+
+.tourism-marker { background-color: #ea4335; }
+.restaurant-marker { background-color: #34a853; }
+.airport-marker { background-color: #9b59b6; }
+.accommodation-marker { background-color: #1a73e8; }
+
+/* Custom Marker Icons (Circular, Google-style) */
+.google-circle-marker {
+    background: transparent;
+    border: none;
+}
+
+.circle-marker {
+    width: 18px; /* 24px * 0.75 = 18px */
+    height: 18px; /* 24px * 0.75 = 18px */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.circle-marker:hover {
+    transform: scale(1.2);
+}
+
+.circle-marker i {
+    color: white;
+    font-size: 9px; /* 12px * 0.75 = 9px */
+    font-weight: bold;
+}
+
+/* Marker Colors - Google Style */
+.tourism-bg { background-color: #ea4335; }  /* Google Red */
+.restaurant-bg { background-color: #34a853; }  /* Google Green */
+.airport-bg { background-color: #9b59b6; }  /* Purple */
+.accommodation-bg { background-color: #1a73e8; }  /* Google Blue */
+
+/* New Label Design (Applied to Leaflet Tooltip) */
+.leaflet-tooltip {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 8px !important;
+    padding: 4px 6px !important; /* Original 8px 12px -> 4px 6px (roughly 50%) */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+    font-family: 'Noto Sans KR', sans-serif !important;
+    font-weight: 500 !important;
+    color: #333 !important;
+    white-space: nowrap !important;
+    opacity: 0; /* 초기에는 숨김 */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out !important; /* 부드러운 애니메이션 */
+    pointer-events: none; /* Allows clicks to pass through to map below */
+    font-size: 10px !important; /* Original 13px -> 10px (roughly 75%, visual adjustment for 50%) */
+    line-height: 1.2; /* 줄 높이 조정 */
+}
+
+/* Specific tooltip direction adjustments */
+.leaflet-tooltip-bottom {
+    margin-top: 5px !important; /* Adjust to be just below the marker */
+}
+
+/* Override Leaflet's default tooltip pointer */
+.leaflet-tooltip:before {
+    display: none !important;
+}
+
+/* 라벨이 보일 때 */
+.leaflet-tooltip.show-label {
+    opacity: 1;
+}
+
+/* Current Location Label */
+.current-location-label {
+    background: #4285f4 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border-left: 4px solid #1a73e8 !important; /* Blue accent */
+    opacity: 1 !important; /* 항상 보이도록 설정 */
+    font-size: 12px !important; /* 현재 위치 라벨은 좀 더 크게 */
+    padding: 6px 10px !important;
+}
+
+
+/* Place Info Box */
+.info-box {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    max-width: 380px; /* Increased max-width */
+    max-height: 400px; /* Increased max-height */
+    overflow-y: auto;
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-out;
+}
+
+.info-box.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.info-box h3 {
+    margin: 0 0 12px 0;
+    color: #2c3e50;
+    font-size: 1.1em;
+    border-left: 4px solid #3498db;
+    padding-left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-box p {
+    margin: 6px 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.info-box strong {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.info-box ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.info-box li {
+    margin: 4px 0;
+    font-size: 0.85em;
+    color: #555;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+}
+
+/* Place Type Badge */
+.place-type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.type-attractions { background-color: #ea4335; }
+.type-restaurants { background-color: #34a853; }
+.type-airports { background-color: #9b59b6; }
+.type-hotels { background-color: #1a73e8; }
+
+/* Grouped Place Styles */
+.place-group-item {
+    margin-bottom: 15px !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-left: 4px solid #3498db !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.place-group-item:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.place-group-item h4 {
+    margin: 5px 0 8px 0 !important;
+    color: #2c3e50 !important;
+    font-size: 1em !important;
+    font-weight: 600 !important;
+}
+
+.place-group-item p {
+    margin: 4px 0 !important;
+    font-size: 0.85em !important;
+    line-height: 1.4 !important;
+    color: #555 !important;
+}
+
+.place-group-item .place-type-badge {
+    margin-bottom: 6px !important;
+    font-size: 0.7em !important;
+}
+
+/* Type-specific border colors for grouped items */
+.place-group-item.type-attractions { border-left-color: #ea4335 !important; }
+.place-group-item.type-restaurants { border-left-color: #34a853 !important; }
+.place-group-item.type-hotels { border-left-color: #1a73e8 !important; }
+.place-group-item.type-airports { border-left-color: #9b59b6 !important; }
+
+/* Separator */
+.place-separator {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
+    margin: 10px 0;
+}
+
+/* Group Header */
+.group-header {
+    background: rgba(52, 152, 219, 0.1);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border-left: 3px solid #3498db;
+}
+
+.group-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1em;
+    border: none;
+    padding: 0;
+}
+
+/* Place Count Badge */
+.place-count-badge {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+/* Map Link Buttons */
+.map-links, .group-map-links {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.map-links h4, .group-map-links h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.map-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.map-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: white;
+}
+
+.map-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.google-btn {
+    background: linear-gradient(135deg, #4285f4, #1a73e8);
+}
+
+.google-btn:hover {
+    background: linear-gradient(135deg, #3367d6, #1557b0);
+}
+
+.amap-btn {
+    background: linear-gradient(135deg, #00a6fb, #0066cc);
+}
+
+.amap-btn:hover {
+    background: linear-gradient(135deg, #0088cc, #004499);
+}
+
+/* Small map buttons */
+.place-map-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.map-btn-small {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75em;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: white;
+}
+
+.map-btn-small:hover {
+    transform: scale(1.1);
+}
+
+.map-btn-small.google-btn {
+    background: #4285f4;
+}
+
+.map-btn-small.google-btn:hover {
+    background: #3367d6;
+}
+
+.map-btn-small.amap-btn {
+    background: #00a6fb;
+}
+
+.map-btn-small.amap-btn:hover {
+    background: #0088cc;
+}
+
+/* Scrollbar Style */
+.info-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.info-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.info-box::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 3px;
+}
+
+.info-box::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title-box {
+        top: 10px;
+        left: 10px;
+        right: 60px; /* Space for location button */
+        transform: none;
+        padding: 10px 16px;
+        text-align: center; /* Center text on mobile */
     }
 
-    // If no parentheses or empty, extract Korean part from the whole text
-    const koreanParts = text.match(/[가-힣\s]+/g);
-    if (koreanParts && koreanParts.length > 0) {
-        // Filter out empty strings and return the first non-empty Korean part
-        const filteredParts = koreanParts.filter(part => part.trim() !== '');
-        if (filteredParts.length > 0) {
-            return filteredParts[0].trim();
-        }
+    .title-box h1 {
+        font-size: 1.2em;
+        justify-content: center; /* Center icon and text */
     }
 
-    // Return original text if no Korean found
-    return text;
-}
-
-// Map Initialization Function
-function initializeMap() {
-    // Initialize map (centered on Shanghai)
-    map = L.map('map').setView([31.2304, 121.4737], 12);
-
-    // Define different tile layers
-    const tileLayers = {
-        cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }),
-        street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19
-        }),
-        satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '© <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
-            maxZoom: 19
-        })
-    };
-
-    // Add default simple tile layer
-    currentTileLayer = tileLayers.cartodb;
-    currentTileLayer.addTo(map);
-
-    // Tile layer change event listener
-    document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked) {
-                map.removeLayer(currentTileLayer);
-                currentTileLayer = tileLayers[this.value];
-                currentTileLayer.addTo(map);
-
-                document.querySelectorAll('.tile-option').forEach(option => {
-                    option.classList.remove('active');
-                });
-                this.parentElement.classList.add('active');
-            }
-        });
-    });
-
-    // Add marker groups to the map
-    Object.values(markerGroups).forEach(group => {
-        group.addTo(map);
-    });
-
-    // Display markers
-    displayMarkers();
-
-    // Update label visibility on zoom end
-    map.on('zoomend', () => {
-        updateLabelVisibility();
-    });
-}
-
-// Event Listener Setup
-function setupEventListeners() {
-    // Close info box with ESC key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeInfoBox();
-        }
-    });
-
-    // Close info box on map click (if not on a marker)
-    map.on('click', (e) => {
-        // Check if the click target is directly the map container, not a marker or popup
-        if (e.originalEvent && e.originalEvent.target === map.getContainer()) {
-            closeInfoBox();
-        }
-    });
-
-    // Legend checkbox event listeners
-    document.getElementById('attractions-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('attractions', this.checked);
-    });
-    document.getElementById('restaurants-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('restaurants', this.checked);
-    });
-    document.getElementById('hotels-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('hotels', this.checked);
-    });
-    document.getElementById('airports-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('airports', this.checked);
-    });
-
-    // Locate button event listener
-    document.getElementById('locate-btn').addEventListener('click', function() {
-        findMyLocation();
-    });
-}
-
-// Toggle Marker Group Function
-function toggleMarkerGroup(type, show) {
-    if (show) {
-        markerGroups[type].addTo(map);
-    } else {
-        map.removeLayer(markerGroups[type]);
+    .location-control {
+        top: 10px;
+        right: 10px;
     }
 
-    // Ensure labels are updated after group visibility changes
-    setTimeout(() => {
-        updateLabelVisibility();
-    }, 100);
-}
-
-// Display Markers Function
-function displayMarkers() {
-    if (!shanghaiData || !shanghaiData.shanghai_tourism) {
-        console.error('No data available to display markers.');
-        return;
+    .locate-button {
+        width: 44px;
+        height: 44px;
     }
 
-    // Clear existing markers
-    Object.values(markerGroups).forEach(group => {
-        group.clearLayers();
-    });
-    allMarkers = [];
-
-    // Combine all place data
-    const allPlaces = [];
-    const types = ['attractions', 'restaurants', 'hotels', 'airports'];
-
-    types.forEach(type => {
-        const places = shanghaiData.shanghai_tourism[type];
-        places.forEach(place => {
-            allPlaces.push({...place, type: type});
-        });
-    });
-
-    // Group places by location
-    const locationGroups = {};
-
-    allPlaces.forEach(place => {
-        // Use fixed precision for grouping to avoid floating point issues
-        const lat = parseFloat(place.latitude).toFixed(4);
-        const lng = parseFloat(place.longitude).toFixed(4);
-        const locationKey = `${lat},${lng}`;
-
-        if (!locationGroups[locationKey]) {
-            locationGroups[locationKey] = {
-                latitude: place.latitude,
-                longitude: place.longitude,
-                places: []
-            };
-        }
-        locationGroups[locationKey].places.push(place);
-    });
-
-    // Create a marker for each location group
-    Object.values(locationGroups).forEach(group => {
-        // Determine the main type for the icon based on a priority (e.g., airports > attractions > hotels > restaurants)
-        const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-        const mainType = group.places.reduce((prev, curr) =>
-            (priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr)
-        ).type;
-
-        // Create marker
-        const marker = L.marker([group.latitude, group.longitude], {
-            icon: createCustomIcon(mainType)
-        }).addTo(markerGroups[mainType]);
-
-        // Generate label text (Korean only)
-        let labelText;
-        if (group.places.length === 1) {
-            labelText = extractKorean(group.places[0].name);
-        } else {
-            const firstPlaceName = extractKorean(group.places[0].name);
-            labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
-        }
-
-        // Click event to display group details
-        marker.on('click', () => {
-            displayGroupDetails(group);
-            map.flyTo([group.latitude, group.longitude], 15); // Zoom in on click
-        });
-
-        // Bind tooltip (label) to the bottom of the marker
-        const tooltip = marker.bindTooltip(labelText, {
-            permanent: true,
-            direction: 'bottom', // Place label to the bottom of the marker
-            offset: [0, 15], // Adjust offset to move it slightly down from the marker center
-            className: 'leaflet-tooltip', // Use the class for the new label design
-            opacity: 1
-        }).getTooltip();
-
-        // Dynamically set the border-left color of the tooltip
-        tooltip.getElement().style.borderLeft = `4px solid ${markerColors[mainType] || '#3498db'}`;
-
-
-        // Store marker information for visibility control
-        allMarkers.push({
-            marker: marker,
-            labelText: labelText,
-            group: group,
-            labelVisible: false,
-            groupType: mainType
-        });
-    });
-
-    // Adjust map view to fit all markers
-    const allMarkersLayer = L.featureGroup();
-    Object.values(markerGroups).forEach(group => {
-        group.getLayers().forEach(layer => {
-            allMarkersLayer.addLayer(layer);
-        });
-    });
-
-    if (allMarkersLayer.getLayers().length > 0) {
-        map.fitBounds(allMarkersLayer.getBounds().pad(0.1));
+    .locate-button i {
+        font-size: 14px;
     }
 
-    // Initial label visibility setup
-    // A small delay ensures all elements are rendered before calculating visibility
-    setTimeout(() => {
-        updateLabelVisibility();
-    }, 500);
-}
-
-// Find My Location Function
-function findMyLocation() {
-    const locateBtn = document.getElementById('locate-btn');
-    const icon = locateBtn.querySelector('i');
-
-    // Change to loading state
-    icon.className = 'fas fa-spinner fa-spin';
-    locateBtn.disabled = true;
-
-    if (!navigator.geolocation) {
-        alert('Location services are not supported by this browser.');
-        resetLocateButton();
-        return;
+    .legend-box {
+        bottom: 10px;
+        right: 10px;
+        padding: 12px;
+        max-width: 160px;
     }
 
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-
-            // Move map to current location
-            map.setView([lat, lng], 15);
-
-            // Remove existing current location marker
-            if (currentLocationMarker) {
-                map.removeLayer(currentLocationMarker);
-            }
-
-            // Create current location marker
-            currentLocationMarker = L.marker([lat, lng], {
-                icon: createCurrentLocationIcon()
-            }).addTo(map);
-
-            const currentLocationTooltip = currentLocationMarker.bindTooltip('현재 위치', {
-                permanent: false,
-                direction: 'top',
-                offset: [0, -25],
-                className: 'leaflet-tooltip current-location-label' // Use the new label class
-            }).openTooltip(); // Show tooltip immediately for current location
-
-            // Set border color for current location label
-            currentLocationTooltip.getElement().style.borderLeft = `4px solid #1a73e8`; // Example: blue border
-
-            resetLocateButton();
-        },
-        function(error) {
-            let errorMessage = 'Could not find your location.';
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = 'Location access denied.';
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = 'Location information is unavailable.';
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = 'Location request timed out.';
-                    break;
-            }
-            alert(errorMessage);
-            resetLocateButton();
-        },
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 60000
-        }
-    );
-}
-
-// Reset Locate Button State
-function resetLocateButton() {
-    const locateBtn = document.getElementById('locate-btn');
-    const icon = locateBtn.querySelector('i');
-
-    icon.className = 'fas fa-location-crosshairs';
-    locateBtn.disabled = false;
-}
-
-// Create Current Location Icon
-function createCurrentLocationIcon() {
-    return L.divIcon({
-        className: 'current-location-marker',
-        html: `<div class="location-pulse">
-                 <div class="location-dot"></div>
-               </div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-    });
-}
-
-// Update Label Visibility based on zoom and group visibility
-function updateLabelVisibility() {
-    const currentZoom = map.getZoom();
-
-    // Determine the minimum zoom level at which labels should start appearing.
-    // You'll need to adjust this value (e.g., 13, 14, or 15) based on your data density
-    // and when you observe marker overlap.
-    const minZoomForLabels = 14; // Labels visible at zoom 14 and higher
-
-    allMarkers.forEach(markerData => {
-        const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
-
-        // Show labels only when zoom is at or above minZoomForLabels AND their group is visible
-        if (currentZoom >= minZoomForLabels && isGroupVisible) {
-            if (!markerData.labelVisible) {
-                markerData.marker.openTooltip();
-                markerData.labelVisible = true;
-            }
-        } else {
-            // Hide labels
-            if (markerData.labelVisible) {
-                markerData.marker.closeTooltip();
-                markerData.labelVisible = false;
-            }
-        }
-    });
-}
-
-// Create Custom Icon (Circular Marker)
-function createCustomIcon(type) {
-    let iconClass, bgClass;
-
-    switch (type) {
-        case 'attractions':
-            iconClass = 'fas fa-camera';
-            bgClass = 'tourism-bg';
-            break;
-        case 'restaurants':
-            iconClass = 'fas fa-utensils';
-            bgClass = 'restaurant-bg';
-            break;
-        case 'airports':
-            iconClass = 'fas fa-plane';
-            bgClass = 'airport-bg';
-            break;
-        case 'hotels':
-            iconClass = 'fas fa-bed';
-            bgClass = 'accommodation-bg';
-            break;
-        default:
-            iconClass = 'fas fa-map-marker-alt';
-            bgClass = 'tourism-bg';
+    .legend-box h3 {
+        font-size: 0.9em;
     }
 
-    return L.divIcon({
-        className: 'google-circle-marker',
-        html: `<div class="circle-marker ${bgClass}">
-                 <i class="${iconClass}"></i>
-               </div>`,
-        iconSize: [24, 24], // Adjusted icon size
-        iconAnchor: [12, 12] // Centered anchor
-    });
-}
-
-// Display Group Details Function
-function displayGroupDetails(group) {
-    const infoBox = document.getElementById('place-details');
-    const placeContent = document.getElementById('place-content');
-
-    let detailsHtml = '';
-
-    if (group.places.length === 1) {
-        // Single place
-        const place = group.places[0];
-        detailsHtml = `
-            <div class="place-type-badge type-${place.type}">
-                ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
-            </div>
-            <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
-        `;
-
-        if (place.description) {
-            detailsHtml += `<p><strong>🎯 설명:</strong> ${place.description}</p>`;
-        }
-
-        if (place.address && place.address !== "N/A") {
-            detailsHtml += `<p><strong>📍 주소:</strong> ${place.address}</p>`;
-        }
-
-        if (place.features && place.features.length > 0) {
-            detailsHtml += `<p><strong>✨ 특징:</strong> ${place.features.join(', ')}</p>`;
-        }
-
-        if (place.menu && place.menu.length > 0) {
-            detailsHtml += `<p><strong>🍽️ 메뉴:</strong></p><ul>`;
-            place.menu.forEach(item => {
-                detailsHtml += `<li>${item}</li>`;
-            });
-            detailsHtml += `</ul>`;
-        }
-
-        // Map links buttons
-        detailsHtml += `
-            <div class="map-links">
-                <h4><i class="fas fa-external-link-alt"></i> 외부 지도에서 보기</h4>
-                <div class="map-buttons">
-                    <button class="map-btn google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})">
-                        <i class="fab fa-google"></i> 구글지도
-                    </button>
-                    <button class="map-btn amap-btn" onclick="openAmapSearch('${place.address}', ${place.latitude}, ${place.longitude})">
-                        <i class="fas fa-map"></i> 가오더지도
-                    </button>
-                </div>
-            </div>
-        `;
-    } else {
-        // Group of places
-        detailsHtml = `
-            <div class="group-header">
-                <h3>
-                    <i class="fas fa-map-marker-alt"></i>
-                    이 위치의 장소들
-                    <span class="place-count-badge">${group.places.length}곳</span>
-                </h3>
-            </div>
-        `;
-
-        group.places.forEach((place, index) => {
-            detailsHtml += `
-                <div class="place-group-item type-${place.type}">
-                    <div class="place-type-badge type-${place.type}">
-                        ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
-                    </div>
-                    <h4>${place.name}</h4>
-            `;
-
-            if (place.description) {
-                detailsHtml += `<p><strong>설명:</strong> ${place.description}</p>`;
-            }
-
-            if (place.address && place.address !== "N/A") {
-                detailsHtml += `<p><strong>주소:</strong> ${place.address}</p>`;
-            }
-
-            if (place.features && place.features.length > 0) {
-                detailsHtml += `<p><strong>특징:</strong> ${place.features.join(', ')}</p>`;
-            }
-
-            if (place.menu && place.menu.length > 0) {
-                detailsHtml += `<p><strong>메뉴:</strong> ${place.menu.join(', ')}</p>`;
-            }
-
-            // Individual map links buttons
-            detailsHtml += `
-                <div class="place-map-buttons">
-                    <button class="map-btn-small google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})" title="구글지도에서 ${place.name} 검색">
-                        <i class="fab fa-google"></i>
-                    </button>
-                    <button class="map-btn-small amap-btn" onclick="openAmapSearch('${place.address}', ${place.latitude}, ${place.longitude})" title="가오더지도에서 ${place.name} 검색">
-                        <i class="fas fa-map"></i>
-                    </button>
-                </div>
-            `;
-
-            detailsHtml += `</div>`;
-
-            if (index < group.places.length - 1) {
-                detailsHtml += `<div class="place-separator"></div>`;
-            }
-        });
-
-        // Group total map links buttons
-        const firstPlace = group.places[0];
-        detailsHtml += `
-            <div class="group-map-links">
-                <h4><i class="fas fa-external-link-alt"></i> 이 위치 전체보기</h4>
-                <div class="map-buttons">
-                    <button class="map-btn google-btn" onclick="openGoogleMaps('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
-                        <i class="fab fa-google"></i> 구글지도
-                    </button>
-                    <button class="map-btn amap-btn" onclick="openAmapSearch('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
-                        <i class="fas fa-map"></i> 가오더지도
-                    </button>
-                </div>
-            </div>
-        `;
+    .legend-box li {
+        font-size: 0.8em;
     }
 
-    placeContent.innerHTML = detailsHtml;
-    infoBox.classList.add('show');
-}
-
-// Open Google Maps Function (address-based)
-function openGoogleMaps(address, lat, lng) {
-    const encodedAddress = encodeURIComponent(address);
-    // Standard Google Maps URL for searching by query (address) or lat/lng for a point.
-    // Using a combined approach for better accuracy.
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress},${lat},${lng}`;
-    window.open(googleMapsUrl, '_blank');
-}
-
-// Open Amap Function (address-based)
-function openAmapSearch(address, lat, lng) {
-    const encodedAddress = encodeURIComponent(address);
-    // Amap URL for searching, including city and a precise lat/lng if available.
-    const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
-    window.open(amapUrl, '_blank');
-}
-
-// Close Info Box Function
-function closeInfoBox() {
-    const infoBox = document.getElementById('place-details');
-    infoBox.classList.remove('show');
-}
-
-// Return Type Icon Function
-function getTypeIcon(type) {
-    switch (type) {
-        case 'attractions': return '📷';
-        case 'restaurants': return '🍴';
-        case 'airports': return '✈️';
-        case 'hotels': return '🏨';
-        default: return '📍';
+    .info-box {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        padding: 15px;
     }
-}
 
-// Return Type Display Name Function (Korean)
-function getTypeDisplayName(type) {
-    switch (type) {
-        case 'attractions': return '관광지';
-        case 'restaurants': return '음식점';
-        case 'airports': return '공항';
-        case 'hotels': return '호텔';
-        default: return '기타';
+    .map-tile-control {
+        bottom: 10px;
+        left: 10px;
+        padding: 8px;
+        max-width: 120px;
+    }
+
+    .map-tile-control h4 {
+        font-size: 0.8em;
+        margin-bottom: 6px;
+    }
+
+    .tile-option {
+        font-size: 0.75em;
+        margin: 2px 0;
+        padding: 2px 4px;
+    }
+
+    /* Mobile Label Size Adjustment */
+    .leaflet-tooltip {
+        font-size: 9px !important; /* Even smaller for mobile labels */
+        padding: 3px 5px !important; /* Adjusted padding */
+    }
+
+    /* Mobile Marker Size Adjustment */
+    .circle-marker {
+        width: 16px !important; /* Slightly smaller for mobile */
+        height: 16px !important; /* Slightly smaller for mobile */
+    }
+
+    .circle-marker i {
+        font-size: 8px !important; /* Adjusted icon size for mobile */
+    }
+
+    .map-buttons {
+        flex-direction: column;
+    }
+
+    .map-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .place-map-buttons {
+        justify-content: center;
+        margin-top: 10px;
     }
 }
