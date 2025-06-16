@@ -200,7 +200,7 @@ function displayMarkers() {
             icon: createCustomIcon(mainType)
         }).addTo(markerGroups[mainType]);
 
-        // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
+        // 라벨 텍스트 생성
         let labelText;
         if (group.places.length === 1) {
             // display_name이 있으면 사용, 없으면 name 사용
@@ -210,15 +210,6 @@ function displayMarkers() {
             labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
-        // 라벨 생성
-        const tooltip = L.tooltip({
-            permanent: true,
-            direction: 'bottom',
-            offset: [0, 15],
-            className: 'place-label',
-            opacity: 0.9
-        }).setContent(labelText);
-
         marker.on('click', () => {
             displayGroupDetails(group);
             map.flyTo([group.latitude, group.longitude], 15);
@@ -227,7 +218,7 @@ function displayMarkers() {
         // 마커 정보를 배열에 저장
         allMarkers.push({
             marker: marker,
-            tooltip: tooltip,
+            labelText: labelText,
             group: group,
             visible: false,
             groupType: mainType
@@ -250,6 +241,49 @@ function displayMarkers() {
     setTimeout(() => {
         updateLabelVisibility();
     }, 500);
+}
+
+// 라벨 가시성 업데이트 함수 (단순화된 버전)
+function updateLabelVisibility() {
+    const currentZoom = map.getZoom();
+    const bounds = map.getBounds();
+    
+    // 줌 레벨이 너무 낮으면 라벨 숨기기
+    if (currentZoom < 11) {
+        allMarkers.forEach(markerData => {
+            if (markerData.visible) {
+                markerData.marker.unbindTooltip();
+                markerData.visible = false;
+            }
+        });
+        return;
+    }
+
+    // 현재 보이는 마커 그룹의 마커들 처리
+    allMarkers.forEach(markerData => {
+        const latLng = markerData.marker.getLatLng();
+        const isInBounds = bounds.contains(latLng);
+        const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
+        
+        if (isInBounds && isGroupVisible) {
+            if (!markerData.visible) {
+                // 마커 바로 아래에 라벨 표시
+                markerData.marker.bindTooltip(markerData.labelText, {
+                    permanent: true,
+                    direction: 'bottom',
+                    offset: [0, 15],
+                    className: 'custom-place-label',
+                    opacity: 1
+                });
+                markerData.visible = true;
+            }
+        } else {
+            if (markerData.visible) {
+                markerData.marker.unbindTooltip();
+                markerData.visible = false;
+            }
+        }
+    });
 }
 
 // 그룹 상세 정보 표시 함수 (지도 연결 버튼 추가)
@@ -404,103 +438,6 @@ function getTypeColor(type) {
         case 'airports': return '#9b59b6';
         case 'hotels': return '#3498db';
         default: return '#95a5a6';
-    }
-}
-
-// 라벨 가시성 업데이트 함수 (개선된 버전)
-function updateLabelVisibility() {
-    const currentZoom = map.getZoom();
-    const bounds = map.getBounds();
-    
-    // 모든 라벨 숨기기
-    allMarkers.forEach(markerData => {
-        if (markerData.visible) {
-            markerData.tooltip.removeFrom(map);
-            markerData.visible = false;
-        }
-    });
-
-    // 현재 보이는 마커 그룹의 마커들만 필터링
-    const visibleMarkers = allMarkers.filter(markerData => {
-        const latLng = markerData.marker.getLatLng();
-        const isInBounds = bounds.contains(latLng);
-        const isGroupVisible = map.hasLayer(markerGroups[markerData.group]);
-        return isInBounds && isGroupVisible;
-    });
-
-    if (visibleMarkers.length === 0) return;
-
-    // 각 마커에 대해 최적의 라벨 위치 찾기
-    visibleMarkers.forEach(markerData => {
-        const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-        const directions = ['right', 'left', 'top', 'bottom', 'topright', 'topleft', 'bottomright', 'bottomleft'];
-        
-        let bestDirection = 'right'; // 기본값
-        let bestScore = -1;
-
-        // 각 방향에 대해 점수 계산
-        for (const direction of directions) {
-            const offset = getTooltipOffset(direction);
-            const labelPos = {
-                x: markerPos.x + offset[0],
-                y: markerPos.y + offset[1]
-            };
-
-            let score = 100; // 기본 점수
-
-            // 화면 경계 체크 (경계를 벗어나면 점수 감소)
-            const mapSize = map.getSize();
-            const labelWidth = markerData.place.name.length * 7; // 라벨 너비 추정
-            const labelHeight = 20;
-            
-            if (labelPos.x - labelWidth/2 < 10) score -= 50;
-            if (labelPos.x + labelWidth/2 > mapSize.x - 10) score -= 50;
-            if (labelPos.y - labelHeight/2 < 10) score -= 50;
-            if (labelPos.y + labelHeight/2 > mapSize.y - 10) score -= 50;
-
-            // 마커와의 거리 체크 (너무 가까우면 점수 감소)
-            const distanceToMarker = Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
-            if (distanceToMarker < 20) score -= 30;
-
-            // 우선순위 방향 (오른쪽과 왼쪽을 선호)
-            if (direction === 'right') score += 10;
-            if (direction === 'left') score += 8;
-            if (direction === 'top' || direction === 'bottom') score += 5;
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestDirection = direction;
-            }
-        }
-
-        // 최소 점수 이상이면 라벨 표시
-        if (bestScore >= 0) {
-            const offset = getTooltipOffset(bestDirection);
-            
-            // 툴팁 설정 및 표시
-            markerData.tooltip.options.direction = bestDirection;
-            markerData.tooltip.options.offset = offset;
-            markerData.tooltip.options.opacity = 0.9;
-            
-            markerData.marker.bindTooltip(markerData.tooltip);
-            markerData.visible = true;
-        }
-    });
-}
-
-// 툴팁 오프셋 계산 함수 (마커와 적절한 거리 유지)
-function getTooltipOffset(direction) {
-    const baseOffset = 22; // 마커와의 기본 거리
-    switch (direction) {
-        case 'top': return [0, -baseOffset];
-        case 'bottom': return [0, baseOffset];
-        case 'right': return [baseOffset, 0];
-        case 'left': return [-baseOffset, 0];
-        case 'topright': return [baseOffset * 0.8, -baseOffset * 0.8];
-        case 'topleft': return [-baseOffset * 0.8, -baseOffset * 0.8];
-        case 'bottomright': return [baseOffset * 0.8, baseOffset * 0.8];
-        case 'bottomleft': return [-baseOffset * 0.8, baseOffset * 0.8];
-        default: return [baseOffset, 0];
     }
 }
 
