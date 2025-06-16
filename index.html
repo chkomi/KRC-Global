@@ -6,10 +6,10 @@
     <title>상하이 11월 여행 계획</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 지도 타일 선택 컨트롤 -->
     <div class="map-tile-control">
         <h4>🗺️ 지도 종류</h4>
         <label class="tile-option active" id="cartodb-option">
@@ -26,19 +26,16 @@
         </label>
     </div>
 
-    <!-- 상단 타이틀 박스 -->
     <div class="title-box">
         <h1><i class="fas fa-map-marked-alt"></i> 상하이 여행 지도</h1>
     </div>
 
-    <!-- 위치 찾기 버튼 -->
     <div class="location-control">
         <button id="locate-btn" class="locate-button" title="내 위치 찾기">
             <i class="fas fa-location-crosshairs"></i>
         </button>
     </div>
 
-    <!-- 범례 박스 -->
     <div class="legend-box">
         <h3><i class="fas fa-list"></i> 범례</h3>
         <ul>
@@ -81,20 +78,16 @@
         </ul>
     </div>
 
-    <!-- 장소 정보 박스 -->
     <div class="info-box" id="place-details">
         <button class="close-btn" onclick="closeInfoBox()">
             <i class="fas fa-times"></i>
         </button>
         <div id="place-content">
-            <!-- 장소 정보가 여기에 표시됩니다 -->
-        </div>
+            </div>
     </div>
 
-    <!-- 전체 화면 지도 -->
     <div id="map"></div>
 
-    <!-- JavaScript 파일들 -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
