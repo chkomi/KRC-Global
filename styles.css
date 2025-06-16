@@ -1,19 +1,26 @@
 /* Basic Styles */
-body {
+html, body {
     font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f7f6;
     color: #333;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
-/* Fullscreen Map */
+/* Fullscreen Map - 명시적 크기 설정 */
 #map {
     width: 100vw;
     height: 100vh;
+    min-height: 400px; /* 최소 높이 보장 */
     z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* Top Title Box */
