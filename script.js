@@ -33,8 +33,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadData() {
     try {
         const response = await fetch('data/shanghai-data.json'); // 'data' 폴더에서 JSON 로드
+        if (!response.ok) { // HTTP 응답이 성공(200-299)이 아니면 에러 발생
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         shanghaiData = await response.json();
         console.log('데이터 로드 완료:', shanghaiData);
+
+        // 데이터가 비어있을 경우 초기화 메시지
+        if (!shanghaiData || !shanghaiData.shanghai_tourism || Object.keys(shanghaiData.shanghai_tourism).every(key => shanghaiData.shanghai_tourism[key].length === 0)) {
+             console.warn('로드된 데이터에 장소 정보가 없습니다. 지도가 비어있을 수 있습니다.');
+        }
+
     } catch (error) {
         console.error('데이터 로드 실패:', error);
         // 데이터 로드 실패 시 빈 데이터로 초기화하여 앱이 작동은 하도록 함
@@ -46,10 +55,11 @@ async function loadData() {
                 airports: []
             }
         };
+        alert('여행 데이터를 로드하지 못했습니다. 지도가 정상적으로 표시되지 않을 수 있습니다. 콘솔을 확인해주세요.');
     }
 }
 
-// 텍스트에서 한글 부분만 추출하는 함수
+// 한글 추출 함수
 function extractKorean(text) {
     // 괄호 안의 한글 부분을 먼저 찾기 (예: "와이탄 (The Bund)")
     const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
@@ -70,6 +80,49 @@ function extractKorean(text) {
     // 한글이 없다면 원본 텍스트 반환 (영어나 숫자 등)
     return text;
 }
+
+// 커스텀 아이콘 생성 함수 (원형 마커) -- MOVED TO HERE!
+function createCustomIcon(type) {
+    let iconClass, bgClass;
+
+    switch (type) {
+        case 'attractions':
+            iconClass = 'fas fa-camera';
+            bgClass = 'tourism-bg';
+            break;
+        case 'restaurants':
+            iconClass = 'fas fa-utensils';
+            bgClass = 'restaurant-bg';
+            break;
+        case 'airports':
+            iconClass = 'fas fa-plane';
+            bgClass = 'airport-bg';
+            break;
+        case 'hotels':
+            iconClass = 'fas fa-bed';
+            bgClass = 'accommodation-bg';
+            break;
+        default:
+            iconClass = 'fas fa-map-marker-alt';
+            bgClass = 'tourism-bg'; // 기본값
+    }
+
+    // L.divIcon을 사용하여 커스텀 HTML 기반 마커 생성
+    try {
+        return L.divIcon({
+            className: 'google-circle-marker',
+            html: `<div class="circle-marker ${bgClass}">
+                         <i class="${iconClass}"></i>
+                       </div>`,
+            iconSize: [18, 18],
+            iconAnchor: [9, 9] // 아이콘 중심을 마커의 중심에 맞춤
+        });
+    } catch (e) {
+        console.error(`L.divIcon 생성 오류 (Type: ${type}):`, e);
+        return null; // 오류 발생 시 null 반환
+    }
+}
+
 
 // 지도 초기화 함수
 function initializeMap() {
@@ -191,8 +244,9 @@ function toggleMarkerGroup(type, show) {
 
 // 마커 표시 함수
 function displayMarkers() {
+    console.log('displayMarkers 함수 시작.');
     if (!shanghaiData || !shanghaiData.shanghai_tourism) {
-        console.error('마커를 표시할 데이터가 없습니다.');
+        console.error('마커를 표시할 데이터가 없습니다. shanghaiData 또는 shanghai_tourism이 정의되지 않았습니다.');
         return;
     }
 
@@ -208,31 +262,55 @@ function displayMarkers() {
 
     types.forEach(type => {
         const places = shanghaiData.shanghai_tourism[type];
-        places.forEach(place => {
-            allPlaces.push({...place, type: type}); // 각 장소에 타입 정보 추가
-        });
+        if (Array.isArray(places)) { // 'places'가 배열인지 확인
+            places.forEach(place => {
+                allPlaces.push({...place, type: type}); // 각 장소에 타입 정보 추가
+            });
+        } else {
+            console.warn(`데이터에 "${type}" 카테고리가 유효한 배열이 아닙니다.`, places);
+        }
     });
+
+    if (allPlaces.length === 0) {
+        console.warn('로드된 데이터에서 유효한 장소를 찾을 수 없습니다. 마커가 표시되지 않습니다.');
+        return;
+    }
+    console.log(`총 ${allPlaces.length}개의 장소 데이터 처리 시작.`);
 
     // 위치(좌표)별로 장소들을 그룹화 (동일 좌표에 여러 장소가 있을 수 있으므로)
     const locationGroups = {};
     allPlaces.forEach(place => {
+        // 유효한 위도/경도 값인지 확인
+        const lat = parseFloat(place.latitude);
+        const lng = parseFloat(place.longitude);
+
+        if (isNaN(lat) || isNaN(lng)) {
+            console.warn(`유효하지 않은 좌표 발견: ${place.name} (위도: ${place.latitude}, 경도: ${place.longitude}) - 이 장소는 마커로 표시되지 않습니다.`);
+            return; // 유효하지 않은 좌표는 건너뛰기
+        }
+
         // 부동 소수점 문제 방지를 위해 위도, 경도 정밀도를 고정하여 키 생성
-        const lat = parseFloat(place.latitude).toFixed(4);
-        const lng = parseFloat(place.longitude).toFixed(4);
-        const locationKey = `${lat},${lng}`;
+        const locationKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
 
         if (!locationGroups[locationKey]) {
             locationGroups[locationKey] = {
-                latitude: place.latitude,
-                longitude: place.longitude,
+                latitude: lat,
+                longitude: lng,
                 places: [] // 이 위치에 해당하는 모든 장소들
             };
         }
         locationGroups[locationKey].places.push(place);
     });
 
+    if (Object.keys(locationGroups).length === 0) {
+        console.warn('유효한 좌표를 가진 장소 그룹이 없습니다. 마커가 표시되지 않습니다.');
+        return;
+    }
+    console.log(`총 ${Object.keys(locationGroups).length}개의 고유한 위치에 마커 생성 시작.`);
+
+
     // 각 위치 그룹에 대해 마커 생성
-    Object.values(locationGroups).forEach(group => {
+    Object.values(locationGroups).forEach((group, groupIndex) => {
         // 동일 좌표에 여러 타입의 장소가 있을 경우, 아이콘 표시 우선순위를 결정
         const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
         const mainType = group.places.reduce((prev, curr) =>
@@ -240,8 +318,14 @@ function displayMarkers() {
         ).type;
 
         // 마커 생성 및 해당 마커 그룹에 추가
+        const customIcon = createCustomIcon(mainType); // <--- createCustomIcon 호출
+        if (!customIcon) {
+            console.error(`아이콘 생성 실패 for group ${groupIndex} (Type: ${mainType}). 이 마커는 표시되지 않습니다.`);
+            return;
+        }
+
         const marker = L.marker([group.latitude, group.longitude], {
-            icon: createCustomIcon(mainType)
+            icon: customIcon
         }).addTo(markerGroups[mainType]);
 
         // 라벨 텍스트 생성 (한글 부분만 추출)
@@ -249,7 +333,6 @@ function displayMarkers() {
         if (group.places.length === 1) {
             const place = group.places[0];
             labelText = extractKorean(place.name);
-            // 호텔 카테고리이고 가격 정보가 있을 경우 가격 추가 및 개행 처리
             if (place.type === 'hotels' && place.price) {
                 const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
                 labelText += `<br><span style="font-size:0.8em; color:#555;">${formattedPrice}</span>`;
@@ -261,6 +344,7 @@ function displayMarkers() {
 
         // 마커 클릭 시 팝업 표시 및 지도를 해당 위치로 이동
         marker.on('click', () => {
+            console.log(`마커 클릭됨: ${group.places[0].name}`);
             displayGroupDetailsAsPopup(marker, group); // 팝업으로 변경된 함수 호출
             map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
         });
@@ -295,24 +379,24 @@ function displayMarkers() {
 
     if (allMarkersLayer.getLayers().length > 0) {
         map.fitBounds(allMarkersLayer.getBounds().pad(0.1)); // 모든 마커가 보이도록 지도 뷰 조정
+        console.log('지도 뷰가 마커들에 맞게 조정되었습니다.');
+    } else {
+        console.warn('표시할 마커가 없어 지도 뷰를 조정할 수 없습니다.');
     }
 
     // 툴팁 엘리먼트들이 DOM에 추가된 후에 참조를 설정
     setTimeout(() => {
         allMarkers.forEach((markerData, index) => {
-            // Leaflet 툴팁은 마커마다 고유한 DOM 엘리먼트를 가짐.
-            // marker._tooltip._container를 통해 접근 가능.
             if (markerData.marker && markerData.marker._tooltip && markerData.marker._tooltip._container) {
                 markerData.tooltipElement = markerData.marker._tooltip._container;
-                // 툴팁의 왼쪽 테두리 색상을 마커의 타입에 따라 동적으로 설정
                 markerData.tooltipElement.style.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
             } else {
-                // console.warn(`마커 ${index}의 툴팁 엘리먼트를 찾을 수 없습니다.`);
+                console.warn(`마커 ${index}의 툴팁 엘리먼트를 찾을 수 없습니다. (마커: ${markerData.labelText})`);
             }
         });
-        // 툴팁 엘리먼트 설정 후 라벨 가시성 업데이트
-        updateLabelVisibility();
-    }, 100);
+        updateLabelVisibility(); // 툴팁 엘리먼트 설정 후 라벨 가시성 업데이트
+        console.log('툴팁 엘리먼트 설정 및 라벨 가시성 업데이트 완료.');
+    }, 500); // 충분한 지연 시간을 주어 DOM 렌더링을 기다림
 }
 
 // 내 위치 찾기 함수
@@ -387,14 +471,8 @@ function findMyLocation() {
     );
 }
 
-// 위치 찾기 버튼 상태 리셋 함수
-function resetLocateButton() {
-    const locateBtn = document.getElementById('locate-btn');
-    const icon = locateBtn.querySelector('i');
-
-    icon.className = 'fas fa-location-crosshairs'; // 기본 아이콘으로 변경
-    locateBtn.disabled = false; // 버튼 활성화
-}
+// 위치 찾기 버튼 상태 리셋 함수 (동일)
+// ...
 
 // 현재 위치 마커 아이콘 생성 함수 (애니메이션 포함)
 function createCurrentLocationIcon() {
@@ -444,6 +522,7 @@ function updateLabelVisibility() {
         }
     });
 }
+
 
 // 그룹 상세 정보 팝업 표시 함수 (클릭 시 마커 위에 팝업으로 내용 채우기)
 function displayGroupDetailsAsPopup(marker, group) {
