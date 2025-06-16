@@ -348,10 +348,10 @@ function displaySinglePlace(place) {
     // 지도 연결 버튼
     detailsHtml += `
         <div class="map-buttons">
-            <button class="map-btn google-btn" onclick="openGoogleMaps('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})">
+            <button class="map-btn google-btn" data-place-name="${(place.display_name || place.name).replace(/"/g, '&quot;')}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)">
                 <i class="fab fa-google"></i> 구글지도
             </button>
-            <button class="map-btn amap-btn" onclick="openAmapSearch('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})">
+            <button class="map-btn amap-btn" data-place-name="${(place.display_name || place.name).replace(/"/g, '&quot;')}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)">
                 <i class="fas fa-map"></i> 가오더지도
             </button>
         </div>
@@ -374,16 +374,17 @@ function displayClusterDetails(cluster) {
     `;
     
     cluster.places.forEach((place, index) => {
+        const safeName = (place.display_name || place.name).replace(/"/g, '&quot;');
         detailsHtml += `
             <div class="cluster-place-item" data-type="${place.type}">
                 <div class="place-title">
                     <span class="place-type-icon type-${place.type}">${getTypeIcon(place.type)}</span>
                     <span class="place-name">${place.display_name || place.name}</span>
                     <div class="place-mini-buttons">
-                        <button class="mini-btn google-btn" onclick="openGoogleMaps('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})" title="구글지도">
+                        <button class="mini-btn google-btn" data-place-name="${safeName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)" title="구글지도">
                             <i class="fab fa-google"></i>
                         </button>
-                        <button class="mini-btn amap-btn" onclick="openAmapSearch('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})" title="가오더지도">
+                        <button class="mini-btn amap-btn" data-place-name="${safeName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)" title="가오더지도">
                             <i class="fas fa-map"></i>
                         </button>
                     </div>
@@ -407,16 +408,35 @@ function displayClusterDetails(cluster) {
     infoBox.classList.add('show');
 }
 
+// 안전한 이벤트 핸들러들
+function handleGoogleMapsClick(button) {
+    const placeName = button.getAttribute('data-place-name');
+    const lat = button.getAttribute('data-lat');
+    const lng = button.getAttribute('data-lng');
+    openGoogleMaps(placeName, lat, lng);
+}
+
+function handleAmapClick(button) {
+    const placeName = button.getAttribute('data-place-name');
+    const lat = button.getAttribute('data-lat');
+    const lng = button.getAttribute('data-lng');
+    openAmapSearch(placeName, lat, lng);
+}
+
 // 구글지도 열기 함수
 function openGoogleMaps(placeName, lat, lng) {
-    const encodedName = encodeURIComponent(placeName);
+    // 특수문자 처리를 위한 안전한 인코딩
+    const safePlaceName = String(placeName).replace(/['"]/g, '');
+    const encodedName = encodeURIComponent(safePlaceName);
     const googleMapsUrl = `https://www.google.com/maps/search/${encodedName}/@${lat},${lng},17z`;
     window.open(googleMapsUrl, '_blank');
 }
 
 // 가오더지도(Amap) 열기 함수
 function openAmapSearch(placeName, lat, lng) {
-    const encodedName = encodeURIComponent(placeName);
+    // 특수문자 처리를 위한 안전한 인코딩
+    const safePlaceName = String(placeName).replace(/['"]/g, '');
+    const encodedName = encodeURIComponent(safePlaceName);
     // 가오더지도 웹 검색 URL
     const amapUrl = `https://ditu.amap.com/search?query=${encodedName}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
     window.open(amapUrl, '_blank');
