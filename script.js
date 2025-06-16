@@ -317,41 +317,60 @@ function getIconClass(type) {
     }
 }
 
+// 안전한 문자열 이스케이프 함수
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 안전한 속성값 생성 함수
+function createSafeDataAttribute(text) {
+    return String(text)
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 // 단일 장소 상세 정보 표시
 function displaySinglePlace(place) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
     
+    const placeName = place.display_name || place.name;
+    const safeDataName = createSafeDataAttribute(placeName);
+    
     let detailsHtml = `
         <div class="place-header">
             <div class="place-type-badge type-${place.type}">${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}</div>
-            <h3>${place.display_name || place.name}</h3>
+            <h3>${escapeHtml(placeName)}</h3>
         </div>
     `;
     
     if (place.description) {
-        detailsHtml += `<div class="place-info"><strong>설명:</strong> ${place.description}</div>`;
+        detailsHtml += `<div class="place-info"><strong>설명:</strong> ${escapeHtml(place.description)}</div>`;
     }
     
     if (place.address && place.address !== "N/A") {
-        detailsHtml += `<div class="place-info"><strong>주소:</strong> ${place.address}</div>`;
+        detailsHtml += `<div class="place-info"><strong>주소:</strong> ${escapeHtml(place.address)}</div>`;
     }
     
     if (place.features && place.features.length > 0) {
-        detailsHtml += `<div class="place-info"><strong>특징:</strong> ${place.features.join(', ')}</div>`;
+        detailsHtml += `<div class="place-info"><strong>특징:</strong> ${place.features.map(f => escapeHtml(f)).join(', ')}</div>`;
     }
     
     if (place.menu && place.menu.length > 0) {
-        detailsHtml += `<div class="place-info"><strong>메뉴:</strong> ${place.menu.join(', ')}</div>`;
+        detailsHtml += `<div class="place-info"><strong>메뉴:</strong> ${place.menu.map(m => escapeHtml(m)).join(', ')}</div>`;
     }
 
     // 지도 연결 버튼
     detailsHtml += `
         <div class="map-buttons">
-            <button class="map-btn google-btn" data-place-name="${(place.display_name || place.name).replace(/"/g, '&quot;')}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)">
+            <button class="map-btn google-btn" data-place-name="${safeDataName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)">
                 <i class="fab fa-google"></i> 구글지도
             </button>
-            <button class="map-btn amap-btn" data-place-name="${(place.display_name || place.name).replace(/"/g, '&quot;')}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)">
+            <button class="map-btn amap-btn" data-place-name="${safeDataName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)">
                 <i class="fas fa-map"></i> 가오더지도
             </button>
         </div>
@@ -374,17 +393,19 @@ function displayClusterDetails(cluster) {
     `;
     
     cluster.places.forEach((place, index) => {
-        const safeName = (place.display_name || place.name).replace(/"/g, '&quot;');
+        const placeName = place.display_name || place.name;
+        const safeDataName = createSafeDataAttribute(placeName);
+        
         detailsHtml += `
             <div class="cluster-place-item" data-type="${place.type}">
                 <div class="place-title">
                     <span class="place-type-icon type-${place.type}">${getTypeIcon(place.type)}</span>
-                    <span class="place-name">${place.display_name || place.name}</span>
+                    <span class="place-name">${escapeHtml(placeName)}</span>
                     <div class="place-mini-buttons">
-                        <button class="mini-btn google-btn" data-place-name="${safeName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)" title="구글지도">
+                        <button class="mini-btn google-btn" data-place-name="${safeDataName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleGoogleMapsClick(this)" title="구글지도">
                             <i class="fab fa-google"></i>
                         </button>
-                        <button class="mini-btn amap-btn" data-place-name="${safeName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)" title="가오더지도">
+                        <button class="mini-btn amap-btn" data-place-name="${safeDataName}" data-lat="${place.latitude}" data-lng="${place.longitude}" onclick="handleAmapClick(this)" title="가오더지도">
                             <i class="fas fa-map"></i>
                         </button>
                     </div>
@@ -392,11 +413,12 @@ function displayClusterDetails(cluster) {
         `;
         
         if (place.description) {
-            detailsHtml += `<div class="place-desc">${place.description}</div>`;
+            detailsHtml += `<div class="place-desc">${escapeHtml(place.description)}</div>`;
         }
         
         if (place.menu && place.menu.length > 0) {
-            detailsHtml += `<div class="place-menu">메뉴: ${place.menu.slice(0, 3).join(', ')}${place.menu.length > 3 ? '...' : ''}</div>`;
+            const menuText = place.menu.slice(0, 3).map(m => escapeHtml(m)).join(', ');
+            detailsHtml += `<div class="place-menu">메뉴: ${menuText}${place.menu.length > 3 ? '...' : ''}</div>`;
         }
         
         detailsHtml += `</div>`;
@@ -425,21 +447,29 @@ function handleAmapClick(button) {
 
 // 구글지도 열기 함수
 function openGoogleMaps(placeName, lat, lng) {
-    // 특수문자 처리를 위한 안전한 인코딩
-    const safePlaceName = String(placeName).replace(/['"]/g, '');
-    const encodedName = encodeURIComponent(safePlaceName);
-    const googleMapsUrl = `https://www.google.com/maps/search/${encodedName}/@${lat},${lng},17z`;
-    window.open(googleMapsUrl, '_blank');
+    try {
+        // 특수문자 처리를 위한 안전한 인코딩
+        const safePlaceName = String(placeName).replace(/['"]/g, '');
+        const encodedName = encodeURIComponent(safePlaceName);
+        const googleMapsUrl = `https://www.google.com/maps/search/${encodedName}/@${lat},${lng},17z`;
+        window.open(googleMapsUrl, '_blank');
+    } catch (error) {
+        console.error('구글지도 열기 오류:', error);
+    }
 }
 
 // 가오더지도(Amap) 열기 함수
 function openAmapSearch(placeName, lat, lng) {
-    // 특수문자 처리를 위한 안전한 인코딩
-    const safePlaceName = String(placeName).replace(/['"]/g, '');
-    const encodedName = encodeURIComponent(safePlaceName);
-    // 가오더지도 웹 검색 URL
-    const amapUrl = `https://ditu.amap.com/search?query=${encodedName}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
-    window.open(amapUrl, '_blank');
+    try {
+        // 특수문자 처리를 위한 안전한 인코딩
+        const safePlaceName = String(placeName).replace(/['"]/g, '');
+        const encodedName = encodeURIComponent(safePlaceName);
+        // 가오더지도 웹 검색 URL
+        const amapUrl = `https://ditu.amap.com/search?query=${encodedName}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
+        window.open(amapUrl, '_blank');
+    } catch (error) {
+        console.error('가오더지도 열기 오류:', error);
+    }
 }
 
 // 타입별 색상 반환 함수
