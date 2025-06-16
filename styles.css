@@ -1,6 +1,6 @@
-/* 기본 스타일 */
+/* Basic Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f7f6;
@@ -9,14 +9,14 @@ body {
     overflow: hidden;
 }
 
-/* 전체 화면 지도 */
+/* Fullscreen Map */
 #map {
     width: 100vw;
     height: 100vh;
     z-index: 1;
 }
 
-/* 상단 타이틀 박스 */
+/* Top Title Box */
 .title-box {
     position: absolute;
     top: 15px;
@@ -41,7 +41,7 @@ body {
     gap: 8px;
 }
 
-/* 위치 찾기 버튼 */
+/* Location Button */
 .location-control {
     position: absolute;
     top: 15px;
@@ -83,7 +83,7 @@ body {
     font-size: 16px;
 }
 
-/* 현재 위치 마커 */
+/* Current Location Marker */
 .current-location-marker {
     background: transparent;
     border: none;
@@ -119,31 +119,8 @@ body {
         box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
     }
 }
-.title-box {
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(44, 62, 80, 0.95);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 25px;
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
 
-.title-box h1 {
-    margin: 0;
-    font-size: 1.4em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* 지도 타일 선택 컨트롤 */
+/* Map Tile Selection Control */
 .map-tile-control {
     position: absolute;
     bottom: 15px;
@@ -187,7 +164,7 @@ body {
     color: white;
 }
 
-/* 범례 박스 */
+/* Legend Box */
 .legend-box {
     position: absolute;
     bottom: 15px;
@@ -262,15 +239,15 @@ body {
 .airport-marker { background-color: #9b59b6; }
 .accommodation-marker { background-color: #1a73e8; }
 
-/* 구글 지도 스타일 원형 마커 */
+/* Custom Marker Icons (Circular, Google-style) */
 .google-circle-marker {
     background: transparent;
     border: none;
 }
 
 .circle-marker {
-    width: 20px;
-    height: 20px;
+    width: 24px; /* Slightly larger for better visibility */
+    height: 24px; /* Slightly larger for better visibility */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -287,47 +264,60 @@ body {
 
 .circle-marker i {
     color: white;
-    font-size: 10px;
+    font-size: 12px; /* Adjusted icon size */
     font-weight: bold;
 }
 
-/* 마커 색상 - 구글 지도 스타일 */
-.tourism-bg { background-color: #ea4335; }  /* 구글 빨강 */
-.restaurant-bg { background-color: #34a853; }  /* 구글 초록 */
-.airport-bg { background-color: #9b59b6; }  /* 보라 */
-.accommodation-bg { background-color: #1a73e8; }  /* 구글 파랑 */
+/* Marker Colors - Google Style */
+.tourism-bg { background-color: #ea4335; }  /* Google Red */
+.restaurant-bg { background-color: #34a853; }  /* Google Green */
+.airport-bg { background-color: #9b59b6; }  /* Purple */
+.accommodation-bg { background-color: #1a73e8; }  /* Google Blue */
 
-/* 머티리얼 디자인 라벨 */
-.material-label,
+/* New Label Design (Applied to Leaflet Tooltip) */
 .leaflet-tooltip {
-    background: white !important;
-    color: #202124 !important;
-    padding: 8px 12px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
     border-radius: 8px !important;
-    font-size: 13px !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+    border-left: 4px solid #3498db !important; /* Accent border */
+    font-family: 'Noto Sans KR', sans-serif !important;
     font-weight: 500 !important;
+    color: #333 !important;
     white-space: nowrap !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24) !important;
-    border: none !important;
-    font-family: 'Google Sans', 'Roboto', 'Segoe UI', sans-serif !important;
-    line-height: 1.25 !important;
-    opacity: 1 !important;
-    letter-spacing: 0.25px !important;
+    transition: all 0.3s ease !important;
+    opacity: 1 !important; /* Ensure visibility */
+    pointer-events: none; /* Allows clicks to pass through to map below */
 }
 
-.material-label:before,
+/* Override Leaflet's default tooltip pointer */
 .leaflet-tooltip:before {
     display: none !important;
 }
 
-/* 현재 위치 라벨 */
+.leaflet-tooltip-top {
+    margin-top: -30px !important; /* Adjust position if needed */
+}
+.leaflet-tooltip-bottom {
+    margin-bottom: -30px !important; /* Adjust position if needed */
+}
+.leaflet-tooltip-left {
+    margin-left: -15px !important; /* Adjust position if needed */
+}
+.leaflet-tooltip-right {
+    margin-right: -15px !important; /* Adjust position if needed */
+}
+
+
+/* Current Location Label */
 .current-location-label {
     background: #4285f4 !important;
     color: white !important;
     font-weight: 600 !important;
+    border-left: 4px solid #1a73e8 !important; /* Blue accent */
 }
 
-/* 장소 정보 박스 */
+/* Place Info Box */
 .info-box {
     position: absolute;
     bottom: 15px;
@@ -339,26 +329,19 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    max-width: 350px;
-    max-height: 300px;
+    max-width: 380px; /* Increased max-width */
+    max-height: 400px; /* Increased max-height */
     overflow-y: auto;
     display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-out;
 }
 
 .info-box.show {
     display: block;
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .info-box h3 {
@@ -413,7 +396,7 @@ body {
     color: #2c3e50;
 }
 
-/* 장소 타입 뱃지 */
+/* Place Type Badge */
 .place-type-badge {
     display: inline-block;
     padding: 4px 10px;
@@ -429,7 +412,7 @@ body {
 .type-airports { background-color: #9b59b6; }
 .type-hotels { background-color: #1a73e8; }
 
-/* 그룹화된 장소 스타일 */
+/* Grouped Place Styles */
 .place-group-item {
     margin-bottom: 15px !important;
     padding: 12px !important;
@@ -462,31 +445,20 @@ body {
     font-size: 0.7em !important;
 }
 
-/* 타입별 테두리 색상 */
-.place-group-item.type-attractions {
-    border-left-color: #ea4335 !important;
-}
+/* Type-specific border colors for grouped items */
+.place-group-item.type-attractions { border-left-color: #ea4335 !important; }
+.place-group-item.type-restaurants { border-left-color: #34a853 !important; }
+.place-group-item.type-hotels { border-left-color: #1a73e8 !important; }
+.place-group-item.type-airports { border-left-color: #9b59b6 !important; }
 
-.place-group-item.type-restaurants {
-    border-left-color: #34a853 !important;
-}
-
-.place-group-item.type-hotels {
-    border-left-color: #1a73e8 !important;
-}
-
-.place-group-item.type-airports {
-    border-left-color: #9b59b6 !important;
-}
-
-/* 구분선 */
+/* Separator */
 .place-separator {
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
     margin: 10px 0;
 }
 
-/* 그룹 헤더 */
+/* Group Header */
 .group-header {
     background: rgba(52, 152, 219, 0.1);
     padding: 8px 12px;
@@ -503,7 +475,7 @@ body {
     padding: 0;
 }
 
-/* 장소 카운트 뱃지 */
+/* Place Count Badge */
 .place-count-badge {
     display: inline-block;
     background: #3498db;
@@ -515,7 +487,7 @@ body {
     margin-left: 8px;
 }
 
-/* 지도 연결 버튼 스타일 */
+/* Map Link Buttons */
 .map-links, .group-map-links {
     margin-top: 15px;
     padding-top: 15px;
@@ -574,7 +546,7 @@ body {
     background: linear-gradient(135deg, #0088cc, #004499);
 }
 
-/* 작은 지도 버튼 */
+/* Small map buttons */
 .place-map-buttons {
     display: flex;
     gap: 6px;
@@ -617,7 +589,7 @@ body {
     background: #0088cc;
 }
 
-/* 스크롤바 스타일 */
+/* Scrollbar Style */
 .info-box::-webkit-scrollbar {
     width: 6px;
 }
@@ -636,19 +608,20 @@ body {
     background: #95a5a6;
 }
 
-/* 반응형 디자인 */
+/* Responsive Design */
 @media (max-width: 768px) {
     .title-box {
         top: 10px;
         left: 10px;
-        right: 60px; /* 위치 버튼 공간 확보 */
+        right: 60px; /* Space for location button */
         transform: none;
         padding: 10px 16px;
+        text-align: center; /* Center text on mobile */
     }
 
     .title-box h1 {
         font-size: 1.2em;
-        text-align: center;
+        justify-content: center; /* Center icon and text */
     }
 
     .location-control {
@@ -706,32 +679,32 @@ body {
         padding: 2px 4px;
     }
 
-    /* 모바일에서 머티리얼 라벨 크기 조정 */
-    .material-label, .leaflet-tooltip {
+    /* Mobile Label Size Adjustment */
+    .leaflet-tooltip {
         font-size: 12px !important;
         padding: 6px 10px !important;
         border-radius: 6px !important;
     }
 
-    /* 모바일에서 마커 크기 조정 */
+    /* Mobile Marker Size Adjustment */
     .circle-marker {
-        width: 18px !important;
-        height: 18px !important;
+        width: 20px !important; /* Slightly smaller for mobile */
+        height: 20px !important; /* Slightly smaller for mobile */
     }
 
     .circle-marker i {
-        font-size: 8px !important;
+        font-size: 10px !important; /* Adjusted icon size for mobile */
     }
 
     .map-buttons {
         flex-direction: column;
     }
-    
+
     .map-btn {
         width: 100%;
         justify-content: center;
     }
-    
+
     .place-map-buttons {
         justify-content: center;
         margin-top: 10px;
