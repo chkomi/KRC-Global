@@ -94,8 +94,15 @@ function initializeMap() {
     // 마커 표시
     displayMarkers();
 
-    // 줌 레벨 변경 시 라벨 가시성 업데이트
-    map.on('zoomend moveend', () => {
+    // 줌 레벨 변경 시 클러스터 재계산 및 라벨 가시성 업데이트
+    map.on('zoomend', () => {
+        displayMarkers(); // 클러스터 재계산
+        setTimeout(() => {
+            updateLabelVisibility();
+        }, 100);
+    });
+
+    map.on('moveend', () => {
         updateLabelVisibility();
     });
 }
@@ -145,7 +152,7 @@ function toggleMarkerGroup(type, show) {
     }, 100);
 }
 
-// 마커 표시 함수 (같은 위치 장소 그룹화)
+// 마커 표시 함수 (클러스터링 적용)
 function displayMarkers() {
     if (!shanghaiData || !shanghaiData.shanghai_tourism) {
         console.error('데이터가 없습니다.');
@@ -169,45 +176,39 @@ function displayMarkers() {
         });
     });
 
-    // 위치별로 장소들을 그룹화 (소수점 4자리까지 같으면 같은 위치로 간주)
-    const locationGroups = {};
+    const currentZoom = map.getZoom();
     
-    allPlaces.forEach(place => {
-        const lat = parseFloat(place.latitude).toFixed(4);
-        const lng = parseFloat(place.longitude).toFixed(4);
-        const locationKey = `${lat},${lng}`;
-        
-        if (!locationGroups[locationKey]) {
-            locationGroups[locationKey] = {
-                latitude: place.latitude,
-                longitude: place.longitude,
-                places: []
-            };
-        }
-        
-        locationGroups[locationKey].places.push(place);
-    });
+    // 줌 레벨에 따른 클러스터링
+    let locationGroups;
+    if (currentZoom < 13) {
+        // 낮은 줌: 큰 범위로 클러스터링 (소수점 2자리)
+        locationGroups = clusterPlaces(allPlaces, 2);
+    } else if (currentZoom < 15) {
+        // 중간 줌: 중간 범위로 클러스터링 (소수점 3자리)
+        locationGroups = clusterPlaces(allPlaces, 3);
+    } else {
+        // 높은 줌: 정확한 위치로 클러스터링 (소수점 4자리)
+        locationGroups = clusterPlaces(allPlaces, 4);
+    }
 
-    // 각 위치 그룹에 대해 마커 생성
-    Object.values(locationGroups).forEach(group => {
-        // 그룹에서 가장 우선순위가 높은 타입으로 마커 아이콘 결정
+    // 각 클러스터에 대해 마커 생성
+    Object.values(locationGroups).forEach(cluster => {
+        // 클러스터에서 가장 우선순위가 높은 타입으로 마커 아이콘 결정
         const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-        const mainType = group.places.reduce((prev, curr) => 
+        const mainType = cluster.places.reduce((prev, curr) => 
             priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr
         ).type;
 
-        const marker = L.marker([group.latitude, group.longitude], {
-            icon: createCustomIcon(mainType)
+        const marker = L.marker([cluster.latitude, cluster.longitude], {
+            icon: createClusterIcon(mainType, cluster.places.length)
         }).addTo(markerGroups[mainType]);
 
-        // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
+        // 라벨 설정
         let labelText;
-        if (group.places.length === 1) {
-            // display_name이 있으면 사용, 없으면 name 사용
-            labelText = group.places[0].display_name || group.places[0].name;
+        if (cluster.places.length === 1) {
+            labelText = cluster.places[0].display_name || cluster.places[0].name;
         } else {
-            const firstPlaceName = group.places[0].display_name || group.places[0].name;
-            labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
+            labelText = `${cluster.places.length}개 장소`;
         }
 
         // 라벨 생성
@@ -220,15 +221,19 @@ function displayMarkers() {
         }).setContent(labelText);
 
         marker.on('click', () => {
-            displayGroupDetails(group);
-            map.flyTo([group.latitude, group.longitude], 15);
+            if (cluster.places.length === 1) {
+                displaySinglePlace(cluster.places[0]);
+            } else {
+                displayClusterDetails(cluster);
+            }
+            map.flyTo([cluster.latitude, cluster.longitude], Math.min(map.getZoom() + 1, 18));
         });
 
         // 마커 정보를 배열에 저장
         allMarkers.push({
             marker: marker,
             tooltip: tooltip,
-            group: group,
+            cluster: cluster,
             visible: false,
             groupType: mainType
         });
@@ -252,122 +257,181 @@ function displayMarkers() {
     }, 500);
 }
 
-// 그룹 상세 정보 표시 함수 (지도 연결 버튼 추가)
-function displayGroupDetails(group) {
+// 장소들을 클러스터링하는 함수
+function clusterPlaces(places, precision) {
+    const clusters = {};
+    
+    places.forEach(place => {
+        const lat = parseFloat(place.latitude).toFixed(precision);
+        const lng = parseFloat(place.longitude).toFixed(precision);
+        const clusterKey = `${lat},${lng}`;
+        
+        if (!clusters[clusterKey]) {
+            clusters[clusterKey] = {
+                latitude: place.latitude,
+                longitude: place.longitude,
+                places: []
+            };
+        }
+        
+        clusters[clusterKey].places.push(place);
+    });
+    
+    return clusters;
+}
+
+// 클러스터 아이콘 생성 함수
+function createClusterIcon(type, count) {
+    let bgClass;
+    switch (type) {
+        case 'attractions': bgClass = 'tourism-bg'; break;
+        case 'restaurants': bgClass = 'restaurant-bg'; break;
+        case 'airports': bgClass = 'airport-bg'; break;
+        case 'hotels': bgClass = 'accommodation-bg'; break;
+        default: bgClass = 'tourism-bg';
+    }
+
+    let iconSize = count === 1 ? [18, 18] : [Math.min(30 + count * 2, 40), Math.min(30 + count * 2, 40)];
+    let iconClass = count === 1 ? getIconClass(type) : 'fas fa-layer-group';
+    
+    return L.divIcon({
+        className: 'custom-marker-icon',
+        html: `<div class="marker-content ${bgClass}" style="width: ${iconSize[0]}px; height: ${iconSize[1]}px;">
+                 <i class="${iconClass}"></i>
+                 ${count > 1 ? `<span class="cluster-count">${count}</span>` : ''}
+               </div>`,
+        iconSize: iconSize,
+        iconAnchor: [iconSize[0]/2, iconSize[1]/2],
+        tooltipAnchor: [0, -15]
+    });
+}
+
+// 타입별 아이콘 클래스 반환
+function getIconClass(type) {
+    switch (type) {
+        case 'attractions': return 'fas fa-camera';
+        case 'restaurants': return 'fas fa-utensils';
+        case 'airports': return 'fas fa-plane';
+        case 'hotels': return 'fas fa-bed';
+        default: return 'fas fa-map-marker-alt';
+    }
+}
+
+// 단일 장소 상세 정보 표시
+function displaySinglePlace(place) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
     
-    let detailsHtml = '';
+    let detailsHtml = `
+        <div class="place-header">
+            <div class="place-type-badge type-${place.type}">${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}</div>
+            <h3>${place.display_name || place.name}</h3>
+        </div>
+    `;
     
-    if (group.places.length === 1) {
-        // 단일 장소인 경우 기존 방식대로 표시
-        const place = group.places[0];
-        detailsHtml = `
-            <div class="place-type-badge type-${place.type}">
-                ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
-            </div>
-            <h3><i class="fas fa-map-marker-alt"></i> ${place.display_name || place.name}</h3>
+    if (place.description) {
+        detailsHtml += `<div class="place-info"><strong>설명:</strong> ${place.description}</div>`;
+    }
+    
+    if (place.address && place.address !== "N/A") {
+        detailsHtml += `<div class="place-info"><strong>주소:</strong> ${place.address}</div>`;
+    }
+    
+    if (place.features && place.features.length > 0) {
+        detailsHtml += `<div class="place-info"><strong>특징:</strong> ${place.features.join(', ')}</div>`;
+    }
+    
+    if (place.menu && place.menu.length > 0) {
+        detailsHtml += `<div class="place-info"><strong>메뉴:</strong> ${place.menu.join(', ')}</div>`;
+    }
+
+    // 지도 연결 버튼
+    detailsHtml += `
+        <div class="map-buttons">
+            <button class="map-btn google-btn" onclick="openGoogleMaps('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})">
+                <i class="fab fa-google"></i> 구글지도
+            </button>
+            <button class="map-btn amap-btn" onclick="openAmapSearch('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})">
+                <i class="fas fa-map"></i> 가오더지도
+            </button>
+        </div>
+    `;
+
+    placeContent.innerHTML = detailsHtml;
+    infoBox.classList.add('show');
+}
+
+// 클러스터 상세 정보 표시
+function displayClusterDetails(cluster) {
+    const infoBox = document.getElementById('place-details');
+    const placeContent = document.getElementById('place-content');
+    
+    let detailsHtml = `
+        <div class="cluster-header">
+            <h3><i class="fas fa-layer-group"></i> 이 지역 ${cluster.places.length}개 장소</h3>
+        </div>
+        <div class="cluster-places">
+    `;
+    
+    cluster.places.forEach((place, index) => {
+        detailsHtml += `
+            <div class="cluster-place-item" data-type="${place.type}">
+                <div class="place-title">
+                    <span class="place-type-icon type-${place.type}">${getTypeIcon(place.type)}</span>
+                    <span class="place-name">${place.display_name || place.name}</span>
+                    <div class="place-mini-buttons">
+                        <button class="mini-btn google-btn" onclick="openGoogleMaps('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})" title="구글지도">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button class="mini-btn amap-btn" onclick="openAmapSearch('${place.display_name || place.name}', ${place.latitude}, ${place.longitude})" title="가오더지도">
+                            <i class="fas fa-map"></i>
+                        </button>
+                    </div>
+                </div>
         `;
         
         if (place.description) {
-            detailsHtml += `<p><strong>🎯 설명:</strong> ${place.description}</p>`;
-        }
-        
-        if (place.address && place.address !== "N/A") {
-            detailsHtml += `<p><strong>📍 주소:</strong> ${place.address}</p>`;
-        }
-        
-        if (place.features && place.features.length > 0) {
-            detailsHtml += `<p><strong>✨ 특징:</strong> ${place.features.join(', ')}</p>`;
+            detailsHtml += `<div class="place-desc">${place.description}</div>`;
         }
         
         if (place.menu && place.menu.length > 0) {
-            detailsHtml += `<p><strong>🍽️ 메뉴:</strong></p><ul>`;
-            place.menu.forEach(item => {
-                detailsHtml += `<li>${item}</li>`;
-            });
-            detailsHtml += `</ul>`;
+            detailsHtml += `<div class="place-menu">메뉴: ${place.menu.slice(0, 3).join(', ')}${place.menu.length > 3 ? '...' : ''}</div>`;
         }
-
-        // 지도 연결 버튼 추가
-        detailsHtml += `
-            <div class="map-links">
-                <h4><i class="fas fa-external-link-alt"></i> 외부 지도에서 보기</h4>
-                <div class="map-buttons">
-                    <button class="map-btn google-btn" onclick="openGoogleMaps('${place.name}', ${place.latitude}, ${place.longitude})">
-                        <i class="fab fa-google"></i> 구글지도
-                    </button>
-                    <button class="map-btn amap-btn" onclick="openAmapSearch('${place.name}', ${place.latitude}, ${place.longitude})">
-                        <i class="fas fa-map"></i> 가오더지도
-                    </button>
-                </div>
-            </div>
-        `;
-    } else {
-        // 여러 장소인 경우 그룹으로 표시
-        detailsHtml = `
-            <div class="group-header">
-                <h3>
-                    <i class="fas fa-map-marker-alt"></i> 
-                    이 위치의 장소들
-                    <span class="place-count-badge">${group.places.length}곳</span>
-                </h3>
-            </div>
-        `;
         
-        group.places.forEach((place, index) => {
-            detailsHtml += `
-                <div class="place-group-item type-${place.type}">
-                    <div class="place-type-badge type-${place.type}">
-                        ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
-                    </div>
-                    <h4>${place.display_name || place.name}</h4>
-            `;
-            
-            if (place.description) {
-                detailsHtml += `<p><strong>설명:</strong> ${place.description}</p>`;
-            }
-            
-            if (place.address && place.address !== "N/A") {
-                detailsHtml += `<p><strong>주소:</strong> ${place.address}</p>`;
-            }
-            
-            if (place.features && place.features.length > 0) {
-                detailsHtml += `<p><strong>특징:</strong> ${place.features.join(', ')}</p>`;
-            }
-            
-            if (place.menu && place.menu.length > 0) {
-                detailsHtml += `<p><strong>메뉴:</strong> ${place.menu.join(', ')}</p>`;
-            }
+        detailsHtml += `</div>`;
+    });
+    
+    detailsHtml += `</div>`;
 
-            // 각 장소별 지도 연결 버튼
-            detailsHtml += `
-                <div class="place-map-buttons">
-                    <button class="map-btn-small google-btn" onclick="openGoogleMaps('${place.name}', ${place.latitude}, ${place.longitude})" title="구글지도에서 ${place.name} 검색">
-                        <i class="fab fa-google"></i>
-                    </button>
-                    <button class="map-btn-small amap-btn" onclick="openAmapSearch('${place.name}', ${place.latitude}, ${place.longitude})" title="가오더지도에서 ${place.name} 검색">
-                        <i class="fas fa-map"></i>
-                    </button>
-                </div>
-            `;
-            
-            detailsHtml += `</div>`;
-            
-            // 마지막 항목이 아니면 구분선 추가
-            if (index < group.places.length - 1) {
-                detailsHtml += `<div class="place-separator"></div>`;
-            }
-        });
+    placeContent.innerHTML = detailsHtml;
+    infoBox.classList.add('show');
+}
 
-        // 그룹 전체 위치 지도 연결 버튼
-        const firstPlace = group.places[0];
-        detailsHtml += `
-            <div class="group-map-links">
-                <h4><i class="fas fa-external-link-alt"></i> 이 위치 전체보기</h4>
-                <div class="map-buttons">
-                    <button class="map-btn google-btn" onclick="openGoogleMaps('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
-                        <i class="fab fa-google"></i> 구글지도
+// 구글지도 열기 함수
+function openGoogleMaps(placeName, lat, lng) {
+    const encodedName = encodeURIComponent(placeName);
+    const googleMapsUrl = `https://www.google.com/maps/search/${encodedName}/@${lat},${lng},17z`;
+    window.open(googleMapsUrl, '_blank');
+}
+
+// 가오더지도(Amap) 열기 함수
+function openAmapSearch(placeName, lat, lng) {
+    const encodedName = encodeURIComponent(placeName);
+    // 가오더지도 웹 검색 URL
+    const amapUrl = `https://ditu.amap.com/search?query=${encodedName}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
+    window.open(amapUrl, '_blank');
+}
+
+// 타입별 색상 반환 함수
+function getTypeColor(type) {
+    switch (type) {
+        case 'attractions': return '#e74c3c';
+        case 'restaurants': return '#27ae60';
+        case 'airports': return '#9b59b6';
+        case 'hotels': return '#3498db';
+        default: return '#95a5a6';
+    }
+}글지도
                     </button>
                     <button class="map-btn amap-btn" onclick="openAmapSearch('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
                         <i class="fas fa-map"></i> 가오더지도
@@ -424,7 +488,7 @@ function updateLabelVisibility() {
     const visibleMarkers = allMarkers.filter(markerData => {
         const latLng = markerData.marker.getLatLng();
         const isInBounds = bounds.contains(latLng);
-        const isGroupVisible = map.hasLayer(markerGroups[markerData.group]);
+        const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
         return isInBounds && isGroupVisible;
     });
 
