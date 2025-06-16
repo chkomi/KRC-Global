@@ -12,6 +12,15 @@ let markerGroups = {
     airports: L.featureGroup()
 };
 
+// Map marker background colors for dynamic label border
+const markerColors = {
+    attractions: '#ea4335',
+    restaurants: '#34a853',
+    airports: '#9b59b6',
+    hotels: '#1a73e8'
+};
+
+
 // Initialize on document load
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
@@ -43,14 +52,18 @@ async function loadData() {
 function extractKorean(text) {
     // Find Korean part within parentheses first
     const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
-    if (koreanInParentheses) {
+    if (koreanInParentheses && koreanInParentheses[1].trim() !== '') {
         return koreanInParentheses[1].trim();
     }
 
-    // If no parentheses, extract Korean part from the whole text
+    // If no parentheses or empty, extract Korean part from the whole text
     const koreanParts = text.match(/[가-힣\s]+/g);
     if (koreanParts && koreanParts.length > 0) {
-        return koreanParts[0].trim();
+        // Filter out empty strings and return the first non-empty Korean part
+        const filteredParts = koreanParts.filter(part => part.trim() !== '');
+        if (filteredParts.length > 0) {
+            return filteredParts[0].trim();
+        }
     }
 
     // Return original text if no Korean found
@@ -235,16 +248,17 @@ function displayMarkers() {
             map.flyTo([group.latitude, group.longitude], 15); // Zoom in on click
         });
 
-        // Bind tooltip (label) with new design class and appropriate offset
-        // Offset is crucial for label placement relative to the marker
-        // Using 'right' direction to place labels to the right of markers by default
-        marker.bindTooltip(labelText, {
+        // Bind tooltip (label) to the bottom of the marker
+        const tooltip = marker.bindTooltip(labelText, {
             permanent: true,
-            direction: 'right', // Place label to the right of the marker
-            offset: [25, 0], // Adjust offset to move it further right from the marker center
+            direction: 'bottom', // Place label to the bottom of the marker
+            offset: [0, 15], // Adjust offset to move it slightly down from the marker center
             className: 'leaflet-tooltip', // Use the class for the new label design
             opacity: 1
-        });
+        }).getTooltip();
+
+        // Dynamically set the border-left color of the tooltip
+        tooltip.getElement().style.borderLeft = `4px solid ${markerColors[mainType] || '#3498db'}`;
 
 
         // Store marker information for visibility control
@@ -309,12 +323,15 @@ function findMyLocation() {
                 icon: createCurrentLocationIcon()
             }).addTo(map);
 
-            currentLocationMarker.bindTooltip('현재 위치', {
+            const currentLocationTooltip = currentLocationMarker.bindTooltip('현재 위치', {
                 permanent: false,
                 direction: 'top',
                 offset: [0, -25],
                 className: 'leaflet-tooltip current-location-label' // Use the new label class
             }).openTooltip(); // Show tooltip immediately for current location
+
+            // Set border color for current location label
+            currentLocationTooltip.getElement().style.borderLeft = `4px solid #1a73e8`; // Example: blue border
 
             resetLocateButton();
         },
@@ -367,11 +384,16 @@ function createCurrentLocationIcon() {
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
 
+    // Determine the minimum zoom level at which labels should start appearing.
+    // You'll need to adjust this value (e.g., 13, 14, or 15) based on your data density
+    // and when you observe marker overlap.
+    const minZoomForLabels = 14; // Labels visible at zoom 14 and higher
+
     allMarkers.forEach(markerData => {
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
 
-        // Show labels only when zoom is 11 or higher AND their group is visible
-        if (currentZoom >= 11 && isGroupVisible) {
+        // Show labels only when zoom is at or above minZoomForLabels AND their group is visible
+        if (currentZoom >= minZoomForLabels && isGroupVisible) {
             if (!markerData.labelVisible) {
                 markerData.marker.openTooltip();
                 markerData.labelVisible = true;
@@ -553,19 +575,17 @@ function displayGroupDetails(group) {
 // Open Google Maps Function (address-based)
 function openGoogleMaps(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // Note: The googleusercontent.com part is unusual. Typically it's maps.google.com.
-    // I'm updating it to the standard Google Maps URL for searching.
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}&query_place_id=${lat},${lng}`;
+    // Standard Google Maps URL for searching by query (address) or lat/lng for a point.
+    // Using a combined approach for better accuracy.
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress},${lat},${lng}`;
     window.open(googleMapsUrl, '_blank');
 }
 
 // Open Amap Function (address-based)
 function openAmapSearch(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // For Amap, the geoobj parameter might be for bounding boxes. A simple search query is usually enough.
-    const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&keywords=${encodedAddress}`;
-    // If specific lat/lng is needed for exact point:
-    // const amapUrl = `https://ditu.amap.com/regeo?lng=${lng}&lat=${lat}&name=${encodedAddress}`;
+    // Amap URL for searching, including city and a precise lat/lng if available.
+    const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
     window.open(amapUrl, '_blank');
 }
 
