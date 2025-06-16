@@ -128,7 +128,10 @@ function initializeMap() {
 
     // 지도 로드 후 초기 라벨 가시성 설정
     map.whenReady(() => {
-        updateLabelVisibility();
+        // 약간의 지연을 주어 모든 마커와 툴팁이 완전히 렌더링된 후 실행
+        setTimeout(() => {
+            updateLabelVisibility();
+        }, 200);
     });
 }
 
@@ -262,26 +265,22 @@ function displayMarkers() {
         });
 
         // 툴팁(라벨)을 마커 하단에 바인딩하고 동적으로 스타일 적용
-        const tooltip = marker.bindTooltip(labelText, {
+        marker.bindTooltip(labelText, {
             permanent: true, // 항상 툴팁이 활성화되도록 설정 (CSS로 가시성 제어)
             direction: 'bottom', // 라벨을 마커 하단에 배치
             offset: [0, 15], // 마커 중앙에서 아래로 15px 이동
             className: 'leaflet-tooltip', // 커스텀 라벨 스타일 클래스 적용
             opacity: 0 // 초기에는 CSS로 투명하게 설정 (나중에 나타나도록)
-        }).getTooltip();
+        });
 
-        // 툴팁의 왼쪽 테두리 색상을 마커의 타입에 따라 동적으로 설정
-        tooltip.getElement().style.borderLeft = `4px solid ${markerColors[mainType] || '#3498db'}`;
-
-
-        // 라벨 가시성 제어를 위해 마커 정보와 툴팁 엘리먼트를 배열에 저장
+        // 라벨 가시성 제어를 위해 마커 정보를 배열에 저장
         allMarkers.push({
             marker: marker,
             labelText: labelText,
             group: group,
             labelVisible: false, // 초기 라벨 가시성 상태
             groupType: mainType,
-            tooltipElement: tooltip.getElement() // 툴팁 DOM 엘리먼트 참조 저장
+            tooltipElement: null // 나중에 설정될 예정
         });
     });
 
@@ -297,8 +296,19 @@ function displayMarkers() {
         map.fitBounds(allMarkersLayer.getBounds().pad(0.1));
     }
 
-    // 초기 라벨 가시성 설정은 map.whenReady() 이벤트 리스너에서 호출되므로,
-    // 이곳에서는 별도로 호출하지 않아도 됩니다.
+    // 툴팁 엘리먼트들이 DOM에 추가된 후에 참조를 설정
+    setTimeout(() => {
+        allMarkers.forEach((markerData, index) => {
+            const tooltipElements = document.querySelectorAll('.leaflet-tooltip');
+            if (tooltipElements[index]) {
+                markerData.tooltipElement = tooltipElements[index];
+                // 툴팁의 왼쪽 테두리 색상을 마커의 타입에 따라 동적으로 설정
+                markerData.tooltipElement.style.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
+            }
+        });
+        // 툴팁 엘리먼트 설정 후 라벨 가시성 업데이트
+        updateLabelVisibility();
+    }, 100);
 }
 
 // 내 위치 찾기 함수
@@ -400,10 +410,18 @@ function updateLabelVisibility() {
     // 이 값을 조정하여 라벨 표시 시점을 제어합니다. (예: 15, 16)
     const minZoomForLabels = 16; // 줌 레벨 16 이상에서 라벨 표시
 
-    allMarkers.forEach(markerData => {
+    console.log(`현재 줌 레벨: ${currentZoom}, 라벨 표시 최소 줌: ${minZoomForLabels}`);
+
+    allMarkers.forEach((markerData, index) => {
         // 해당 마커의 그룹이 현재 지도에 보이는지 확인
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
         const tooltipElement = markerData.tooltipElement; // 저장된 툴팁 DOM 엘리먼트 참조
+
+        // 툴팁 엘리먼트가 존재하는지 확인
+        if (!tooltipElement) {
+            console.warn(`마커 ${index}의 툴팁 엘리먼트를 찾을 수 없습니다.`);
+            return;
+        }
 
         // 현재 줌 레벨이 라벨 표시 최소 줌 레벨 이상이고, 해당 그룹이 보이는 상태일 때
         if (currentZoom >= minZoomForLabels && isGroupVisible) {
@@ -411,6 +429,7 @@ function updateLabelVisibility() {
                 // 라벨이 보이도록 'show-label' CSS 클래스 추가
                 tooltipElement.classList.add('show-label');
                 markerData.labelVisible = true;
+                console.log(`마커 ${index} 라벨 표시`);
             }
         } else {
             // 라벨 숨기기
@@ -418,6 +437,7 @@ function updateLabelVisibility() {
                 // 라벨이 숨겨지도록 'show-label' CSS 클래스 제거
                 tooltipElement.classList.remove('show-label');
                 markerData.labelVisible = false;
+                console.log(`마커 ${index} 라벨 숨김`);
             }
         }
     });
