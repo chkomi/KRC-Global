@@ -287,7 +287,7 @@ function updateLabelVisibility() {
     const bounds = map.getBounds();
     
     // 줌 레벨이 너무 낮으면 라벨 숨기기
-    if (currentZoom < 12) {
+    if (currentZoom < 11) {
         allMarkers.forEach(markerData => {
             if (markerData.labelVisible) {
                 markerData.labelElement.style.display = 'none';
@@ -323,8 +323,9 @@ function updateLabelPosition(markerData) {
     if (!markerData.labelElement) return;
     
     const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-    markerData.labelElement.style.left = (markerPos.x + 25) + 'px';
-    markerData.labelElement.style.top = (markerPos.y - 10) + 'px';
+    // 구글 지도 스타일: 마커 오른쪽 상단에 약간 떨어져서 배치
+    markerData.labelElement.style.left = (markerPos.x + 15) + 'px';
+    markerData.labelElement.style.top = (markerPos.y - 25) + 'px';
 }
 
 // 그룹 상세 정보 표시 함수 (지도 연결 버튼 추가)
@@ -482,7 +483,7 @@ function getTypeColor(type) {
     }
 }
 
-// 커스텀 아이콘 생성 함수 (구글 스타일 핀)
+// 커스텀 아이콘 생성 함수 (구글 지도 스타일 - 원형 마커)
 function createCustomIcon(type) {
     let iconClass, bgClass;
 
@@ -509,14 +510,13 @@ function createCustomIcon(type) {
     }
 
     return L.divIcon({
-        className: 'google-style-marker',
-        html: `<div class="marker-pin ${bgClass}">
+        className: 'google-circle-marker',
+        html: `<div class="circle-marker ${bgClass}">
                  <i class="${iconClass}"></i>
-               </div>
-               <div class="marker-shadow"></div>`,
-        iconSize: [24, 36],
-        iconAnchor: [12, 36],
-        tooltipAnchor: [0, -36]
+               </div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        tooltipAnchor: [0, -20]
     });
 }
 
