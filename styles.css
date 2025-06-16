@@ -338,11 +338,11 @@ body {
 }
 
 .leaflet-popup-content {
-    padding: 12px !important; /* 내부 콘텐츠 패딩 */
-    max-height: 250px; /* 팝업 콘텐츠의 최대 높이 */
-    overflow-y: auto; /* 내용이 넘칠 경우 스크롤 */
-    font-size: 0.85em; /* 기본 폰트 크기 */
-    width: 250px !important; /* 팝업 고정 너비 설정 */
+    padding: 6px !important; /* 기존 12px에서 절반인 6px로 줄임 */
+    max-height: 250px;
+    overflow-y: auto;
+    font-size: 0.85em;
+    width: 250px !important;
 }
 
 /* Popup close button */
@@ -562,16 +562,20 @@ body {
 @media (max-width: 768px) {
     .title-box {
         top: 10px;
-        left: 10px;
-        right: 60px; /* 위치 버튼 공간 확보 */
-        transform: none;
-        padding: 10px 16px;
-        text-align: center; /* 모바일에서 텍스트 중앙 정렬 */
+        left: 50%; /* 왼쪽을 50%로 설정 */
+        transform: translateX(-50%); /* X축으로 -50% 이동하여 정확히 중앙 정렬 */
+        right: auto; /* right 속성 제거하여 left와 transform으로 제어 */
+        width: calc(100% - 140px); /* 좌우 여백 및 위치 버튼 고려하여 너비 설정 (60px + 60px = 120px, 약간의 추가 여유) */
+        padding: 8px 12px; /* 상하좌우 패딩 조정 */
+        text-align: center; /* 텍스트 중앙 정렬 */
     }
 
     .title-box h1 {
-        font-size: 1.2em;
-        justify-content: center; /* 아이콘과 텍스트 중앙 정렬 */
+        font-size: 1.1em; /* 폰트 크기 약간 더 줄임 */
+        justify-content: center; /* 아이콘과 텍스트 중앙 정렬 유지 */
+        white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 */
+        overflow: hidden; /* 넘치는 텍스트 숨김 */
+        text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
     }
 
     .location-control {
@@ -605,25 +609,20 @@ body {
 
     /* 모바일 팝업 스타일 수정 */
     .leaflet-popup.place-details-popup {
-        /* Leaflet이 팝업 위치를 계산하도록 기본 position: absolute 유지.
-           position: fixed는 지도 상의 요소보다는 뷰포트 고정에 사용됩니다.
-           여기서는 Leaflet이 알아서 잘 배치하도록 맡기고, 팝업 크기만 조절합니다.
-        */
-        max-width: calc(100vw - 20px) !important; /* 화면 너비에 맞춰 조절 */
-        /* left/right/bottom을 고정하면 Leaflet의 autoPan 기능과 충돌할 수 있으므로 제거합니다. */
+        max-width: calc(100vw - 20px) !important;
     }
 
     .leaflet-popup-content-wrapper {
         border-radius: 12px !important;
-        max-height: 250px !important; /* 모바일에서 최대 높이 */
-        width: auto !important; /* 모바일에서 너비 자동 */
+        max-height: 250px !important;
+        width: auto !important;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
     }
 
     .leaflet-popup-content {
-        padding: 10px !important;
+        padding: 5px !important; /* 모바일에서 기존 10px에서 5px로 줄임 */
         font-size: 0.8em !important;
-        max-height: 230px; /* wrapper max-height - padding을 고려 */
+        max-height: 230px;
         overflow-y: auto;
     }
 
