@@ -274,8 +274,8 @@ body {
 .airport-bg { background-color: #9b59b6; }  /* 보라 */
 .accommodation-bg { background-color: #1a73e8; }  /* 구글 파랑 */
 
-/* New Label Design (Applied to Leaflet Tooltip) */
-.leaflet-tooltip {
+/* New Label Design (Applied to Custom Tooltip) */
+.custom-marker-tooltip {
     background: rgba(255, 255, 255, 0.9) !important;
     border-radius: 8px !important;
     padding: 3px 5px !important;
@@ -291,23 +291,25 @@ body {
     font-size: 8px !important;
     line-height: 1.2 !important; /* 줄 높이 조정 */
     visibility: hidden !important; /* 초기에는 보이지 않게 설정 */
-    transform-origin: center bottom !important; /* 마커 하단에서 스케일 시작 */
+    transform-origin: center top !important; /* 마커 상단에서 스케일 시작 */
+    position: relative !important;
+    z-index: 1000 !important;
+    border: none !important;
+    margin: 0 !important;
 }
 
-/* Leaflet의 기본 툴팁 움직임 관련 transition을 새로운 애니메이션으로 설정 */
-/* Leaflet의 기본 margin-top을 조정하여 마커에 더 가깝게 붙도록 함 */
-.leaflet-tooltip.leaflet-tooltip-bottom {
-    transition: opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
-    margin-top: 0px !important; /* 마커에 더 가깝게 붙도록 0으로 설정 */
+/* 마커 툴팁의 위치 고정을 위한 추가 스타일 */
+.custom-marker-tooltip.leaflet-tooltip-bottom {
+    margin-top: 3px !important; /* 마커에서 3px 아래 위치 */
 }
 
-/* Override Leaflet's default tooltip pointer */
-.leaflet-tooltip:before {
+/* Override Leaflet's default tooltip pointer for custom tooltips */
+.custom-marker-tooltip:before {
     display: none !important; /* 툴팁 꼬리 제거 */
 }
 
 /* 라벨이 보일 때 적용되는 클래스 */
-.leaflet-tooltip.show-label {
+.custom-marker-tooltip.show-label {
     opacity: 1 !important; /* 나타날 때 불투명하게 */
     transform: scale(1) !important; /* 정상 크기로 확대 */
     visibility: visible !important; /* 가시성 명시적으로 설정 */
@@ -323,6 +325,7 @@ body {
     font-size: 10px !important; /* 현재 위치 라벨은 다른 라벨보다 조금 크게 */
     padding: 5px 8px !important;
     visibility: visible !important; /* 현재 위치 라벨은 항상 보이도록 */
+    transform: scale(1) !important; /* 현재 위치는 스케일 애니메이션 없이 */
 }
 
 /* --- Leaflet Popup Customization (New Styles) --- */
@@ -557,7 +560,6 @@ body {
     background: #95a5a6;
 }
 
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .title-box {
@@ -650,7 +652,7 @@ body {
     }
 
     /* 모바일 라벨 크기 조정 */
-    .leaflet-tooltip {
+    .custom-marker-tooltip {
         font-size: 7px !important; /* 모바일 라벨 폰트 크기 추가 조정 */
         padding: 2px 4px !important; /* 패딩 추가 조정 */
     }
