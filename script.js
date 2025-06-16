@@ -97,12 +97,6 @@ function initializeMap() {
     // 줌 레벨 변경 시 라벨 가시성 업데이트
     map.on('zoomend moveend', () => {
         updateLabelVisibility();
-        // 모든 라벨 위치 업데이트
-        allMarkers.forEach(markerData => {
-            if (markerData.labelVisible) {
-                updateLabelPosition(markerData);
-            }
-        });
     });
 }
 
@@ -144,13 +138,6 @@ function toggleMarkerGroup(type, show) {
         markerGroups[type].addTo(map);
     } else {
         map.removeLayer(markerGroups[type]);
-        // 해당 그룹의 라벨들 숨기기
-        allMarkers.forEach(markerData => {
-            if (markerData.groupType === type && markerData.labelVisible) {
-                markerData.labelElement.style.display = 'none';
-                markerData.labelVisible = false;
-            }
-        });
     }
     // 라벨 가시성 업데이트
     setTimeout(() => {
@@ -165,16 +152,9 @@ function displayMarkers() {
         return;
     }
 
-    // 기존 마커들과 라벨들 제거
+    // 기존 마커들 제거
     Object.values(markerGroups).forEach(group => {
         group.clearLayers();
-    });
-    
-    // 기존 라벨 요소들 제거
-    allMarkers.forEach(markerData => {
-        if (markerData.labelElement) {
-            markerData.labelElement.remove();
-        }
     });
     
     allMarkers = [];
@@ -221,13 +201,12 @@ function displayMarkers() {
             icon: createCustomIcon(mainType)
         }).addTo(markerGroups[mainType]);
 
-        // 라벨 텍스트 생성
+        // 라벨 텍스트 생성 (한글만 추출)
         let labelText;
         if (group.places.length === 1) {
-            // name 사용
-            labelText = group.places[0].name;
+            labelText = extractKorean(group.places[0].name);
         } else {
-            const firstPlaceName = group.places[0].name;
+            const firstPlaceName = extractKorean(group.places[0].name);
             labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
@@ -236,14 +215,19 @@ function displayMarkers() {
             map.flyTo([group.latitude, group.longitude], 15);
         });
 
-        // 구글 스타일 라벨 생성
-        const labelElement = createGoogleStyleLabel(labelText);
+        // Leaflet 기본 툴팁 사용 (부드러운 이동을 위해)
+        marker.bindTooltip(labelText, {
+            permanent: true,
+            direction: 'top',
+            offset: [15, -25],
+            className: 'google-map-label',
+            opacity: 1
+        });
         
-        // 마커 정보를 배열에 저장
+        // 마커 정보를 배열에 저장 (간소화)
         allMarkers.push({
             marker: marker,
             labelText: labelText,
-            labelElement: labelElement,
             group: group,
             labelVisible: false,
             groupType: mainType
@@ -268,7 +252,23 @@ function displayMarkers() {
     }, 500);
 }
 
-// 구글 스타일 라벨 생성 함수
+// 한글 추출 함수
+function extractKorean(text) {
+    // 괄호 안의 한글 부분을 먼저 찾기
+    const koreanInParentheses = text.match(/\(([가-힣\s]+)/);
+    if (koreanInParentheses) {
+        return koreanInParentheses[1].trim();
+    }
+    
+    // 괄호가 없다면 전체 텍스트에서 한글 부분 추출
+    const koreanParts = text.match(/[가-힣\s]+/g);
+    if (koreanParts && koreanParts.length > 0) {
+        return koreanParts[0].trim();
+    }
+    
+    // 한글이 없다면 원본 텍스트 반환
+    return text;
+}
 function createGoogleStyleLabel(text) {
     const labelElement = document.createElement('div');
     labelElement.className = 'google-style-label';
@@ -281,37 +281,23 @@ function createGoogleStyleLabel(text) {
     return labelElement;
 }
 
-// 라벨 가시성 업데이트 함수 (구글 지도 스타일)
+// 라벨 가시성 업데이트 함수 (간소화)
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
-    const bounds = map.getBounds();
     
-    // 줌 레벨이 너무 낮으면 라벨 숨기기
-    if (currentZoom < 11) {
-        allMarkers.forEach(markerData => {
-            if (markerData.labelVisible) {
-                markerData.labelElement.style.display = 'none';
-                markerData.labelVisible = false;
-            }
-        });
-        return;
-    }
-
-    // 현재 보이는 마커 그룹의 마커들 처리
     allMarkers.forEach(markerData => {
-        const latLng = markerData.marker.getLatLng();
-        const isInBounds = bounds.contains(latLng);
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
         
-        if (isInBounds && isGroupVisible) {
-            if (!markerData.labelVisible && markerData.labelElement) {
-                markerData.labelElement.style.display = 'block';
+        if (currentZoom >= 11 && isGroupVisible) {
+            // 라벨 표시
+            if (!markerData.labelVisible) {
+                markerData.marker.openTooltip();
                 markerData.labelVisible = true;
-                updateLabelPosition(markerData);
             }
         } else {
-            if (markerData.labelVisible && markerData.labelElement) {
-                markerData.labelElement.style.display = 'none';
+            // 라벨 숨기기
+            if (markerData.labelVisible) {
+                markerData.marker.closeTooltip();
                 markerData.labelVisible = false;
             }
         }
@@ -515,8 +501,7 @@ function createCustomIcon(type) {
                  <i class="${iconClass}"></i>
                </div>`,
         iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        tooltipAnchor: [0, -20]
+        iconAnchor: [10, 10]
     });
 }
 
