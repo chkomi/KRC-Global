@@ -3,8 +3,8 @@ let map;
 let markers = L.featureGroup();
 let currentTileLayer;
 let shanghaiData = null;
-let allMarkers = []; // Array to store all marker data including label visibility
-let currentLocationMarker = null; // Current location marker
+let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시성 포함)
+let currentLocationMarker = null; // 현재 위치 마커
 let markerGroups = {
     attractions: L.featureGroup(),
     restaurants: L.featureGroup(),
@@ -12,31 +12,31 @@ let markerGroups = {
     airports: L.featureGroup()
 };
 
-// Map marker background colors for dynamic label border
+// 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
-    attractions: '#ea4335',
-    restaurants: '#34a853',
-    airports: '#9b59b6',
-    hotels: '#1a73e8'
+    attractions: '#ea4335', // 관광지
+    restaurants: '#34a853', // 음식점
+    airports: '#9b59b6',    // 공항
+    hotels: '#1a73e8'       // 호텔
 };
 
 
-// Initialize on document load
+// 문서 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadData();
-    initializeMap();
-    setupEventListeners();
+    await loadData(); // 데이터 로드
+    initializeMap();  // 지도 초기화
+    setupEventListeners(); // 이벤트 리스너 설정
 });
 
-// Function to load data
+// 데이터 로드 함수
 async function loadData() {
     try {
         const response = await fetch('data/shanghai-data.json');
         shanghaiData = await response.json();
-        console.log('Data loaded successfully:', shanghaiData);
+        console.log('데이터 로드 완료:', shanghaiData);
     } catch (error) {
-        console.error('Failed to load data:', error);
-        // Initialize with empty data on failure
+        console.error('데이터 로드 실패:', error);
+        // 데이터 로드 실패 시 빈 데이터로 초기화
         shanghaiData = {
             shanghai_tourism: {
                 attractions: [],
@@ -48,7 +48,7 @@ async function loadData() {
     }
 }
 
-// Function to extract Korean text
+// 한글 추출 함수
 function extractKorean(text) {
     // 괄호 안의 한글 부분을 먼저 찾기
     const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
@@ -70,9 +70,9 @@ function extractKorean(text) {
     return text;
 }
 
-// Map Initialization Function
+// 지도 초기화 함수
 function initializeMap() {
-    // 지도 초기화 (상하이 중심)
+    // 지도 초기화 (상하이 중심, 초기 줌 레벨 12)
     map = L.map('map').setView([31.2304, 121.4737], 12);
 
     // 다양한 타일 레이어 정의
@@ -104,6 +104,7 @@ function initializeMap() {
                 currentTileLayer = tileLayers[this.value];
                 currentTileLayer.addTo(map);
 
+                // 현재 선택된 타일 옵션에 'active' 클래스 추가
                 document.querySelectorAll('.tile-option').forEach(option => {
                     option.classList.remove('active');
                 });
@@ -131,7 +132,7 @@ function initializeMap() {
     });
 }
 
-// 이벤트 리스너 설정
+// 이벤트 리스너 설정 함수
 function setupEventListeners() {
     // ESC 키로 정보 박스 닫기
     document.addEventListener('keydown', (e) => {
@@ -140,9 +141,8 @@ function setupEventListeners() {
         }
     });
 
-    // 지도 클릭 시 정보 박스 닫기
+    // 지도 클릭 시 정보 박스 닫기 (마커나 팝업 등이 아닌 순수 지도 배경 클릭 시)
     map.on('click', (e) => {
-        // 클릭 대상이 직접 지도 컨테이너인지 확인 (마커나 팝업 등이 아닌 경우)
         if (e.originalEvent && e.originalEvent.target === map.getContainer()) {
             closeInfoBox();
         }
@@ -168,7 +168,7 @@ function setupEventListeners() {
     });
 }
 
-// 마커 그룹 토글 함수
+// 마커 그룹 토글 함수 (범례 체크박스와 연동)
 function toggleMarkerGroup(type, show) {
     if (show) {
         markerGroups[type].addTo(map);
@@ -177,6 +177,7 @@ function toggleMarkerGroup(type, show) {
     }
 
     // 그룹 가시성 변경 후 라벨 가시성 업데이트
+    // 약간의 지연을 주어 레이어가 완전히 추가/제거된 후 반영되도록 함
     setTimeout(() => {
         updateLabelVisibility();
     }, 100);
@@ -189,13 +190,13 @@ function displayMarkers() {
         return;
     }
 
-    // 기존 마커들 제거
+    // 기존 마커들 제거 및 배열 초기화
     Object.values(markerGroups).forEach(group => {
         group.clearLayers();
     });
     allMarkers = [];
 
-    // 모든 장소 데이터 합치기
+    // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
     const types = ['attractions', 'restaurants', 'hotels', 'airports'];
 
@@ -206,11 +207,11 @@ function displayMarkers() {
         });
     });
 
-    // 위치별로 장소들을 그룹화
+    // 위치(좌표)별로 장소들을 그룹화 (동일 좌표에 여러 장소가 있을 수 있으므로)
     const locationGroups = {};
 
     allPlaces.forEach(place => {
-        // 부동 소수점 문제 방지를 위해 정밀도를 고정하여 그룹화
+        // 부동 소수점 문제 방지를 위해 위도, 경도 정밀도를 고정하여 키 생성
         const lat = parseFloat(place.latitude).toFixed(4);
         const lng = parseFloat(place.longitude).toFixed(4);
         const locationKey = `${lat},${lng}`;
@@ -219,7 +220,7 @@ function displayMarkers() {
             locationGroups[locationKey] = {
                 latitude: place.latitude,
                 longitude: place.longitude,
-                places: []
+                places: [] // 이 위치에 해당하는 모든 장소들
             };
         }
         locationGroups[locationKey].places.push(place);
@@ -227,18 +228,18 @@ function displayMarkers() {
 
     // 각 위치 그룹에 대해 마커 생성
     Object.values(locationGroups).forEach(group => {
-        // 우선순위가 높은 타입으로 마커 아이콘 결정 (예: 공항 > 관광지 > 호텔 > 음식점)
+        // 동일 좌표에 여러 타입의 장소가 있을 경우, 아이콘 표시 우선순위를 결정
         const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
         const mainType = group.places.reduce((prev, curr) =>
             (priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr)
         ).type;
 
-        // 마커 생성
+        // 마커 생성 및 해당 마커 그룹에 추가
         const marker = L.marker([group.latitude, group.longitude], {
             icon: createCustomIcon(mainType)
         }).addTo(markerGroups[mainType]);
 
-        // 라벨 텍스트 생성 (한글만 추출)
+        // 라벨 텍스트 생성 (한글 부분만 추출)
         let labelText;
         if (group.places.length === 1) {
             labelText = extractKorean(group.places[0].name);
@@ -247,36 +248,37 @@ function displayMarkers() {
             labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
-        // 클릭 이벤트로 그룹 상세 정보 표시
+        // 마커 클릭 시 정보 박스 표시 및 지도를 해당 위치로 이동
         marker.on('click', () => {
             displayGroupDetails(group);
-            map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 확대
+            map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
         });
 
         // 툴팁(라벨)을 마커 하단에 바인딩하고 동적으로 스타일 적용
         const tooltip = marker.bindTooltip(labelText, {
-            permanent: true,
+            permanent: true, // 항상 툴팁이 활성화되도록 설정 (CSS로 가시성 제어)
             direction: 'bottom', // 라벨을 마커 하단에 배치
             offset: [0, 15], // 마커 중앙에서 아래로 15px 이동
-            className: 'leaflet-tooltip', // 새로운 라벨 디자인 클래스 사용
-            opacity: 0 // 초기에는 투명하게 설정 (CSS transition으로 나타남)
+            className: 'leaflet-tooltip', // 커스텀 라벨 스타일 클래스 적용
+            opacity: 0 // 초기에는 CSS로 투명하게 설정 (나중에 나타나도록)
         }).getTooltip();
 
-        // 툴팁의 왼쪽 테두리 색상을 마커의 색상과 동일하게 설정
+        // 툴팁의 왼쪽 테두리 색상을 마커의 타입에 따라 동적으로 설정
         tooltip.getElement().style.borderLeft = `4px solid ${markerColors[mainType] || '#3498db'}`;
 
 
-        // 가시성 제어를 위해 마커 정보 저장
+        // 라벨 가시성 제어를 위해 마커 정보와 툴팁 엘리먼트를 배열에 저장
         allMarkers.push({
             marker: marker,
             labelText: labelText,
             group: group,
             labelVisible: false, // 초기 라벨 가시성 상태
-            groupType: mainType
+            groupType: mainType,
+            tooltipElement: tooltip.getElement() // 툴팁 DOM 엘리먼트 참조 저장
         });
     });
 
-    // 모든 마커가 보이도록 지도 뷰 조정
+    // 모든 마커를 포함하도록 지도 뷰를 조정
     const allMarkersLayer = L.featureGroup();
     Object.values(markerGroups).forEach(group => {
         group.getLayers().forEach(layer => {
@@ -288,8 +290,8 @@ function displayMarkers() {
         map.fitBounds(allMarkersLayer.getBounds().pad(0.1));
     }
 
-    // 초기 라벨 가시성 설정 (지도 로드 완료 후 실행)
-    // 이 부분은 map.whenReady() 에서 호출되도록 했습니다.
+    // 초기 라벨 가시성 설정은 map.whenReady() 이벤트 리스너에서 호출되므로,
+    // 이곳에서는 별도로 호출하지 않아도 됩니다.
 }
 
 // 내 위치 찾기 함수
@@ -298,8 +300,8 @@ function findMyLocation() {
     const icon = locateBtn.querySelector('i');
 
     // 로딩 상태로 변경
-    icon.className = 'fas fa-spinner fa-spin';
-    locateBtn.disabled = true;
+    icon.className = 'fas fa-spinner fa-spin'; // 로딩 스피너 아이콘
+    locateBtn.disabled = true; // 버튼 비활성화
 
     if (!navigator.geolocation) {
         alert('이 브라우저에서는 위치 서비스가 지원되지 않습니다.');
@@ -312,7 +314,7 @@ function findMyLocation() {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
-            // 지도를 현재 위치로 이동
+            // 지도를 현재 위치로 이동 및 확대
             map.setView([lat, lng], 15);
 
             // 기존 현재 위치 마커 제거
@@ -325,17 +327,18 @@ function findMyLocation() {
                 icon: createCurrentLocationIcon()
             }).addTo(map);
 
+            // 현재 위치 마커에 툴팁 바인딩
             const currentLocationTooltip = currentLocationMarker.bindTooltip('현재 위치', {
-                permanent: false,
-                direction: 'top',
+                permanent: false, // 현재 위치 라벨은 영구적이지 않음 (클릭 시 사라짐)
+                direction: 'top', // 마커 상단에 배치
                 offset: [0, -25],
-                className: 'leaflet-tooltip current-location-label' // 새로운 라벨 클래스 사용
-            }).openTooltip(); // 현재 위치 툴팁은 즉시 보이도록
+                className: 'leaflet-tooltip current-location-label' // 커스텀 클래스 적용
+            }).openTooltip(); // 툴팁 즉시 표시
 
             // 현재 위치 라벨 테두리 색상 설정
-            currentLocationTooltip.getElement().style.borderLeft = `4px solid #1a73e8`;
+            currentLocationTooltip.getElement().style.borderLeft = `4px solid #1a73e8`; // 파란색 테두리
 
-            resetLocateButton();
+            resetLocateButton(); // 버튼 상태 리셋
         },
         function(error) {
             let errorMessage = '위치를 찾을 수 없습니다.';
@@ -354,57 +357,58 @@ function findMyLocation() {
             resetLocateButton();
         },
         {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 60000
+            enableHighAccuracy: true,  // 고정밀 위치 정보 요청
+            timeout: 10000,            // 10초 타임아웃
+            maximumAge: 60000          // 1분 이내 캐시된 위치 정보 사용
         }
     );
 }
 
-// 위치 버튼 리셋
+// 위치 찾기 버튼 상태 리셋 함수
 function resetLocateButton() {
     const locateBtn = document.getElementById('locate-btn');
     const icon = locateBtn.querySelector('i');
 
-    icon.className = 'fas fa-location-crosshairs';
-    locateBtn.disabled = false;
+    icon.className = 'fas fa-location-crosshairs'; // 기본 아이콘으로 변경
+    locateBtn.disabled = false; // 버튼 활성화
 }
 
-// 현재 위치 아이콘 생성
+// 현재 위치 마커 아이콘 생성 함수
 function createCurrentLocationIcon() {
     return L.divIcon({
         className: 'current-location-marker',
         html: `<div class="location-pulse">
                  <div class="location-dot"></div>
                </div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
+        iconSize: [20, 20], // 아이콘 크기
+        iconAnchor: [10, 10] // 아이콘 기준점 (중앙)
     });
 }
 
-// 줌 및 그룹 가시성에 따라 라벨 가시성 업데이트
+// 줌 레벨 및 그룹 가시성에 따라 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
 
-    // 라벨이 나타나기 시작할 최소 줌 레벨을 설정합니다.
-    // 이 값은 데이터 밀도와 마커 겹침 정도에 따라 조정해야 합니다.
-    const minZoomForLabels = 15; // 줌 레벨 15 이상에서 라벨 표시
+    // 라벨이 나타나기 시작할 최소 줌 레벨 설정
+    // 이 값을 조정하여 라벨 표시 시점을 제어합니다. (예: 15, 16)
+    const minZoomForLabels = 16; // 줌 레벨 16 이상에서 라벨 표시
 
     allMarkers.forEach(markerData => {
+        // 해당 마커의 그룹이 현재 지도에 보이는지 확인
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
-        const tooltipElement = markerData.marker.getTooltip().getElement();
+        const tooltipElement = markerData.tooltipElement; // 저장된 툴팁 DOM 엘리먼트 참조
 
         // 현재 줌 레벨이 라벨 표시 최소 줌 레벨 이상이고, 해당 그룹이 보이는 상태일 때
         if (currentZoom >= minZoomForLabels && isGroupVisible) {
             if (!markerData.labelVisible) {
-                // 라벨이 보이도록 CSS 클래스 추가
+                // 라벨이 보이도록 'show-label' CSS 클래스 추가
                 tooltipElement.classList.add('show-label');
                 markerData.labelVisible = true;
             }
         } else {
             // 라벨 숨기기
             if (markerData.labelVisible) {
-                // 라벨이 숨겨지도록 CSS 클래스 제거
+                // 라벨이 숨겨지도록 'show-label' CSS 클래스 제거
                 tooltipElement.classList.remove('show-label');
                 markerData.labelVisible = false;
             }
@@ -414,8 +418,9 @@ function updateLabelVisibility() {
 
 // 커스텀 아이콘 생성 함수 (원형 마커)
 function createCustomIcon(type) {
-    let iconClass, bgClass;
+    let iconClass, bgClass; // 아이콘 클래스와 배경색 클래스
 
+    // 타입에 따라 아이콘과 배경색 클래스 결정
     switch (type) {
         case 'attractions':
             iconClass = 'fas fa-camera';
@@ -433,22 +438,23 @@ function createCustomIcon(type) {
             iconClass = 'fas fa-bed';
             bgClass = 'accommodation-bg';
             break;
-        default:
+        default: // 기본값
             iconClass = 'fas fa-map-marker-alt';
             bgClass = 'tourism-bg';
     }
 
+    // L.divIcon을 사용하여 커스텀 HTML 기반 마커 생성
     return L.divIcon({
-        className: 'google-circle-marker',
+        className: 'google-circle-marker', // 마커 컨테이너 클래스
         html: `<div class="circle-marker ${bgClass}">
                  <i class="${iconClass}"></i>
-               </div>`,
-        iconSize: [18, 18], // 마커 크기 24px * 0.75 = 18px
-        iconAnchor: [9, 9] // 중앙 기준 18px / 2 = 9px
+               </div>`, // 마커 내부 HTML (원형 배경과 아이콘)
+        iconSize: [18, 18], // 마커 전체 크기 (가로, 세로)
+        iconAnchor: [9, 9] // 아이콘 기준점 (중앙)
     });
 }
 
-// 그룹 상세 정보 표시 함수
+// 그룹 상세 정보 표시 함수 (클릭 시 정보 박스에 내용 채우기)
 function displayGroupDetails(group) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
@@ -456,7 +462,7 @@ function displayGroupDetails(group) {
     let detailsHtml = '';
 
     if (group.places.length === 1) {
-        // 단일 장소
+        // 단일 장소인 경우
         const place = group.places[0];
         detailsHtml = `
             <div class="place-type-badge type-${place.type}">
@@ -485,7 +491,7 @@ function displayGroupDetails(group) {
             detailsHtml += `</ul>`;
         }
 
-        // 지도 연결 버튼
+        // 외부 지도 연결 버튼
         detailsHtml += `
             <div class="map-links">
                 <h4><i class="fas fa-external-link-alt"></i> 외부 지도에서 보기</h4>
@@ -500,7 +506,7 @@ function displayGroupDetails(group) {
             </div>
         `;
     } else {
-        // 여러 장소 그룹
+        // 여러 장소가 그룹화된 경우
         detailsHtml = `
             <div class="group-header">
                 <h3>
@@ -550,13 +556,14 @@ function displayGroupDetails(group) {
 
             detailsHtml += `</div>`;
 
+            // 마지막 요소가 아니면 구분선 추가
             if (index < group.places.length - 1) {
                 detailsHtml += `<div class="place-separator"></div>`;
             }
         });
 
         // 그룹 전체 지도 연결 버튼
-        const firstPlace = group.places[0];
+        const firstPlace = group.places[0]; // 그룹의 첫 번째 장소 정보 사용
         detailsHtml += `
             <div class="group-map-links">
                 <h4><i class="fas fa-external-link-alt"></i> 이 위치 전체보기</h4>
@@ -572,22 +579,20 @@ function displayGroupDetails(group) {
         `;
     }
 
-    placeContent.innerHTML = detailsHtml;
-    infoBox.classList.add('show');
+    placeContent.innerHTML = detailsHtml; // 생성된 HTML을 정보 박스에 삽입
+    infoBox.classList.add('show'); // 정보 박스를 보이도록
 }
 
-// 구글지도 열기 함수 (주소 기반)
+// 구글지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openGoogleMaps(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // 정확한 위치와 함께 주소를 쿼리로 사용
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress},${lat},${lng}`;
     window.open(googleMapsUrl, '_blank');
 }
 
-// 가오더지도 열기 함수 (주소 기반)
+// 가오더지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openAmapSearch(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // 도시와 쿼리를 포함한 검색 URL
     const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
     window.open(amapUrl, '_blank');
 }
@@ -595,10 +600,10 @@ function openAmapSearch(address, lat, lng) {
 // 정보 박스 닫기 함수
 function closeInfoBox() {
     const infoBox = document.getElementById('place-details');
-    infoBox.classList.remove('show');
+    infoBox.classList.remove('show'); // 정보 박스를 숨기도록
 }
 
-// 타입별 아이콘 반환 함수
+// 타입별 아이콘 반환 함수 (UI에 사용)
 function getTypeIcon(type) {
     switch (type) {
         case 'attractions': return '📷';
@@ -609,7 +614,7 @@ function getTypeIcon(type) {
     }
 }
 
-// 타입별 한국어 이름 반환 함수
+// 타입별 한국어 이름 반환 함수 (UI에 사용)
 function getTypeDisplayName(type) {
     switch (type) {
         case 'attractions': return '관광지';
