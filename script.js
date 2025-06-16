@@ -1,8 +1,10 @@
 // 전역 변수
 let map;
+let markers = L.featureGroup();
 let currentTileLayer;
 let shanghaiData = null;
-let allMarkers = [];
+let allMarkers = []; // 모든 마커를 저장할 배열
+let currentLocationMarker = null; // 현재 위치 마커
 let markerGroups = {
     attractions: L.featureGroup(),
     restaurants: L.featureGroup(),
@@ -25,6 +27,7 @@ async function loadData() {
         console.log('데이터 로드 완료:', shanghaiData);
     } catch (error) {
         console.error('데이터 로드 실패:', error);
+        // 로드 실패 시 빈 데이터로 초기화
         shanghaiData = {
             shanghai_tourism: {
                 attractions: [],
@@ -139,6 +142,11 @@ function setupEventListeners() {
     document.getElementById('airports-toggle').addEventListener('change', function() {
         toggleMarkerGroup('airports', this.checked);
     });
+
+    // 위치 찾기 버튼 이벤트 리스너
+    document.getElementById('locate-btn').addEventListener('click', function() {
+        findMyLocation();
+    });
 }
 
 // 마커 그룹 토글 함수
@@ -148,6 +156,7 @@ function toggleMarkerGroup(type, show) {
     } else {
         map.removeLayer(markerGroups[type]);
     }
+    
     setTimeout(() => {
         updateLabelVisibility();
     }, 100);
@@ -177,7 +186,7 @@ function displayMarkers() {
         });
     });
 
-    // 위치별로 장소들을 그룹화 (소수점 4자리까지 같으면 같은 위치로 간주)
+    // 위치별로 장소들을 그룹화
     const locationGroups = {};
     
     allPlaces.forEach(place => {
@@ -198,12 +207,13 @@ function displayMarkers() {
 
     // 각 위치 그룹에 대해 마커 생성
     Object.values(locationGroups).forEach(group => {
-        // 그룹에서 가장 우선순위가 높은 타입으로 마커 아이콘 결정
+        // 우선순위가 높은 타입으로 마커 아이콘 결정
         const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
         const mainType = group.places.reduce((prev, curr) => 
             priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr
         ).type;
 
+        // 마커 생성
         const marker = L.marker([group.latitude, group.longitude], {
             icon: createCustomIcon(mainType)
         }).addTo(markerGroups[mainType]);
@@ -217,22 +227,22 @@ function displayMarkers() {
             labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
-        // 마커 클릭 이벤트
+        // 클릭 이벤트
         marker.on('click', () => {
             displayGroupDetails(group);
             map.flyTo([group.latitude, group.longitude], 15);
         });
 
-        // Leaflet 툴팁을 사용하여 라벨 생성 (부드러운 이동)
+        // 툴팁(라벨) 바인딩 - 머티리얼 디자인 적용
         marker.bindTooltip(labelText, {
             permanent: true,
             direction: 'top',
-            offset: [15, -25],
-            className: 'google-map-label',
+            offset: [15, -30],
+            className: 'material-label',
             opacity: 1
         });
-        
-        // 마커 정보를 배열에 저장
+
+        // 마커 정보 저장
         allMarkers.push({
             marker: marker,
             labelText: labelText,
@@ -260,7 +270,92 @@ function displayMarkers() {
     }, 500);
 }
 
-// 라벨 가시성 업데이트 함수
+// 내 위치 찾기 함수
+function findMyLocation() {
+    const locateBtn = document.getElementById('locate-btn');
+    const icon = locateBtn.querySelector('i');
+    
+    // 로딩 상태로 변경
+    icon.className = 'fas fa-spinner fa-spin';
+    locateBtn.disabled = true;
+
+    if (!navigator.geolocation) {
+        alert('이 브라우저에서는 위치 서비스가 지원되지 않습니다.');
+        resetLocateButton();
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // 지도를 현재 위치로 이동
+            map.setView([lat, lng], 15);
+            
+            // 기존 현재 위치 마커 제거
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+            
+            // 현재 위치 마커 생성
+            currentLocationMarker = L.marker([lat, lng], {
+                icon: createCurrentLocationIcon()
+            }).addTo(map);
+            
+            currentLocationMarker.bindTooltip('현재 위치', {
+                permanent: false,
+                direction: 'top',
+                offset: [0, -25],
+                className: 'material-label current-location-label'
+            });
+            
+            resetLocateButton();
+        },
+        function(error) {
+            let errorMessage = '위치를 찾을 수 없습니다.';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = '위치 접근이 거부되었습니다.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = '위치 정보를 사용할 수 없습니다.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = '위치 요청 시간이 초과되었습니다.';
+                    break;
+            }
+            alert(errorMessage);
+            resetLocateButton();
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000
+        }
+    );
+}
+
+// 위치 버튼 리셋
+function resetLocateButton() {
+    const locateBtn = document.getElementById('locate-btn');
+    const icon = locateBtn.querySelector('i');
+    
+    icon.className = 'fas fa-location-crosshairs';
+    locateBtn.disabled = false;
+}
+
+// 현재 위치 아이콘 생성
+function createCurrentLocationIcon() {
+    return L.divIcon({
+        className: 'current-location-marker',
+        html: `<div class="location-pulse">
+                 <div class="location-dot"></div>
+               </div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+    });
+}
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     
@@ -283,7 +378,7 @@ function updateLabelVisibility() {
     });
 }
 
-// 커스텀 아이콘 생성 함수 (구글 지도 스타일 원형 마커)
+// 커스텀 아이콘 생성 함수 (원형 마커)
 function createCustomIcon(type) {
     let iconClass, bgClass;
 
@@ -327,7 +422,7 @@ function displayGroupDetails(group) {
     let detailsHtml = '';
     
     if (group.places.length === 1) {
-        // 단일 장소인 경우
+        // 단일 장소
         const place = group.places[0];
         detailsHtml = `
             <div class="place-type-badge type-${place.type}">
@@ -371,7 +466,7 @@ function displayGroupDetails(group) {
             </div>
         `;
     } else {
-        // 여러 장소인 경우
+        // 여러 장소 그룹
         detailsHtml = `
             <div class="group-header">
                 <h3>
@@ -407,7 +502,7 @@ function displayGroupDetails(group) {
                 detailsHtml += `<p><strong>메뉴:</strong> ${place.menu.join(', ')}</p>`;
             }
 
-            // 각 장소별 지도 연결 버튼
+            // 개별 지도 연결 버튼
             detailsHtml += `
                 <div class="place-map-buttons">
                     <button class="map-btn-small google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})" title="구글지도에서 ${place.name} 검색">
@@ -426,7 +521,7 @@ function displayGroupDetails(group) {
             }
         });
 
-        // 그룹 전체 위치 지도 연결 버튼
+        // 그룹 전체 지도 연결 버튼
         const firstPlace = group.places[0];
         detailsHtml += `
             <div class="group-map-links">
