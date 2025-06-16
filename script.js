@@ -1,6 +1,6 @@
 // Global Variables
 let map;
-let markers = L.featureGroup(); // 현재 사용되지 않지만, 레거시로 남겨둠
+let markers = L.featureGroup();
 let currentTileLayer;
 let shanghaiData = null;
 let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시성 포함)
@@ -59,7 +59,7 @@ async function loadData() {
     }
 }
 
-// 한글 추출 함수
+// 텍스트에서 한글 부분만 추출하는 함수
 function extractKorean(text) {
     // 괄호 안의 한글 부분을 먼저 찾기 (예: "와이탄 (The Bund)")
     const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
@@ -81,7 +81,7 @@ function extractKorean(text) {
     return text;
 }
 
-// 커스텀 아이콘 생성 함수 (원형 마커) -- MOVED TO HERE!
+// 커스텀 아이콘 생성 함수 (원형 마커)
 function createCustomIcon(type) {
     let iconClass, bgClass;
 
@@ -318,7 +318,7 @@ function displayMarkers() {
         ).type;
 
         // 마커 생성 및 해당 마커 그룹에 추가
-        const customIcon = createCustomIcon(mainType); // <--- createCustomIcon 호출
+        const customIcon = createCustomIcon(mainType);
         if (!customIcon) {
             console.error(`아이콘 생성 실패 for group ${groupIndex} (Type: ${mainType}). 이 마커는 표시되지 않습니다.`);
             return;
@@ -353,7 +353,7 @@ function displayMarkers() {
         marker.bindTooltip(labelText, {
             permanent: true, // 항상 툴팁이 활성화되도록 설정 (CSS로 가시성 제어)
             direction: 'bottom', // 라벨을 마커 하단에 배치
-            offset: [0, 5], // 마커 중앙에서 아래로 5px 이동 (마커 크기 고려, 더 가깝게)
+            offset: [0, 10], // 마커 중앙에서 아래로 10px 이동 (마커 크기 고려, 더 가깝게)
             className: 'leaflet-tooltip', // 커스텀 라벨 스타일 클래스 적용
             opacity: 0 // 초기에는 CSS로 투명하게 설정 (나중에 나타나도록)
         });
@@ -668,10 +668,10 @@ function displayGroupDetailsAsPopup(marker, group) {
 // 구글지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openGoogleMaps(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
-    // Google Maps 검색 쿼리 사용: q= 검색어 + @위도,경도
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress},${lat},${lng}&query_place_id=${lat},${lng}`;
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedAddress}`;
     window.open(googleMapsUrl, '_blank');
 }
+
 
 // 가오더지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openAmapSearch(address, lat, lng) {
