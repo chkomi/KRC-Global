@@ -246,8 +246,8 @@ body {
 }
 
 .circle-marker {
-    width: 18px; /* 24px * 0.75 = 18px */
-    height: 18px; /* 24px * 0.75 = 18px */
+    width: 18px; /* 마커 크기 24px * 0.75 = 18px */
+    height: 18px; /* 마커 크기 24px * 0.75 = 18px */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -264,46 +264,49 @@ body {
 
 .circle-marker i {
     color: white;
-    font-size: 9px; /* 12px * 0.75 = 9px */
+    font-size: 9px; /* 아이콘 크기 12px * 0.75 = 9px */
     font-weight: bold;
 }
 
 /* Marker Colors - Google Style */
-.tourism-bg { background-color: #ea4335; }  /* Google Red */
-.restaurant-bg { background-color: #34a853; }  /* Google Green */
-.airport-bg { background-color: #9b59b6; }  /* Purple */
-.accommodation-bg { background-color: #1a73e8; }  /* Google Blue */
+.tourism-bg { background-color: #ea4335; }  /* 구글 빨강 */
+.restaurant-bg { background-color: #34a853; }  /* 구글 초록 */
+.airport-bg { background-color: #9b59b6; }  /* 보라 */
+.accommodation-bg { background-color: #1a73e8; }  /* 구글 파랑 */
 
 /* New Label Design (Applied to Leaflet Tooltip) */
 .leaflet-tooltip {
     background: rgba(255, 255, 255, 0.9) !important;
     border-radius: 8px !important;
-    padding: 4px 6px !important; /* Original 8px 12px -> 4px 6px (roughly 50%) */
+    padding: 3px 5px !important; /* 이전 4px 6px 에서 더 줄여서 위아래 75% 효과 (시각적) */
     box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
     font-family: 'Noto Sans KR', sans-serif !important;
     font-weight: 500 !important;
     color: #333 !important;
     white-space: nowrap !important;
-    opacity: 0; /* 초기에는 숨김 */
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out !important; /* 부드러운 애니메이션 */
-    pointer-events: none; /* Allows clicks to pass through to map below */
-    font-size: 10px !important; /* Original 13px -> 10px (roughly 75%, visual adjustment for 50%) */
+    opacity: 0; /* 초기에는 투명하게 설정 */
+    transition: opacity 0.3s ease-out !important; /* 나타나고 사라지는 애니메이션만 유지 */
+    pointer-events: none; /* 지도 클릭 시 라벨을 통과하도록 설정 */
+    font-size: 8px !important; /* 이전 10px 에서 더 줄여서 라벨 폰트 크기 50% 효과 (시각적) */
     line-height: 1.2; /* 줄 높이 조정 */
 }
 
-/* Specific tooltip direction adjustments */
-.leaflet-tooltip-bottom {
-    margin-top: 5px !important; /* Adjust to be just below the marker */
+/* Leaflet의 기본 툴팁 움직임 관련 transition을 강제적으로 제거 */
+/* 이것이 라벨의 움직임을 즉각적으로 만듭니다. */
+.leaflet-tooltip.leaflet-tooltip-bottom {
+    transition: opacity 0.3s ease-out !important; /* 움직임 transition 제거 */
+    margin-top: 5px !important; /* 마커 아래로 5px 이동 */
 }
+
 
 /* Override Leaflet's default tooltip pointer */
 .leaflet-tooltip:before {
     display: none !important;
 }
 
-/* 라벨이 보일 때 */
+/* 라벨이 보일 때 적용되는 클래스 */
 .leaflet-tooltip.show-label {
-    opacity: 1;
+    opacity: 1; /* 나타날 때 불투명하게 */
 }
 
 /* Current Location Label */
@@ -311,10 +314,10 @@ body {
     background: #4285f4 !important;
     color: white !important;
     font-weight: 600 !important;
-    border-left: 4px solid #1a73e8 !important; /* Blue accent */
-    opacity: 1 !important; /* 항상 보이도록 설정 */
-    font-size: 12px !important; /* 현재 위치 라벨은 좀 더 크게 */
-    padding: 6px 10px !important;
+    border-left: 4px solid #1a73e8 !important; /* 파란색 강조 테두리 */
+    opacity: 1 !important; /* 현재 위치 라벨은 항상 보이도록 설정 */
+    font-size: 10px !important; /* 현재 위치 라벨은 다른 라벨보다 조금 크게 */
+    padding: 5px 8px !important;
 }
 
 
@@ -330,8 +333,8 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    max-width: 380px; /* Increased max-width */
-    max-height: 400px; /* Increased max-height */
+    max-width: 380px;
+    max-height: 400px;
     overflow-y: auto;
     display: none;
     opacity: 0;
@@ -614,15 +617,15 @@ body {
     .title-box {
         top: 10px;
         left: 10px;
-        right: 60px; /* Space for location button */
+        right: 60px; /* 위치 버튼 공간 확보 */
         transform: none;
         padding: 10px 16px;
-        text-align: center; /* Center text on mobile */
+        text-align: center; /* 모바일에서 텍스트 중앙 정렬 */
     }
 
     .title-box h1 {
         font-size: 1.2em;
-        justify-content: center; /* Center icon and text */
+        justify-content: center; /* 아이콘과 텍스트 중앙 정렬 */
     }
 
     .location-control {
@@ -680,20 +683,20 @@ body {
         padding: 2px 4px;
     }
 
-    /* Mobile Label Size Adjustment */
+    /* 모바일 라벨 크기 조정 */
     .leaflet-tooltip {
-        font-size: 9px !important; /* Even smaller for mobile labels */
-        padding: 3px 5px !important; /* Adjusted padding */
+        font-size: 7px !important; /* 모바일 라벨 폰트 크기 추가 조정 */
+        padding: 2px 4px !important; /* 패딩 추가 조정 */
     }
 
-    /* Mobile Marker Size Adjustment */
+    /* 모바일 마커 크기 조정 */
     .circle-marker {
-        width: 16px !important; /* Slightly smaller for mobile */
-        height: 16px !important; /* Slightly smaller for mobile */
+        width: 16px !important; /* 모바일 마커 크기 조정 */
+        height: 16px !important; /* 모바일 마커 크기 조정 */
     }
 
     .circle-marker i {
-        font-size: 8px !important; /* Adjusted icon size for mobile */
+        font-size: 8px !important; /* 모바일 아이콘 크기 조정 */
     }
 
     .map-buttons {
