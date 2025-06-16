@@ -251,8 +251,15 @@ function displayMarkers() {
         ).type;
 
         // 마커 생성 및 해당 마커 그룹에 추가
+        // 식당의 경우 메뉴 정보를 전달하여 아이콘 결정
+        let iconPlace = null;
+        if (mainType === 'restaurants') {
+            // 식당인 경우 첫 번째 식당 정보를 전달 (메뉴 분석용)
+            iconPlace = group.places.find(place => place.type === 'restaurants');
+        }
+        
         const marker = L.marker([group.latitude, group.longitude], {
-            icon: createCustomIcon(mainType)
+            icon: createCustomIcon(mainType, iconPlace)
         }).addTo(markerGroups[mainType]);
 
         // 라벨 텍스트 생성 (한글 부분만 추출)
@@ -456,8 +463,60 @@ function updateLabelVisibility() {
     });
 }
 
-// 커스텀 아이콘 생성 함수 (원형 마커)
-function createCustomIcon(type) {
+// 메뉴 기반 식당 카테고리 분류 함수
+function getRestaurantCategory(place) {
+    if (place.type !== 'restaurants' || !place.menu || place.menu.length === 0) {
+        return 'general'; // 기본 식당
+    }
+
+    const menuText = place.menu.join(' ').toLowerCase();
+    
+    // 딤섬/만두류 (샤오롱바오, 셩지엔, 만두, 딤섬 등)
+    if (menuText.includes('샤오롱바오') || menuText.includes('셩지엔') || 
+        menuText.includes('만두') || menuText.includes('딤섬') || 
+        menuText.includes('하가우') || menuText.includes('시우마이') ||
+        menuText.includes('게살샤오롱바오') || menuText.includes('단황시엔')) {
+        return 'dumpling';
+    }
+    
+    // 면 요리 (국수, 미엔, 면 등)
+    if (menuText.includes('미엔') || menuText.includes('국수') || 
+        menuText.includes('면') || menuText.includes('황유미엔') ||
+        menuText.includes('따창미엔') || menuText.includes('시아런미엔') ||
+        menuText.includes('볶음밥') || menuText.includes('창펀')) {
+        return 'noodle';
+    }
+    
+    // 해산물 (게, 새우, 조기 등)
+    if (menuText.includes('게') || menuText.includes('새우') || 
+        menuText.includes('조기') || menuText.includes('굴전') ||
+        menuText.includes('게살') || menuText.includes('랍스터')) {
+        return 'seafood';
+    }
+    
+    // 훠궈/탕류 (훠궈, 탕, 토마토탕 등)
+    if (menuText.includes('훠궈') || menuText.includes('탕') || 
+        menuText.includes('마라') || menuText.includes('백탕') ||
+        menuText.includes('토마토') || menuText.includes('하이디라오')) {
+        return 'hotpot';
+    }
+    
+    // 고급 중식/오리 요리 (북경오리, 거지닭, 동파육 등)
+    if (menuText.includes('북경오리') || menuText.includes('거지닭') || 
+        menuText.includes('叫化鸡') || menuText.includes('동파육') ||
+        menuText.includes('마파두부') || menuText.includes('카오야') ||
+        menuText.includes('오리') || menuText.includes('천황')) {
+        return 'chinese';
+    }
+    
+    // 대만 요리
+    if (menuText.includes('대만') || menuText.includes('파인애플볶음밥') ||
+        menuText.includes('허자이지엔')) {
+        return 'taiwanese';
+    }
+    
+    return 'general'; // 기타 일반 식당
+}
     let iconClass, bgClass; // 아이콘 클래스와 배경색 클래스
 
     // 타입에 따라 아이콘과 배경색 클래스 결정
@@ -506,7 +565,7 @@ function displayGroupDetails(group) {
         const place = group.places[0];
         detailsHtml = `
             <div class="place-type-badge type-${place.type}">
-                ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
+                ${getTypeIcon(place.type, place)} ${getTypeDisplayName(place.type)}
             </div>
             <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
         `;
@@ -567,7 +626,7 @@ function displayGroupDetails(group) {
             detailsHtml += `
                 <div class="place-group-item type-${place.type}">
                     <div class="place-type-badge type-${place.type}">
-                        ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
+                        ${getTypeIcon(place.type, place)} ${getTypeDisplayName(place.type)}
                     </div>
                     <h4>${place.name}</h4>
             `;
@@ -661,13 +720,31 @@ function closeInfoBox() {
 }
 
 // 타입별 아이콘 반환 함수 (UI에 사용)
-function getTypeIcon(type) {
+function getTypeIcon(type, place = null) {
     switch (type) {
-        case 'attractions': return '📷';
-        case 'restaurants': return '🍴';
-        case 'airports': return '✈️';
-        case 'hotels': return '🏨';
-        default: return '📍';
+        case 'attractions': 
+            return '📷';
+        case 'restaurants': 
+            // 식당의 경우 메뉴에 따라 다른 아이콘 표시
+            if (place) {
+                const category = getRestaurantCategory(place);
+                switch (category) {
+                    case 'dumpling': return '🥟'; // 만두/딤섬
+                    case 'noodle': return '🍜';   // 면 요리
+                    case 'seafood': return '🐟';  // 해산물
+                    case 'hotpot': return '🍲';   // 훠궈/탕류
+                    case 'chinese': return '🍗';  // 고급 중식/고기요리
+                    case 'taiwanese': return '🌿'; // 대만 요리
+                    default: return '🍴';         // 기본 식당
+                }
+            }
+            return '🍴';
+        case 'airports': 
+            return '✈️';
+        case 'hotels': 
+            return '🏨';
+        default: 
+            return '📍';
     }
 }
 
