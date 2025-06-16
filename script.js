@@ -21,12 +21,24 @@ const markerColors = {
     hotels: '#1a73e8'      // 호텔 (Google Blue)
 };
 
-// 문서 로드 완료 시 초기화
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadData(); // 데이터 로드
-    initializeMap();   // 지도 초기화
-    setupEventListeners(); // 이벤트 리스너 설정
+// 문서 로드 완료 시 초기화 - 더 안전한 방법
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM 로드 완료');
+    initializeApp();
 });
+
+// 앱 초기화 함수
+async function initializeApp() {
+    try {
+        await loadData(); // 데이터 로드
+        console.log('데이터 로드 완료, 지도 초기화 시작');
+        initializeMap();   // 지도 초기화
+        setupEventListeners(); // 이벤트 리스너 설정
+    } catch (error) {
+        console.error('앱 초기화 오류:', error);
+        alert('지도를 로드하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+    }
+}
 
 // 데이터 로드 함수
 async function loadData() {
@@ -163,73 +175,97 @@ function createCustomIcon(type) {
 
 // 지도 초기화 함수
 function initializeMap() {
-    // 지도 초기화 (상하이 중심 좌표, 초기 줌 레벨 12)
-    map = L.map('map').setView([31.2304, 121.4737], 12);
+    // Leaflet이 로드되었는지 확인
+    if (typeof L === 'undefined') {
+        console.error('Leaflet 라이브러리가 로드되지 않았습니다.');
+        alert('지도 라이브러리 로드 오류. 페이지를 새로고침해주세요.');
+        return;
+    }
 
-    // 다양한 타일 레이어 정의
-    const tileLayers = {
-        cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }),
-        street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19
-        }),
-        satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '© <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
-            maxZoom: 19
-        })
-    };
+    // 지도 컨테이너가 존재하는지 확인
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) {
+        console.error('지도 컨테이너를 찾을 수 없습니다.');
+        return;
+    }
 
-    // 기본 심플 타일 레이어 추가
-    currentTileLayer = tileLayers.cartodb;
-    currentTileLayer.addTo(map);
+    try {
+        // 지도 초기화 (상하이 중심 좌표, 초기 줌 레벨 12)
+        map = L.map('map', {
+            preferCanvas: true, // 성능 향상을 위해 Canvas 렌더링 사용
+            zoomControl: true
+        }).setView([31.2304, 121.4737], 12);
 
-    // 타일 레이어 변경 이벤트 리스너
-    document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked) {
-                map.removeLayer(currentTileLayer); // 기존 레이어 제거
-                currentTileLayer = tileLayers[this.value]; // 새 레이어 설정
-                currentTileLayer.addTo(map); // 새 레이어 추가
+        console.log('지도 객체 생성 완료:', map);
 
-                // 현재 선택된 타일 옵션에 'active' 클래스 추가하여 시각적 피드백 제공
-                document.querySelectorAll('.tile-option').forEach(option => {
-                    option.classList.remove('active');
-                });
-                this.parentElement.classList.add('active');
-            }
+        // 다양한 타일 레이어 정의
+        const tileLayers = {
+            cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }),
+            street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }),
+            satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© <a href="https://www.esri.com/">Esri</a>, Maxar, GeoEye, Earthstar Geographics',
+                maxZoom: 19
+            })
+        };
+
+        // 기본 심플 타일 레이어 추가
+        currentTileLayer = tileLayers.cartodb;
+        currentTileLayer.addTo(map);
+        
+        console.log('기본 타일 레이어 추가 완료');
+
+        // 타일 레이어 변경 이벤트 리스너
+        document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    map.removeLayer(currentTileLayer); // 기존 레이어 제거
+                    currentTileLayer = tileLayers[this.value]; // 새 레이어 설정
+                    currentTileLayer.addTo(map); // 새 레이어 추가
+
+                    // 현재 선택된 타일 옵션에 'active' 클래스 추가하여 시각적 피드백 제공
+                    document.querySelectorAll('.tile-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    this.parentElement.classList.add('active');
+                }
+            });
         });
-    });
 
-    // 마커 그룹들을 지도에 추가 (초기에는 비어있지만, 미리 추가)
-    Object.values(markerGroups).forEach(group => {
-        group.addTo(map);
-    });
+        // 마커 그룹들을 지도에 추가 (초기에는 비어있지만, 미리 추가)
+        Object.values(markerGroups).forEach(group => {
+            group.addTo(map);
+        });
 
-    // 마커 표시 함수 호출
-    displayMarkers();
+        // 지도가 준비되면 마커 표시
+        map.whenReady(() => {
+            console.log('지도 준비 완료, 마커 표시 시작');
+            displayMarkers();
+        });
 
-    // 줌 레벨 변경 시 라벨 가시성 업데이트 (디바운싱 적용으로 성능 최적화)
-    map.on('zoomend', () => {
-        if (labelUpdateTimeout) {
-            clearTimeout(labelUpdateTimeout); // 기존 타이머가 있다면 취소
-        }
-        // 100ms 후에 라벨 업데이트 (부드러운 전환을 위해)
-        labelUpdateTimeout = setTimeout(() => {
-            updateLabelVisibility();
-        }, 100);
-    });
+        // 줌 레벨 변경 시 라벨 가시성 업데이트 (디바운싱 적용으로 성능 최적화)
+        map.on('zoomend', () => {
+            if (labelUpdateTimeout) {
+                clearTimeout(labelUpdateTimeout); // 기존 타이머가 있다면 취소
+            }
+            // 100ms 후에 라벨 업데이트 (부드러운 전환을 위해)
+            labelUpdateTimeout = setTimeout(() => {
+                updateLabelVisibility();
+            }, 100);
+        });
 
-    // 지도 로드 후 초기 라벨 가시성 설정
-    map.whenReady(() => {
-        // 약간의 지연을 주어 모든 마커와 툴팁이 완전히 렌더링된 후 실행
-        setTimeout(() => {
-            updateLabelVisibility();
-        }, 200);
-    });
+        console.log('지도 초기화 완료');
+
+    } catch (error) {
+        console.error('지도 초기화 중 오류 발생:', error);
+        alert('지도 초기화 오류가 발생했습니다.');
+    }
 }
 
 // 이벤트 리스너 설정 함수
@@ -282,6 +318,12 @@ function toggleMarkerGroup(type, show) {
 // 마커 표시 함수
 function displayMarkers() {
     console.log('displayMarkers 함수 시작.');
+    
+    if (!map) {
+        console.error('지도 객체가 없습니다.');
+        return;
+    }
+    
     if (!shanghaiData || !shanghaiData.shanghai_tourism) {
         console.error('마커를 표시할 데이터가 없습니다. shanghaiData 또는 shanghai_tourism이 정의되지 않았습니다.');
         return;
@@ -345,65 +387,76 @@ function displayMarkers() {
     }
     console.log(`총 ${Object.keys(locationGroups).length}개의 고유한 위치에 마커 생성 시작.`);
 
+    let markerCount = 0;
+
     // 각 위치 그룹에 대해 마커 생성
     Object.values(locationGroups).forEach((group, groupIndex) => {
-        // 동일 좌표에 여러 타입의 장소가 있을 경우, 아이콘 표시 우선순위를 결정
-        const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-        const mainType = group.places.reduce((prev, curr) =>
-            (priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr)
-        ).type;
+        try {
+            // 동일 좌표에 여러 타입의 장소가 있을 경우, 아이콘 표시 우선순위를 결정
+            const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
+            const mainType = group.places.reduce((prev, curr) =>
+                (priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr)
+            ).type;
 
-        // 마커 생성 및 해당 마커 그룹에 추가
-        const customIcon = createCustomIcon(mainType);
-        if (!customIcon) {
-            console.error(`아이콘 생성 실패 for group ${groupIndex} (Type: ${mainType}). 이 마커는 표시되지 않습니다.`);
-            return;
-        }
-
-        const marker = L.marker([group.latitude, group.longitude], {
-            icon: customIcon
-        }).addTo(markerGroups[mainType]);
-
-        // 라벨 텍스트 생성 (한글 부분만 추출)
-        let labelText;
-        if (group.places.length === 1) {
-            const place = group.places[0];
-            labelText = extractKorean(place.name);
-            if (place.type === 'hotels' && place.price) {
-                const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
-                labelText += `<br><span style="font-size:0.8em; color:#555;">${formattedPrice}</span>`;
+            // 마커 생성 및 해당 마커 그룹에 추가
+            const customIcon = createCustomIcon(mainType);
+            if (!customIcon) {
+                console.error(`아이콘 생성 실패 for group ${groupIndex} (Type: ${mainType}). 이 마커는 표시되지 않습니다.`);
+                return;
             }
-        } else {
-            const firstPlaceName = extractKorean(group.places[0].name);
-            labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
+
+            const marker = L.marker([group.latitude, group.longitude], {
+                icon: customIcon
+            }).addTo(markerGroups[mainType]);
+
+            markerCount++;
+
+            // 라벨 텍스트 생성 (한글 부분만 추출)
+            let labelText;
+            if (group.places.length === 1) {
+                const place = group.places[0];
+                labelText = extractKorean(place.name);
+                if (place.type === 'hotels' && place.price) {
+                    const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
+                    labelText += `<br><span style="font-size:0.8em; color:#555;">${formattedPrice}</span>`;
+                }
+            } else {
+                const firstPlaceName = extractKorean(group.places[0].name);
+                labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
+            }
+
+            // 마커 클릭 시 팝업 표시 및 지도를 해당 위치로 이동
+            marker.on('click', () => {
+                console.log(`마커 클릭됨: ${group.places[0].name}`);
+                displayGroupDetailsAsPopup(marker, group); // 팝업으로 변경된 함수 호출
+                map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
+            });
+
+            // 툴팁(라벨)을 마커 하단에 바인딩
+            const tooltip = marker.bindTooltip(labelText, {
+                permanent: true,
+                direction: 'bottom',
+                offset: [0, 5],
+                className: 'custom-marker-tooltip',
+                opacity: 1
+            });
+
+            // 라벨 가시성 제어를 위해 마커 정보를 배열에 저장
+            allMarkers.push({
+                marker: marker,
+                labelText: labelText,
+                group: group,
+                labelVisible: false,
+                groupType: mainType,
+                tooltip: tooltip
+            });
+
+        } catch (error) {
+            console.error(`마커 생성 중 오류 (Group ${groupIndex}):`, error);
         }
-
-        // 마커 클릭 시 팝업 표시 및 지도를 해당 위치로 이동
-        marker.on('click', () => {
-            console.log(`마커 클릭됨: ${group.places[0].name}`);
-            displayGroupDetailsAsPopup(marker, group); // 팝업으로 변경된 함수 호출
-            map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
-        });
-
-        // 툴팁(라벨)을 마커 하단에 바인딩
-        const tooltip = marker.bindTooltip(labelText, {
-            permanent: true,
-            direction: 'bottom',
-            offset: [0, 5],
-            className: 'custom-marker-tooltip',
-            opacity: 1
-        });
-
-        // 라벨 가시성 제어를 위해 마커 정보를 배열에 저장
-        allMarkers.push({
-            marker: marker,
-            labelText: labelText,
-            group: group,
-            labelVisible: false,
-            groupType: mainType,
-            tooltip: tooltip
-        });
     });
+
+    console.log(`${markerCount}개의 마커가 생성되었습니다.`);
 
     // 모든 마커를 포함하도록 지도 뷰를 조정
     const allMarkersLayer = L.featureGroup();
@@ -414,21 +467,32 @@ function displayMarkers() {
     });
 
     if (allMarkersLayer.getLayers().length > 0) {
-        map.fitBounds(allMarkersLayer.getBounds().pad(0.1)); // 모든 마커가 보이도록 지도 뷰 조정
-        console.log('지도 뷰가 마커들에 맞게 조정되었습니다.');
+        try {
+            map.fitBounds(allMarkersLayer.getBounds().pad(0.1)); // 모든 마커가 보이도록 지도 뷰 조정
+            console.log('지도 뷰가 마커들에 맞게 조정되었습니다.');
+        } catch (error) {
+            console.error('지도 뷰 조정 중 오류:', error);
+        }
     } else {
         console.warn('표시할 마커가 없어 지도 뷰를 조정할 수 없습니다.');
     }
 
     // 툴팁 엘리먼트들이 DOM에 추가된 후에 참조를 설정
     setTimeout(() => {
+        let tooltipCount = 0;
         allMarkers.forEach((markerData, index) => {
-            const tooltipElement = markerData.marker._tooltip._container;
-            if (tooltipElement) {
-                markerData.tooltipElement = tooltipElement;
-                tooltipElement.style.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
+            try {
+                const tooltipElement = markerData.marker._tooltip._container;
+                if (tooltipElement) {
+                    markerData.tooltipElement = tooltipElement;
+                    tooltipElement.style.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
+                    tooltipCount++;
+                }
+            } catch (error) {
+                console.warn(`툴팁 설정 실패 (마커 ${index}):`, error);
             }
         });
+        console.log(`${tooltipCount}개의 툴팁이 설정되었습니다.`);
         updateLabelVisibility();
         console.log('툴팁 엘리먼트 설정 및 라벨 가시성 업데이트 완료.');
     }, 300);
