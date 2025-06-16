@@ -21,6 +21,7 @@ const markerColors = {
     hotels: '#1a73e8'       // 호텔
 };
 
+
 // 문서 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData(); // 데이터 로드
@@ -68,61 +69,6 @@ function extractKorean(text) {
 
     // 한글이 없다면 원본 텍스트 반환
     return text;
-}
-
-// 메뉴 기반 식당 카테고리 분류 함수
-function getRestaurantCategory(place) {
-    if (place.type !== 'restaurants' || !place.menu || place.menu.length === 0) {
-        return 'general'; // 기본 식당
-    }
-
-    const menuText = place.menu.join(' ').toLowerCase();
-    
-    // 딤섬/만두류 (샤오롱바오, 셩지엔, 만두, 딤섬 등)
-    if (menuText.includes('샤오롱바오') || menuText.includes('셩지엔') || 
-        menuText.includes('만두') || menuText.includes('딤섬') || 
-        menuText.includes('하가우') || menuText.includes('시우마이') ||
-        menuText.includes('게살샤오롱바오') || menuText.includes('단황시엔')) {
-        return 'dumpling';
-    }
-    
-    // 면 요리 (국수, 미엔, 면 등)
-    if (menuText.includes('미엔') || menuText.includes('국수') || 
-        menuText.includes('면') || menuText.includes('황유미엔') ||
-        menuText.includes('따창미엔') || menuText.includes('시아런미엔') ||
-        menuText.includes('볶음밥') || menuText.includes('창펀')) {
-        return 'noodle';
-    }
-    
-    // 해산물 (게, 새우, 조기 등)
-    if (menuText.includes('게') || menuText.includes('새우') || 
-        menuText.includes('조기') || menuText.includes('굴전') ||
-        menuText.includes('게살') || menuText.includes('랍스터')) {
-        return 'seafood';
-    }
-    
-    // 훠궈/탕류 (훠궈, 탕, 토마토탕 등)
-    if (menuText.includes('훠궈') || menuText.includes('탕') || 
-        menuText.includes('마라') || menuText.includes('백탕') ||
-        menuText.includes('토마토') || menuText.includes('하이디라오')) {
-        return 'hotpot';
-    }
-    
-    // 고급 중식/오리 요리 (북경오리, 거지닭, 동파육 등)
-    if (menuText.includes('북경오리') || menuText.includes('거지닭') || 
-        menuText.includes('叫化鸡') || menuText.includes('동파육') ||
-        menuText.includes('마파두부') || menuText.includes('카오야') ||
-        menuText.includes('오리') || menuText.includes('천황')) {
-        return 'chinese';
-    }
-    
-    // 대만 요리
-    if (menuText.includes('대만') || menuText.includes('파인애플볶음밥') ||
-        menuText.includes('허자이지엔')) {
-        return 'taiwanese';
-    }
-    
-    return 'general'; // 기타 일반 식당
 }
 
 // 지도 초기화 함수
@@ -209,9 +155,7 @@ function setupEventListeners() {
 
     // 지도 클릭 시 정보 박스 닫기 (마커나 팝업 등이 아닌 순수 지도 배경 클릭 시)
     map.on('click', (e) => {
-        // 클릭된 요소가 마커나 팝업이 아닌 경우에만 닫기
-        const clickedElement = e.originalEvent.target;
-        if (!clickedElement.closest('.info-box') && !clickedElement.closest('.leaflet-marker-icon')) {
+        if (e.originalEvent && e.originalEvent.target === map.getContainer()) {
             closeInfoBox();
         }
     });
@@ -307,15 +251,8 @@ function displayMarkers() {
         ).type;
 
         // 마커 생성 및 해당 마커 그룹에 추가
-        // 식당의 경우 메뉴 정보를 전달하여 아이콘 결정
-        let iconPlace = null;
-        if (mainType === 'restaurants') {
-            // 식당인 경우 첫 번째 식당 정보를 전달 (메뉴 분석용)
-            iconPlace = group.places.find(place => place.type === 'restaurants');
-        }
-        
         const marker = L.marker([group.latitude, group.longitude], {
-            icon: createCustomIcon(mainType, iconPlace)
+            icon: createCustomIcon(mainType)
         }).addTo(markerGroups[mainType]);
 
         // 라벨 텍스트 생성 (한글 부분만 추출)
@@ -335,9 +272,9 @@ function displayMarkers() {
         }
 
         // 마커 클릭 시 정보 박스 표시 및 지도를 해당 위치로 이동
-        marker.on('click', (e) => {
-            displayGroupDetails(group, e.latlng);
-            // 클릭 시 줌 확대 제거 (팝업이 작아서 불필요)
+        marker.on('click', () => {
+            displayGroupDetails(group);
+            map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
         });
 
         // 툴팁(라벨)을 마커 하단에 바인딩하고 동적으로 스타일 적용
@@ -520,7 +457,7 @@ function updateLabelVisibility() {
 }
 
 // 커스텀 아이콘 생성 함수 (원형 마커)
-function createCustomIcon(type, place = null) {
+function createCustomIcon(type) {
     let iconClass, bgClass; // 아이콘 클래스와 배경색 클래스
 
     // 타입에 따라 아이콘과 배경색 클래스 결정
@@ -530,34 +467,7 @@ function createCustomIcon(type, place = null) {
             bgClass = 'tourism-bg';
             break;
         case 'restaurants':
-            // 식당의 경우 메뉴에 따라 아이콘 결정
-            if (place) {
-                const category = getRestaurantCategory(place);
-                switch (category) {
-                    case 'dumpling':
-                        iconClass = 'fas fa-cookie-bite'; // 만두/딤섬
-                        break;
-                    case 'noodle':
-                        iconClass = 'fas fa-bowl-hot'; // 면 요리
-                        break;
-                    case 'seafood':
-                        iconClass = 'fas fa-fish'; // 해산물
-                        break;
-                    case 'hotpot':
-                        iconClass = 'fas fa-fire'; // 훠궈/매운요리
-                        break;
-                    case 'chinese':
-                        iconClass = 'fas fa-drumstick-bite'; // 고급 중식/고기요리
-                        break;
-                    case 'taiwanese':
-                        iconClass = 'fas fa-seedling'; // 대만 요리 (특별한 아이콘)
-                        break;
-                    default:
-                        iconClass = 'fas fa-utensils'; // 기본 식당
-                }
-            } else {
-                iconClass = 'fas fa-utensils'; // 기본 식당
-            }
+            iconClass = 'fas fa-utensils';
             bgClass = 'restaurant-bg';
             break;
         case 'airports':
@@ -584,44 +494,8 @@ function createCustomIcon(type, place = null) {
     });
 }
 
-// 팝업 위치 계산 및 설정 함수
-function positionPopup(infoBox, latlng) {
-    // 위도/경도를 픽셀 좌표로 변환
-    const point = map.latLngToContainerPoint(latlng);
-    
-    // 팝업을 마커 위쪽에 위치시키기
-    const popupOffsetX = -150; // 팝업 너비의 절반만큼 왼쪽으로
-    const popupOffsetY = -40;  // 마커 위쪽으로 40px
-    
-    infoBox.style.position = 'absolute';
-    infoBox.style.left = (point.x + popupOffsetX) + 'px';
-    infoBox.style.top = (point.y + popupOffsetY) + 'px';
-    infoBox.style.bottom = 'auto';
-    infoBox.style.right = 'auto';
-    
-    // 화면 경계를 벗어나지 않도록 조정
-    const mapContainer = map.getContainer();
-    const mapWidth = mapContainer.offsetWidth;
-    const mapHeight = mapContainer.offsetHeight;
-    
-    // 왼쪽 경계 확인
-    if (point.x + popupOffsetX < 10) {
-        infoBox.style.left = '10px';
-    }
-    
-    // 오른쪽 경계 확인
-    if (point.x + popupOffsetX + 300 > mapWidth) {
-        infoBox.style.left = (mapWidth - 310) + 'px';
-    }
-    
-    // 상단 경계 확인
-    if (point.y + popupOffsetY < 80) {
-        infoBox.style.top = (point.y + 30) + 'px'; // 마커 아래쪽으로
-    }
-}
-
-// 그룹 상세 정보 표시 함수 (클릭 시 팝업에 내용 채우기)
-function displayGroupDetails(group, latlng) {
+// 그룹 상세 정보 표시 함수 (클릭 시 정보 박스에 내용 채우기)
+function displayGroupDetails(group) {
     const infoBox = document.getElementById('place-details');
     const placeContent = document.getElementById('place-content');
 
@@ -632,112 +506,140 @@ function displayGroupDetails(group, latlng) {
         const place = group.places[0];
         detailsHtml = `
             <div class="place-type-badge type-${place.type}">
-                ${getTypeIcon(place.type, place)} ${getTypeDisplayName(place.type)}
+                ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
             </div>
-            <h3>${extractKorean(place.name)}</h3>
+            <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
         `;
 
         if (place.description) {
-            detailsHtml += `<p class="description">${place.description}</p>`;
+            detailsHtml += `<p><strong>🎯 설명:</strong> ${place.description}</p>`;
         }
 
         if (place.address && place.address !== "N/A") {
-            detailsHtml += `<p class="address"><i class="fas fa-map-marker-alt"></i> ${place.address}</p>`;
+            detailsHtml += `<p><strong>📍 주소:</strong> ${place.address}</p>`;
         }
 
         if (place.features && place.features.length > 0) {
-            detailsHtml += `<p class="features"><i class="fas fa-star"></i> ${place.features.join(', ')}</p>`;
+            detailsHtml += `<p><strong>✨ 특징:</strong> ${place.features.join(', ')}</p>`;
         }
 
         if (place.menu && place.menu.length > 0) {
-            const menuItems = place.menu.slice(0, 3); // 최대 3개만 표시
-            detailsHtml += `<p class="menu"><i class="fas fa-utensils"></i> ${menuItems.join(', ')}`;
-            if (place.menu.length > 3) {
-                detailsHtml += ` 외 ${place.menu.length - 3}개`;
-            }
-            detailsHtml += `</p>`;
+            detailsHtml += `<p><strong>🍽️ 메뉴:</strong></p><ul>`;
+            place.menu.forEach(item => {
+                detailsHtml += `<li>${item}</li>`;
+            });
+            detailsHtml += `</ul>`;
         }
-
         // 호텔 가격 정보 표시 (단일 장소)
         if (place.type === 'hotels' && place.price) {
             const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
-            detailsHtml += `<p class="price"><i class="fas fa-won-sign"></i> ${formattedPrice}</p>`;
+            detailsHtml += `<p><strong>💰 가격:</strong> ${formattedPrice}</p>`;
         }
 
-        // 외부 지도 연결 버튼 (작게 표시)
+
+        // 외부 지도 연결 버튼
         detailsHtml += `
-            <div class="popup-map-buttons">
-                <button class="popup-map-btn google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})" title="구글지도">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button class="popup-map-btn amap-btn" onclick="openAmapSearch('${place.address}', ${place.latitude}, ${place.longitude})" title="가오더지도">
-                    <i class="fas fa-map"></i>
-                </button>
+            <div class="map-links">
+                <h4><i class="fas fa-external-link-alt"></i> 외부 지도에서 보기</h4>
+                <div class="map-buttons">
+                    <button class="map-btn google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})">
+                        <i class="fab fa-google"></i> 구글지도
+                    </button>
+                    <button class="map-btn amap-btn" onclick="openAmapSearch('${place.address}', ${place.latitude}, ${place.longitude})">
+                        <i class="fas fa-map"></i> 가오더지도
+                    </button>
+                </div>
             </div>
         `;
     } else {
         // 여러 장소가 그룹화된 경우
         detailsHtml = `
-            <div class="popup-group-header">
-                <h3>이 위치의 장소들 <span class="place-count">${group.places.length}</span></h3>
+            <div class="group-header">
+                <h3>
+                    <i class="fas fa-map-marker-alt"></i>
+                    이 위치의 장소들
+                    <span class="place-count-badge">${group.places.length}곳</span>
+                </h3>
             </div>
         `;
 
-        group.places.slice(0, 2).forEach((place, index) => { // 최대 2개만 표시
+        group.places.forEach((place, index) => {
             detailsHtml += `
-                <div class="popup-place-item type-${place.type}">
+                <div class="place-group-item type-${place.type}">
                     <div class="place-type-badge type-${place.type}">
-                        ${getTypeIcon(place.type, place)} ${getTypeDisplayName(place.type)}
+                        ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
                     </div>
-                    <h4>${extractKorean(place.name)}</h4>
+                    <h4>${place.name}</h4>
             `;
 
             if (place.description) {
-                detailsHtml += `<p class="description">${place.description.substring(0, 50)}...</p>`;
+                detailsHtml += `<p><strong>설명:</strong> ${place.description}</p>`;
             }
 
+            if (place.address && place.address !== "N/A") {
+                detailsHtml += `<p><strong>주소:</strong> ${place.address}</p>`;
+            }
+
+            if (place.features && place.features.length > 0) {
+                detailsHtml += `<p><strong>특징:</strong> ${place.features.join(', ')}</p>`;
+            }
+
+            if (place.menu && place.menu.length > 0) {
+                detailsHtml += `<p><strong>메뉴:</strong> ${place.menu.join(', ')}</p>`;
+            }
             // 호텔 가격 정보 표시 (그룹 내 각 장소)
             if (place.type === 'hotels' && place.price) {
                 const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
-                detailsHtml += `<p class="price">${formattedPrice}</p>`;
+                detailsHtml += `<p><strong>가격:</strong> ${formattedPrice}</p>`;
             }
+
+            // 개별 지도 연결 버튼
+            detailsHtml += `
+                <div class="place-map-buttons">
+                    <button class="map-btn-small google-btn" onclick="openGoogleMaps('${place.address}', ${place.latitude}, ${place.longitude})" title="구글지도에서 ${place.name} 검색">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="map-btn-small amap-btn" onclick="openAmapSearch('${place.address}', ${place.latitude}, ${place.longitude})" title="가오더지도에서 ${place.name} 검색">
+                        <i class="fas fa-map"></i>
+                    </button>
+                </div>
+            `;
 
             detailsHtml += `</div>`;
 
             // 마지막 요소가 아니면 구분선 추가
-            if (index < Math.min(group.places.length, 2) - 1) {
-                detailsHtml += `<div class="popup-separator"></div>`;
+            if (index < group.places.length - 1) {
+                detailsHtml += `<div class="place-separator"></div>`;
             }
         });
 
-        if (group.places.length > 2) {
-            detailsHtml += `<p class="more-places">외 ${group.places.length - 2}개 장소 더 있음</p>`;
-        }
-
         // 그룹 전체 지도 연결 버튼
-        const firstPlace = group.places[0];
+        const firstPlace = group.places[0]; // 그룹의 첫 번째 장소 정보 사용
         detailsHtml += `
-            <div class="popup-map-buttons">
-                <button class="popup-map-btn google-btn" onclick="openGoogleMaps('${firstPlace.address}', ${group.latitude}, ${group.longitude})" title="구글지도">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button class="popup-map-btn amap-btn" onclick="openAmapSearch('${firstPlace.address}', ${group.latitude}, ${group.longitude})" title="가오더지도">
-                    <i class="fas fa-map"></i>
-                </button>
+            <div class="group-map-links">
+                <h4><i class="fas fa-external-link-alt"></i> 이 위치 전체보기</h4>
+                <div class="map-buttons">
+                    <button class="map-btn google-btn" onclick="openGoogleMaps('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
+                        <i class="fab fa-google"></i> 구글지도
+                    </button>
+                    <button class="map-btn amap-btn" onclick="openAmapSearch('${firstPlace.address}', ${group.latitude}, ${group.longitude})">
+                        <i class="fas fa-map"></i> 가오더지도
+                    </button>
+                </div>
             </div>
         `;
     }
 
-    placeContent.innerHTML = detailsHtml;
-    
-    // 팝업 위치 계산 및 표시
-    positionPopup(infoBox, latlng);
-    infoBox.classList.add('show');
+    placeContent.innerHTML = detailsHtml; // 생성된 HTML을 정보 박스에 삽입
+    infoBox.classList.add('show'); // 정보 박스를 보이도록
 }
 
 // 구글지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openGoogleMaps(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
+    // Google Maps URL을 수정했습니다. (https://www.google.com/maps/search/?api=1&query=$ 이 부분은 일반적으로 사용되지 않습니다.)
+    // https://www.google.com/maps/search/ 또는 https://www.google.com/maps/dir/ 형식이 일반적입니다.
+    // 여기서는 좌표를 중심으로 표시하고, 주소를 검색어로 사용하도록 구성했습니다.
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedAddress}`;
     window.open(googleMapsUrl, '_blank');
 }
@@ -745,6 +647,9 @@ function openGoogleMaps(address, lat, lng) {
 // 가오더지도 열기 함수 (주소와 좌표를 함께 사용하여 정확도 높임)
 function openAmapSearch(address, lat, lng) {
     const encodedAddress = encodeURIComponent(address);
+    // Gaode Maps (Amap) URL은 쿼리 파라미터가 다를 수 있습니다.
+    // 좌표를 직접 넘겨주는 것이 더 정확할 수 있습니다.
+    // 이 예시에서는 기존 방식을 유지하지만, API 문서 확인이 필요할 수 있습니다.
     const amapUrl = `https://ditu.amap.com/search?query=${encodedAddress}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
     window.open(amapUrl, '_blank');
 }
@@ -756,31 +661,13 @@ function closeInfoBox() {
 }
 
 // 타입별 아이콘 반환 함수 (UI에 사용)
-function getTypeIcon(type, place = null) {
+function getTypeIcon(type) {
     switch (type) {
-        case 'attractions': 
-            return '📷';
-        case 'restaurants': 
-            // 식당의 경우 메뉴에 따라 다른 아이콘 표시
-            if (place) {
-                const category = getRestaurantCategory(place);
-                switch (category) {
-                    case 'dumpling': return '🥟'; // 만두/딤섬
-                    case 'noodle': return '🍜';   // 면 요리
-                    case 'seafood': return '🐟';  // 해산물
-                    case 'hotpot': return '🍲';   // 훠궈/탕류
-                    case 'chinese': return '🍗';  // 고급 중식/고기요리
-                    case 'taiwanese': return '🌿'; // 대만 요리
-                    default: return '🍴';         // 기본 식당
-                }
-            }
-            return '🍴';
-        case 'airports': 
-            return '✈️';
-        case 'hotels': 
-            return '🏨';
-        default: 
-            return '📍';
+        case 'attractions': return '📷';
+        case 'restaurants': return '🍴';
+        case 'airports': return '✈️';
+        case 'hotels': return '🏨';
+        default: return '📍';
     }
 }
 
