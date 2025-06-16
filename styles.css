@@ -261,7 +261,86 @@ body {
     color: #2c3e50;
 }
 
-/* 커스텀 마커 스타일 */
+/* 구글 스타일 마커 */
+.google-style-marker {
+    background: transparent;
+    border: none;
+}
+
+.marker-pin {
+    position: relative;
+    width: 24px;
+    height: 30px;
+    border-radius: 12px 12px 12px 0;
+    transform: rotate(-45deg);
+    margin: 3px 0 0 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+}
+
+.marker-pin:hover {
+    transform: rotate(-45deg) scale(1.1);
+}
+
+.marker-pin i {
+    transform: rotate(45deg);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.marker-shadow {
+    position: absolute;
+    top: 32px;
+    left: 8px;
+    width: 8px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    transform: skew(-10deg, 0);
+}
+
+/* 구글 스타일 라벨 */
+.google-style-label {
+    position: absolute;
+    background: white;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.google-style-label:before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 4px solid white;
+}
+
+/* 마커 색상 */
+.tourism-bg { background-color: #e74c3c; }
+.restaurant-bg { background-color: #27ae60; }
+.airport-bg { background-color: #9b59b6; }
+.accommodation-bg { background-color: #3498db; }
+
+/* 커스텀 마커 스타일 (기존 스타일 - 사용하지 않음) */
 .custom-marker-icon {
     background: transparent;
     border: none;
@@ -287,112 +366,14 @@ body {
     transform: scale(1.1);
 }
 
-.tourism-bg { background-color: #e74c3c; }
-.restaurant-bg { background-color: #27ae60; }
-.airport-bg { background-color: #9b59b6; }
-.accommodation-bg { background-color: #3498db; }
-
-/* Leaflet 툴팁 스타일 */
+/* Leaflet 툴팁 스타일 - 사용하지 않음 */
 .leaflet-tooltip {
-    padding: 6px 12px !important;
-    background-color: rgba(0, 0, 0, 0.8) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-    font-weight: bold;
-    font-size: 0.9em;
-    white-space: nowrap;
-    pointer-events: none;
-    border-radius: 4px;
-}
-
-.leaflet-tooltip.leaflet-tooltip-bottom:before {
-    border-top-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-/* 장소 라벨 스타일 */
-.place-label {
-    background: rgba(0, 0, 0, 0.75) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
-    font-weight: 600 !important;
-    font-size: 0.8em !important;
-    padding: 4px 8px !important;
-    border-radius: 4px !important;
-    white-space: nowrap !important;
-    pointer-events: none !important;
-    z-index: 1000 !important;
-    opacity: 0.9 !important;
-    transition: opacity 0.3s ease !important;
-}
-
-.place-label:before {
     display: none !important;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .title-box {
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        transform: none;
-        padding: 10px 16px;
-    }
-
-    .title-box h1 {
-        font-size: 1.2em;
-        text-align: center;
-    }
-
-    .legend-box {
-        bottom: 10px;
-        right: 10px;
-        padding: 12px;
-        max-width: 160px;
-    }
-
-    .legend-box h3 {
-        font-size: 0.9em;
-    }
-
-    .legend-box li {
-        font-size: 0.8em;
-    }
-
-    .info-box {
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
-        max-width: none;
-        padding: 15px;
-    }
-
-    /* 모바일에서 라벨 크기 조정 */
-    .place-label {
-        font-size: 0.7em !important;
-        padding: 3px 6px !important;
-    }
-
-    /* 모바일에서 지도 타일 컨트롤 조정 */
-    .map-tile-control {
-        bottom: 10px;
-        left: 10px;
-        padding: 8px;
-        max-width: 120px;
-    }
-
-    .map-tile-control h4 {
-        font-size: 0.8em;
-        margin-bottom: 6px;
-    }
-
-    .tile-option {
-        font-size: 0.75em;
-        margin: 2px 0;
-        padding: 2px 4px;
-    }
+/* 장소 라벨 스타일 - 사용하지 않음 */
+.place-label {
+    display: none !important;
 }
 
 /* 스크롤바 스타일 */
@@ -445,18 +426,6 @@ body {
 .place-group-item .place-type-badge {
     margin-bottom: 6px !important;
     font-size: 0.7em !important;
-}
-
-/* 그룹 제목 스타일 */
-.info-box h3 {
-    margin: 0 0 15px 0;
-    color: #2c3e50;
-    font-size: 1.1em;
-    border-left: 4px solid #3498db;
-    padding-left: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 /* 그룹화된 장소의 타입별 테두리 색상 */
@@ -616,6 +585,91 @@ body {
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+    .title-box {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+        padding: 10px 16px;
+    }
+
+    .title-box h1 {
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .legend-box {
+        bottom: 10px;
+        right: 10px;
+        padding: 12px;
+        max-width: 160px;
+    }
+
+    .legend-box h3 {
+        font-size: 0.9em;
+    }
+
+    .legend-box li {
+        font-size: 0.8em;
+    }
+
+    .info-box {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        padding: 15px;
+    }
+
+    /* 모바일에서 구글 스타일 라벨 크기 조정 */
+    .google-style-label {
+        font-size: 10px !important;
+        padding: 3px 6px !important;
+    }
+
+    .google-style-label:before {
+        border-top: 3px solid transparent !important;
+        border-bottom: 3px solid transparent !important;
+        border-right: 3px solid white !important;
+    }
+
+    /* 모바일에서 마커 크기 조정 */
+    .marker-pin {
+        width: 20px !important;
+        height: 26px !important;
+        border-radius: 10px 10px 10px 0 !important;
+    }
+
+    .marker-pin i {
+        font-size: 8px !important;
+    }
+
+    .marker-shadow {
+        top: 28px !important;
+        left: 6px !important;
+        width: 6px !important;
+        height: 3px !important;
+    }
+
+    /* 모바일에서 지도 타일 컨트롤 조정 */
+    .map-tile-control {
+        bottom: 10px;
+        left: 10px;
+        padding: 8px;
+        max-width: 120px;
+    }
+
+    .map-tile-control h4 {
+        font-size: 0.8em;
+        margin-bottom: 6px;
+    }
+
+    .tile-option {
+        font-size: 0.75em;
+        margin: 2px 0;
+        padding: 2px 4px;
+    }
+
     .map-buttons {
         flex-direction: column;
     }
