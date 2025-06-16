@@ -5,6 +5,7 @@ let currentTileLayer;
 let shanghaiData = null;
 let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시성 포함)
 let currentLocationMarker = null; // 현재 위치 마커
+let labelUpdateTimeout = null; // 라벨 업데이트 디바운싱을 위한 타이머
 let markerGroups = {
     attractions: L.featureGroup(),
     restaurants: L.featureGroup(),
@@ -121,9 +122,17 @@ function initializeMap() {
     // 마커 표시
     displayMarkers();
 
-    // 줌 레벨 변경 시 라벨 가시성 업데이트
+    // 줌 레벨 변경 시 라벨 가시성 업데이트 (디바운싱 적용)
     map.on('zoomend', () => {
-        updateLabelVisibility();
+        // 기존 타이머가 있다면 취소
+        if (labelUpdateTimeout) {
+            clearTimeout(labelUpdateTimeout);
+        }
+        
+        // 100ms 후에 라벨 업데이트 (부드러운 전환을 위해)
+        labelUpdateTimeout = setTimeout(() => {
+            updateLabelVisibility();
+        }, 100);
     });
 
     // 지도 로드 후 초기 라벨 가시성 설정
@@ -179,11 +188,15 @@ function toggleMarkerGroup(type, show) {
         map.removeLayer(markerGroups[type]);
     }
 
-    // 그룹 가시성 변경 후 라벨 가시성 업데이트
-    // 약간의 지연을 주어 레이어가 완전히 추가/제거된 후 반영되도록 함
-    setTimeout(() => {
+    // 그룹 가시성 변경 후 라벨 가시성 업데이트 (디바운싱 적용)
+    if (labelUpdateTimeout) {
+        clearTimeout(labelUpdateTimeout);
+    }
+    
+    // 150ms 후에 라벨 업데이트 (레이어 변경 후 부드러운 전환을 위해)
+    labelUpdateTimeout = setTimeout(() => {
         updateLabelVisibility();
-    }, 100);
+    }, 150);
 }
 
 // 마커 표시 함수
@@ -407,8 +420,8 @@ function updateLabelVisibility() {
     const currentZoom = map.getZoom();
 
     // 라벨이 나타나기 시작할 최소 줌 레벨 설정
-    // 이 값을 조정하여 라벨 표시 시점을 제어합니다. (예: 15, 16)
-    const minZoomForLabels = 16; // 줌 레벨 16 이상에서 라벨 표시
+    // 이 값을 조정하여 라벨 표시 시점을 제어합니다. (예: 14, 15, 16)
+    const minZoomForLabels = 14; // 줌 레벨 14 이상에서 라벨 표시
 
     console.log(`현재 줌 레벨: ${currentZoom}, 라벨 표시 최소 줌: ${minZoomForLabels}`);
 
