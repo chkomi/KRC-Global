@@ -203,9 +203,11 @@ function displayMarkers() {
         // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
         let labelText;
         if (group.places.length === 1) {
-            labelText = group.places[0].name;
+            // display_name이 있으면 사용, 없으면 name 사용
+            labelText = group.places[0].display_name || group.places[0].name;
         } else {
-            labelText = `${group.places[0].name} 외 ${group.places.length - 1}곳`;
+            const firstPlaceName = group.places[0].display_name || group.places[0].name;
+            labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
         }
 
         // 라벨 생성
@@ -264,7 +266,7 @@ function displayGroupDetails(group) {
             <div class="place-type-badge type-${place.type}">
                 ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
             </div>
-            <h3><i class="fas fa-map-marker-alt"></i> ${place.name}</h3>
+            <h3><i class="fas fa-map-marker-alt"></i> ${place.display_name || place.name}</h3>
         `;
         
         if (place.description) {
@@ -319,7 +321,7 @@ function displayGroupDetails(group) {
                     <div class="place-type-badge type-${place.type}">
                         ${getTypeIcon(place.type)} ${getTypeDisplayName(place.type)}
                     </div>
-                    <h4>${place.name}</h4>
+                    <h4>${place.display_name || place.name}</h4>
             `;
             
             if (place.description) {
