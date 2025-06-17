@@ -296,6 +296,16 @@ function setupEventListeners() {
     document.getElementById('locate-btn').addEventListener('click', function() {
         findMyLocation();
     });
+
+    // 지도 이동 시 라벨 가시성 업데이트
+    map.on('moveend', () => {
+        if (labelUpdateTimeout) {
+            clearTimeout(labelUpdateTimeout);
+        }
+        labelUpdateTimeout = setTimeout(() => {
+            updateLabelVisibility();
+        }, 100);
+    });
 }
 
 // 마커 그룹 토글 함수 (범례 체크박스와 연동)
@@ -418,7 +428,7 @@ function displayMarkers() {
             const tooltip = L.tooltip({
                 permanent: true,
                 direction: 'bottom',
-                offset: [0, 5], // 마커에 더 가깝게 배치
+                offset: [0, 3], // 마커에 더 가깝게 배치
                 className: `place-label ${mainType}-bg`, // 마커 타입에 따른 배경색 클래스 추가
                 opacity: 0.9
             }).setContent(labelText);
