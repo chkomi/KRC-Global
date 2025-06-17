@@ -37,7 +37,11 @@ async function initMap() {
         if (!response.ok) {
             throw new Error('데이터 로드 실패');
         }
-        shanghaiData = await response.json();
+        const data = await response.json();
+        if (!data.shanghai_tourism) {
+            throw new Error('데이터 형식이 올바르지 않습니다.');
+        }
+        shanghaiData = data.shanghai_tourism;
         
         // 지도 생성
         map = L.map('map').setView([31.2304, 121.4737], 12);
@@ -89,9 +93,22 @@ function displayMarkers() {
     const currentZoom = map.getZoom();
     console.log('현재 줌 레벨:', currentZoom);
 
+    // 모든 장소 데이터를 하나의 배열로 합치기
+    const allPlaces = [];
+    const types = ['attractions', 'restaurants', 'hotels', 'airports'];
+
+    types.forEach(type => {
+        const places = shanghaiData[type];
+        if (Array.isArray(places)) {
+            places.forEach(place => {
+                allPlaces.push({...place, type: type});
+            });
+        }
+    });
+
     // 장소 그룹화
     const groups = {};
-    shanghaiData.shanghai_tourism.forEach(place => {
+    allPlaces.forEach(place => {
         if (!place.latitude || !place.longitude) {
             console.warn('유효하지 않은 좌표:', place);
             return;
@@ -109,8 +126,8 @@ function displayMarkers() {
 
         // 그룹의 우선순위가 가장 높은 타입 결정
         const highestPriorityType = group.reduce((highest, place) => {
-            const currentPriority = getTypePriority(place.type);
-            return currentPriority > (getTypePriority(highest?.type) || 0) ? place : highest;
+            const currentPriority = typePriorities[place.type] || 0;
+            return currentPriority > (typePriorities[highest?.type] || 0) ? place : highest;
         }, group[0]);
 
         // 마커 생성
