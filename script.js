@@ -486,7 +486,7 @@ function displayMarkers() {
                 const tooltipElement = markerData.marker._tooltip._container;
                 if (tooltipElement) {
                     markerData.tooltipElement = tooltipElement;
-                    tooltipElement.style.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
+                    markerData.tooltip.options.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
                     tooltipCount++;
                 }
             } catch (error) {
@@ -586,29 +586,109 @@ function createCurrentLocationIcon() {
     });
 }
 
-// 줌 레벨에 따라 라벨 가시성 업데이트 함수
+// 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     const minZoomForLabels = 14;
+    const bounds = map.getBounds();
+    const mapSize = map.getSize();
+    
+    // 모든 라벨 숨기기
+    allMarkers.forEach(markerData => {
+        if (markerData.visible) {
+            markerData.tooltip.removeFrom(map);
+            markerData.visible = false;
+        }
+    });
 
-    allMarkers.forEach((markerData) => {
+    // 현재 보이는 마커 그룹의 마커들만 필터링
+    const visibleMarkers = allMarkers.filter(markerData => {
+        const latLng = markerData.marker.getLatLng();
+        const isInBounds = bounds.contains(latLng);
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
-        const tooltipElement = markerData.tooltipElement;
+        return isInBounds && isGroupVisible;
+    });
 
-        if (!tooltipElement) {
-            return;
+    if (visibleMarkers.length === 0) return;
+
+    // 각 마커에 대해 최적의 라벨 위치 찾기
+    visibleMarkers.forEach(markerData => {
+        const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
+        const directions = ['right', 'left', 'top', 'bottom', 'topright', 'topleft', 'bottomright', 'bottomleft'];
+        
+        let bestDirection = 'right';
+        let bestScore = -1;
+
+        // 각 방향에 대해 점수 계산
+        for (const direction of directions) {
+            const offset = getTooltipOffset(direction);
+            const labelPos = {
+                x: markerPos.x + offset[0],
+                y: markerPos.y + offset[1]
+            };
+
+            let score = 100; // 기본 점수
+
+            // 화면 경계 체크 (경계를 벗어나면 점수 감소)
+            const labelWidth = markerData.tooltip._content.length * 8; // 라벨 너비 추정
+            const labelHeight = 24; // 라벨 높이 추정
+            
+            // 화면 경계에서의 여유 공간
+            const margin = 20;
+            
+            if (labelPos.x < margin) score -= 50;
+            if (labelPos.x + labelWidth > mapSize.x - margin) score -= 50;
+            if (labelPos.y < margin) score -= 50;
+            if (labelPos.y + labelHeight > mapSize.y - margin) score -= 50;
+
+            // 마커와의 거리 체크 (너무 가까우면 점수 감소)
+            const distanceToMarker = Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
+            if (distanceToMarker < 25) score -= 30;
+
+            // 다른 라벨과의 겹침 체크
+            visibleMarkers.forEach(otherMarker => {
+                if (otherMarker !== markerData && otherMarker.visible) {
+                    const otherPos = map.latLngToContainerPoint(otherMarker.marker.getLatLng());
+                    const otherOffset = getTooltipOffset(otherMarker.tooltip.options.direction);
+                    const otherLabelPos = {
+                        x: otherPos.x + otherOffset[0],
+                        y: otherPos.y + otherOffset[1]
+                    };
+
+                    // 라벨 간 거리 계산
+                    const labelDistance = Math.sqrt(
+                        Math.pow(labelPos.x - otherLabelPos.x, 2) +
+                        Math.pow(labelPos.y - otherLabelPos.y, 2)
+                    );
+
+                    if (labelDistance < 30) score -= 40;
+                }
+            });
+
+            // 우선순위 방향 (오른쪽과 왼쪽을 선호)
+            if (direction === 'right') score += 15;
+            if (direction === 'left') score += 12;
+            if (direction === 'top' || direction === 'bottom') score += 8;
+            if (direction.includes('right')) score += 5;
+            if (direction.includes('left')) score += 3;
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestDirection = direction;
+            }
         }
 
-        if (currentZoom >= minZoomForLabels && isGroupVisible) {
-            if (!markerData.labelVisible) {
-                tooltipElement.classList.add('show-label');
-                markerData.labelVisible = true;
-            }
-        } else {
-            if (markerData.labelVisible) {
-                tooltipElement.classList.remove('show-label');
-                markerData.labelVisible = false;
-            }
+        // 최소 점수 이상이면 라벨 표시
+        if (bestScore >= 0) {
+            const offset = getTooltipOffset(bestDirection);
+            
+            // 툴팁 설정 및 표시
+            markerData.tooltip.options.direction = bestDirection;
+            markerData.tooltip.options.offset = offset;
+            markerData.tooltip.options.opacity = 0.9;
+            
+            markerData.marker.bindTooltip(markerData.tooltip);
+            markerData.visible = true;
         }
     });
 }
