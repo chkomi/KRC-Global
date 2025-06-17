@@ -293,10 +293,6 @@ html, body {
     white-space: nowrap !important;
     border: none !important;
     z-index: 1000 !important;
-    /* 위치를 정확히 고정 */
-    position: absolute !important;
-    transform: none !important;
-    margin: 0 !important;
 }
 
 /* Leaflet 기본 툴팁 화살표 제거 */
@@ -324,12 +320,8 @@ html, body {
     visibility: hidden !important;
     border: none !important;
     z-index: 1000 !important;
-    /* 위치를 정확히 고정 */
-    position: absolute !important;
+    /* Leaflet의 기본 위치 시스템 유지하되 transform만 제거 */
     transform: none !important;
-    margin: 0 !important;
-    left: 0 !important;
-    top: 0 !important;
 }
 
 .custom-marker-tooltip:before {
@@ -339,7 +331,6 @@ html, body {
 .custom-marker-tooltip.show-label {
     opacity: 1 !important;
     visibility: visible !important;
-    transform: none !important;
 }
 
 /* Current Location Label */
@@ -352,8 +343,6 @@ html, body {
     padding: 6px 10px !important;
     visibility: visible !important;
     transform: none !important;
-    position: absolute !important;
-    margin: 0 !important;
 }
 
 /* Popup Styles */
