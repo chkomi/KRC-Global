@@ -28,44 +28,40 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 지도 초기화 함수
-function initMap() {
-    console.log('지도 초기화 시작');
-    
-    // 지도 생성
-    map = L.map('map').setView([31.2304, 121.4737], 13);
-    
-    // 타일 레이어 추가
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+async function initMap() {
+    try {
+        console.log('지도 초기화 시작');
+        
+        // 데이터 로드
+        const response = await fetch('data/shanghai-data.json');
+        if (!response.ok) {
+            throw new Error('데이터 로드 실패');
+        }
+        shanghaiData = await response.json();
+        
+        // 지도 생성
+        map = L.map('map').setView([31.2304, 121.4737], 12);
+        
+        // 타일 레이어 추가
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-    // 데이터 로드
-    fetch('shanghai_tourism.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('데이터 로드 실패');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('데이터 로드 성공:', data);
-            shanghaiData = data;
-            displayMarkers();
-        })
-        .catch(error => {
-            console.error('데이터 로드 중 오류:', error);
-            alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        // 줌 변경 이벤트 리스너
+        map.on('zoomend', () => {
+            updateLabelVisibility();
         });
 
-    // 줌 변경 이벤트 리스너
-    map.on('zoomend', () => {
-        updateLabelVisibility();
-    });
+        // 지도 이동 이벤트 리스너
+        map.on('moveend', () => {
+            updateLabelVisibility();
+        });
 
-    // 지도 이동 이벤트 리스너
-    map.on('moveend', () => {
-        updateLabelVisibility();
-    });
+        displayMarkers();
+    } catch (error) {
+        console.error('데이터 로드 중 오류:', error);
+        alert('데이터를 불러오는 중 오류가 발생했습니다.');
+    }
 }
 
 // 마커 표시 함수
