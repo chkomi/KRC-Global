@@ -328,158 +328,70 @@ function toggleMarkerGroup(type, show) {
 
 // 마커 표시 함수
 function displayMarkers() {
-    console.log('displayMarkers 함수 시작.');
+    // 기존 마커와 라벨 제거
+    markers.forEach(marker => marker.remove());
+    markers = [];
     
-    if (!map) {
-        console.error('지도 객체가 없습니다.');
-        return;
-    }
+    // 현재 줌 레벨에 따라 마커 표시
+    const currentZoom = map.getZoom();
     
-    if (!shanghaiData || !shanghaiData.shanghai_tourism) {
-        console.error('마커를 표시할 데이터가 없습니다. shanghaiData 또는 shanghai_tourism이 정의되지 않았습니다.');
-        return;
-    }
+    // 각 그룹에 대해 마커 생성
+    locationGroups.forEach(group => {
+        // 그룹의 가장 높은 우선순위 타입 결정
+        const highestPriorityType = group.places.reduce((highest, place) => {
+            const currentPriority = getTypePriority(place.type);
+            return currentPriority > highest.priority ? 
+                { type: place.type, priority: currentPriority } : highest;
+        }, { type: group.places[0].type, priority: getTypePriority(group.places[0].type) }).type;
 
-    // 기존 마커들 제거 및 배열 초기화
-    Object.values(markerGroups).forEach(group => {
-        group.clearLayers();
-    });
-    allMarkers = [];
-
-    // 모든 장소 데이터를 하나의 배열로 합치기
-    const allPlaces = [];
-    const types = ['attractions', 'restaurants', 'hotels', 'airports'];
-
-    types.forEach(type => {
-        const places = shanghaiData.shanghai_tourism[type];
-        if (Array.isArray(places)) { // 'places'가 배열인지 확인
-            places.forEach(place => {
-                allPlaces.push({...place, type: type}); // 각 장소에 타입 정보 추가
-            });
-        } else {
-            console.warn(`데이터에 "${type}" 카테고리가 유효한 배열이 아닙니다.`, places);
-        }
-    });
-
-    if (allPlaces.length === 0) {
-        console.warn('로드된 데이터에서 유효한 장소를 찾을 수 없습니다. 마커가 표시되지 않습니다.');
-        return;
-    }
-    console.log(`총 ${allPlaces.length}개의 장소 데이터 처리 시작.`);
-
-    // 위치(좌표)별로 장소들을 그룹화 (동일 좌표에 여러 장소가 있을 수 있으므로)
-    const locationGroups = {};
-    allPlaces.forEach(place => {
-        // 유효한 위도/경도 값인지 확인
-        const lat = parseFloat(place.latitude);
-        const lng = parseFloat(place.longitude);
-
-        if (isNaN(lat) || isNaN(lng)) {
-            console.warn(`유효하지 않은 좌표 발견: ${place.name} (위도: ${place.latitude}, 경도: ${place.longitude}) - 이 장소는 마커로 표시되지 않습니다.`);
-            return; // 유효하지 않은 좌표는 건너뛰기
-        }
-
-        // 부동 소수점 문제 방지를 위해 위도, 경도 정밀도를 고정하여 키 생성
-        const locationKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
-
-        if (!locationGroups[locationKey]) {
-            locationGroups[locationKey] = {
-                latitude: lat,
-                longitude: lng,
-                places: [] // 이 위치에 해당하는 모든 장소들
-            };
-        }
-        locationGroups[locationKey].places.push(place);
-    });
-
-    if (Object.keys(locationGroups).length === 0) {
-        console.warn('유효한 좌표를 가진 장소 그룹이 없습니다. 마커가 표시되지 않습니다.');
-        return;
-    }
-    console.log(`총 ${Object.keys(locationGroups).length}개의 고유한 위치에 마커 생성 시작.`);
-
-    let markerCount = 0;
-
-    // 각 위치 그룹에 대해 마커 생성
-    Object.values(locationGroups).forEach((group, groupIndex) => {
-        try {
-            // 그룹에서 가장 우선순위가 높은 타입으로 마커 아이콘 결정
-            const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-            const mainType = group.places.reduce((prev, curr) => 
-                priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr
-            ).type;
-
-            const marker = L.marker([group.latitude, group.longitude], {
-                icon: createCustomIcon(mainType)
-            }).addTo(markerGroups[mainType]);
-
-            markerCount++;
-
-            // 라벨은 첫 번째 장소 이름의 한글 부분만 추출
-            let labelText;
-            if (group.places.length === 1) {
-                labelText = extractKorean(group.places[0].name);
-            } else {
-                const firstPlaceName = extractKorean(group.places[0].name);
-                labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
-            }
-
-            // 라벨 생성 및 설정
-            const tooltip = L.tooltip({
-                permanent: true,
-                direction: 'bottom',
-                offset: [0, 3], // 마커에 더 가깝게 배치
-                className: `place-label ${mainType}-bg`, // 마커 타입에 따른 배경색 클래스 추가
-                opacity: 0.9
-            }).setContent(labelText);
-
-            // 마커에 라벨 바인딩
-            marker.bindTooltip(tooltip);
-
-            marker.on('click', () => {
-                displayGroupDetails(group);
-                map.flyTo([group.latitude, group.longitude], 15);
-            });
-
-            // 마커 정보를 배열에 저장
-            allMarkers.push({
-                marker: marker,
-                tooltip: tooltip,
-                group: group,
-                visible: true,
-                groupType: mainType
-            });
-
-        } catch (error) {
-            console.error(`마커 생성 중 오류 (Group ${groupIndex}):`, error);
-        }
-    });
-
-    console.log(`${markerCount}개의 마커가 생성되었습니다.`);
-
-    // 모든 마커를 포함하도록 지도 뷰를 조정
-    const allMarkersLayer = L.featureGroup();
-    Object.values(markerGroups).forEach(group => {
-        group.getLayers().forEach(layer => {
-            allMarkersLayer.addLayer(layer);
+        // 마커 아이콘 생성
+        const markerIcon = L.divIcon({
+            className: `custom-marker type-${highestPriorityType}`,
+            html: `<div class="marker-icon type-${highestPriorityType}"></div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         });
+
+        // 마커 생성
+        const marker = L.marker([group.latitude, group.longitude], { icon: markerIcon });
+        
+        // 라벨 텍스트 설정 (숙소인 경우 가격 정보 추가)
+        let labelText = extractKorean(group.places[0].name);
+        if (highestPriorityType === 'hotels' && group.places[0].price) {
+            const price = parseInt(group.places[0].price);
+            const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
+            labelText += `<br><span class="price-label">${formattedPrice}</span>`;
+        }
+        
+        // 여러 장소가 있는 경우 표시
+        if (group.places.length > 1) {
+            labelText += ` (${group.places.length})`;
+        }
+
+        // 툴팁 생성
+        const tooltip = L.tooltip({
+            permanent: true,
+            direction: 'top',
+            className: `place-label type-${highestPriorityType}`,
+            offset: [0, -5],  // 마커에 더 가깝게 조정
+            opacity: 1
+        }).setContent(labelText);
+
+        // 마커에 툴팁 추가
+        marker.bindTooltip(tooltip);
+        
+        // 마커 클릭 이벤트
+        marker.on('click', () => {
+            displayGroupDetails(group);
+        });
+
+        // 마커 추가
+        marker.addTo(map);
+        markers.push(marker);
     });
 
-    if (allMarkersLayer.getLayers().length > 0) {
-        try {
-            map.fitBounds(allMarkersLayer.getBounds().pad(0.1)); // 모든 마커가 보이도록 지도 뷰 조정
-            console.log('지도 뷰가 마커들에 맞게 조정되었습니다.');
-        } catch (error) {
-            console.error('지도 뷰 조정 중 오류:', error);
-        }
-    } else {
-        console.warn('표시할 마커가 없어 지도 뷰를 조정할 수 없습니다.');
-    }
-
-    // 초기 라벨 가시성 설정
-    setTimeout(() => {
-        updateLabelVisibility();
-    }, 500);
+    // 라벨 가시성 업데이트
+    updateLabelVisibility();
 }
 
 // 내 위치 찾기 함수
