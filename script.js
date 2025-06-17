@@ -596,53 +596,90 @@ function updateLabelVisibility() {
 // 그룹 상세 정보 팝업 표시 함수
 function displayGroupDetails(group) {
     const popup = L.popup({
-        maxWidth: 280,
+        maxWidth: 300,
         closeButton: true,
         autoClose: true,
         closeOnEscapeKey: true,
         className: 'custom-popup'
     });
 
-    let content = '<div class="popup-header">';
-    content += `<h3>${extractKorean(group.places[0].name)}</h3>`;
+    const place = group.places[0];
+    let content = `<div class="popup-header type-${place.type}">`;
+    content += `<h3>${extractKorean(place.name)}</h3>`;
     content += '</div>';
+    
+    content += '<div class="popup-content">';
 
-    // 숙소인 경우 가격 정보 추가
-    if (group.places[0].type === 'hotels' && group.places[0].price) {
-        const price = parseInt(group.places[0].price);
+    // 가격 정보 (숙소인 경우)
+    if (place.type === 'hotels' && place.price) {
+        const price = parseInt(place.price);
         const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
         content += `<span class="price-info">${formattedPrice}</span>`;
     }
 
-    // 주소 정보 추가
-    if (group.places[0].address) {
-        content += `<p><strong>주소:</strong> ${group.places[0].address}</p>`;
+    // 주소 정보
+    if (place.address && place.address !== "N/A") {
+        content += `<p><strong>주소:</strong> ${place.address}</p>`;
     }
 
-    // 여러 장소가 있는 경우
-    if (group.places.length > 1) {
-        content += `<p><strong>주변 장소:</strong> ${group.places.length - 1}곳</p>`;
+    // 설명
+    if (place.description) {
+        content += `<p><strong>설명:</strong> ${place.description}</p>`;
     }
+
+    // 특징
+    if (place.features && place.features.length > 0) {
+        content += '<div class="features-tags">';
+        place.features.forEach(feature => {
+            content += `<span class="feature-tag">${feature}</span>`;
+        });
+        content += '</div>';
+    }
+
+    // 메뉴 (식당인 경우)
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        content += '<p><strong>대표 메뉴:</strong></p>';
+        content += '<ul class="menu-list">';
+        place.menu.forEach(item => {
+            content += `<li>${item}</li>`;
+        });
+        content += '</ul>';
+    }
+
+    // 외부 지도 링크
+    content += '<div class="map-links">';
+    content += '<h4>외부 지도에서 보기</h4>';
+    content += '<div class="map-buttons">';
+    
+    // 구글 지도 (영어명으로 검색)
+    const englishName = place.name.split('(')[0].trim();
+    content += `<button class="map-btn google-btn" onclick="openGoogleMaps('${englishName}', ${place.latitude}, ${place.longitude})">
+        <i class="fab fa-google"></i> 구글지도
+    </button>`;
+    
+    // 가오더 지도 (중국어명으로 검색)
+    const chineseName = place.name.split('(')[1]?.split(')')[0]?.trim() || englishName;
+    content += `<button class="map-btn amap-btn" onclick="openAmapSearch('${chineseName}', ${place.latitude}, ${place.longitude})">
+        <i class="fas fa-map"></i> 가오더지도
+    </button>`;
+    
+    content += '</div></div>';
+    content += '</div>';
 
     popup.setContent(content);
     popup.setLatLng([group.latitude, group.longitude]);
     popup.openOn(map);
 }
 
-// 구글지도 열기 함수 (영문명으로 검색)
-function openGoogleMaps(placeName, lat, lng) {
-    const englishName = extractEnglishName(placeName);
-    const encodedName = encodeURIComponent(englishName);
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodedName}`;
-    window.open(googleMapsUrl, '_blank');
+// 외부 지도 열기 함수
+function openGoogleMaps(name, lat, lng) {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${lat},${lng}`;
+    window.open(url, '_blank');
 }
 
-// 가오더지도 열기 함수 (중국어명으로 검색)
-function openAmapSearch(placeName, lat, lng) {
-    const chineseName = extractChineseName(placeName);
-    const encodedName = encodeURIComponent(chineseName);
-    const amapUrl = `https://ditu.amap.com/search?query=${encodedName}&city=上海&geoobj=${lng}|${lat}|${lng}|${lat}&zoom=17`;
-    window.open(amapUrl, '_blank');
+function openAmapSearch(name, lat, lng) {
+    const url = `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&location=${lng},${lat}`;
+    window.open(url, '_blank');
 }
 
 // 타입별 아이콘 반환 함수
