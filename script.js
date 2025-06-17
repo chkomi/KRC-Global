@@ -55,10 +55,42 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 14로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 14);
         
-        // 타일 레이어 추가 (심플 스타일)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap contributors & © CARTO'
-        }).addTo(map);
+        // 타일 레이어 정의
+        const tileLayers = {
+            'simple': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap contributors & © CARTO'
+            }),
+            'road': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }),
+            'satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri'
+            })
+        };
+
+        // 기본 타일 레이어 설정
+        currentTileLayer = tileLayers['simple'];
+        currentTileLayer.addTo(map);
+
+        // 타일 레이어 변경 이벤트 리스너
+        document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    // 기존 타일 레이어 제거
+                    map.removeLayer(currentTileLayer);
+                    
+                    // 새 타일 레이어 추가
+                    currentTileLayer = tileLayers[this.value];
+                    currentTileLayer.addTo(map);
+                    
+                    // 활성 상태 업데이트
+                    document.querySelectorAll('.tile-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    this.parentElement.classList.add('active');
+                }
+            });
+        });
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
@@ -172,7 +204,45 @@ function displayMarkers() {
             className: `place-label type-${highestPriorityType.type}`
         }).setContent(labelText);
 
-        // 마커를 해당 그룹에 추가
+        // 팝업 생성 및 설정
+        const popup = L.popup({
+            maxWidth: 300,
+            className: `custom-popup type-${highestPriorityType.type}`
+        });
+
+        // 그룹에 장소가 하나인 경우
+        if (group.length === 1) {
+            popup.setContent(createPopupContent(highestPriorityType));
+        } else {
+            // 여러 장소가 있는 경우 그룹 팝업 생성
+            const groupContent = document.createElement('div');
+            groupContent.className = 'popup-content';
+            
+            const header = document.createElement('div');
+            header.className = `popup-header type-${highestPriorityType.type}`;
+            header.innerHTML = `<h3>${group.length}개의 장소</h3>`;
+            groupContent.appendChild(header);
+            
+            const placesList = document.createElement('div');
+            placesList.className = 'places-list';
+            
+            group.forEach(place => {
+                const placeItem = document.createElement('div');
+                placeItem.className = 'place-item';
+                placeItem.innerHTML = `
+                    <h4>${extractKorean(place.name)}</h4>
+                    ${place.address ? `<p><strong>주소:</strong> ${place.address}</p>` : ''}
+                    ${place.type === 'hotels' && place.price ? 
+                        `<p><strong>가격:</strong> ₩${parseInt(place.price).toLocaleString('ko-KR')}</p>` : ''}
+                `;
+                placesList.appendChild(placeItem);
+            });
+            
+            groupContent.appendChild(placesList);
+            popup.setContent(groupContent);
+        }
+
+        marker.bindPopup(popup);
         marker.addTo(markerGroups[highestPriorityType.type]);
         markers.push(marker);
 
@@ -241,15 +311,59 @@ function extractKorean(text) {
 
 // 커스텀 아이콘 생성 함수
 function createCustomIcon(type) {
-    const color = markerColors[type] || '#3498db';
+    const iconMap = {
+        attractions: 'fa-landmark',
+        restaurants: 'fa-utensils',
+        airports: 'fa-plane',
+        hotels: 'fa-hotel'
+    };
     
     return L.divIcon({
         className: 'custom-marker-icon',
-        html: `<div class="circle-marker ${type}-bg"><i class="fas fa-map-marker-alt"></i></div>`,
+        html: `<div class="circle-marker ${type}-bg"><i class="fas ${iconMap[type]}"></i></div>`,
         iconSize: [18, 18],
         iconAnchor: [9, 9],
         popupAnchor: [0, -9]
     });
+}
+
+// 팝업 내용 생성 함수
+function createPopupContent(place) {
+    const content = document.createElement('div');
+    content.className = 'popup-content';
+    
+    const header = document.createElement('div');
+    header.className = `popup-header type-${place.type}`;
+    header.innerHTML = `<h3>${extractKorean(place.name)}</h3>`;
+    content.appendChild(header);
+    
+    const info = document.createElement('div');
+    info.className = 'popup-info';
+    
+    // 주소 정보
+    if (place.address) {
+        const address = document.createElement('p');
+        address.innerHTML = `<strong>주소:</strong> ${place.address}`;
+        info.appendChild(address);
+    }
+    
+    // 가격 정보 (숙소인 경우)
+    if (place.type === 'hotels' && place.price) {
+        const price = document.createElement('p');
+        const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
+        price.innerHTML = `<strong>가격:</strong> ${formattedPrice}`;
+        info.appendChild(price);
+    }
+    
+    // 설명 정보
+    if (place.description) {
+        const desc = document.createElement('p');
+        desc.innerHTML = `<strong>설명:</strong> ${place.description}`;
+        info.appendChild(desc);
+    }
+    
+    content.appendChild(info);
+    return content;
 }
 
 // 이벤트 리스너 설정 함수

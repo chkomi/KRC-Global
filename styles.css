@@ -37,6 +37,8 @@ html, body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.1);
+    min-width: 200px;
+    text-align: center;
 }
 
 .title-box h1 {
@@ -45,7 +47,9 @@ html, body {
     font-weight: 600;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 /* Location Button */
@@ -177,19 +181,19 @@ html, body {
     bottom: 15px;
     right: 15px;
     background: rgba(255, 255, 255, 0.95);
-    padding: 15px;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 8px;
     z-index: 1000;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    max-width: 200px;
+    max-width: 160px;
 }
 
 .legend-box h3 {
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     color: #2c3e50;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -205,8 +209,8 @@ html, body {
 .legend-box li {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.85em;
+    margin-bottom: 6px;
+    font-size: 0.8em;
 }
 
 .legend-item {
@@ -364,8 +368,7 @@ html, body {
 }
 
 .popup-header {
-    padding: 10px 15px;
-    border-radius: 8px 8px 0 0;
+    padding: 12px 15px;
     color: white;
     font-weight: 500;
 }
@@ -376,99 +379,64 @@ html, body {
     font-weight: 600;
 }
 
-.popup-content {
+.popup-info {
     padding: 12px 15px;
 }
 
-.popup-content p {
+.popup-info p {
     margin: 8px 0;
     font-size: 0.9em;
     line-height: 1.4;
 }
 
-.popup-content strong {
+.popup-info strong {
     color: #666;
     margin-right: 5px;
 }
 
-.popup-content ul {
-    margin: 5px 0;
-    padding-left: 20px;
+.places-list {
+    padding: 12px 15px;
 }
 
-.popup-content li {
-    margin: 3px 0;
-    font-size: 0.9em;
+.place-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
 }
 
-.map-links {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #eee;
+.place-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
-.map-links h4 {
+.place-item h4 {
     margin: 0 0 8px 0;
-    font-size: 0.9em;
+    font-size: 1em;
+    color: #2c3e50;
+}
+
+.place-item p {
+    margin: 4px 0;
+    font-size: 0.85em;
     color: #666;
 }
 
-.map-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.map-btn {
-    flex: 1;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.85em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    transition: all 0.2s;
-}
-
-.map-btn i {
-    font-size: 1.1em;
-}
-
-.google-btn {
-    background: #4285F4;
-    color: white;
-}
-
-.google-btn:hover {
-    background: #3367D6;
-}
-
-.amap-btn {
-    background: #FF6B6B;
-    color: white;
-}
-
-.amap-btn:hover {
-    background: #FF5252;
-}
-
 /* 마커 타입별 팝업 헤더 색상 */
-.popup-header.type-attractions {
-    background: rgba(255, 107, 107, 0.9);  /* 빨간톤 */
+.custom-popup.type-attractions .popup-header {
+    background: rgba(234, 67, 53, 0.9);
 }
 
-.popup-header.type-restaurants {
-    background: rgba(76, 175, 80, 0.9);    /* 녹색톤 */
+.custom-popup.type-restaurants .popup-header {
+    background: rgba(52, 168, 83, 0.9);
 }
 
-.popup-header.type-airports {
-    background: rgba(33, 150, 243, 0.9);   /* 파란톤 */
+.custom-popup.type-airports .popup-header {
+    background: rgba(155, 89, 182, 0.9);
 }
 
-.popup-header.type-hotels {
-    background: rgba(33, 150, 243, 0.9);   /* 파란톤 */
+.custom-popup.type-hotels .popup-header {
+    background: rgba(26, 115, 232, 0.9);
 }
 
 /* 가격 정보 스타일 */
