@@ -606,14 +606,6 @@ function displayGroupDetails(group) {
     const place = group.places[0];
     let content = `<div class="popup-header type-${place.type}">`;
     content += `<h3>${extractKorean(place.name)}</h3>`;
-    
-    // 가격 정보 (숙소인 경우) - 헤더 내부로 이동
-    if (place.type === 'hotels' && place.price) {
-        const price = parseInt(place.price);
-        const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
-        content += `<span class="price-info">${formattedPrice}</span>`;
-    }
-    
     content += '</div>';
     
     content += '<div class="popup-content">';
