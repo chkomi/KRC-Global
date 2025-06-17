@@ -165,7 +165,8 @@ function createCustomIcon(type) {
                          <i class="${iconClass}"></i>
                        </div>`,
             iconSize: [18, 18],
-            iconAnchor: [9, 9] // 아이콘 중심을 마커의 중심에 맞춤
+            iconAnchor: [9, 9], // 아이콘 중심을 마커의 중심에 맞춤
+            tooltipAnchor: [0, 15] // 툴팁이 아이콘 하단에 나타나도록 설정
         });
     } catch (e) {
         console.error(`L.divIcon 생성 오류 (Type: ${type}):`, e);
@@ -436,7 +437,7 @@ function displayMarkers() {
             const tooltip = marker.bindTooltip(labelText, {
                 permanent: true,
                 direction: 'bottom',
-                offset: [0, 5],
+                offset: [0, 12], // 마커 하단에서 좀 더 떨어뜨리기
                 className: 'custom-marker-tooltip',
                 opacity: 1
             });
@@ -530,8 +531,8 @@ function findMyLocation() {
 
             currentLocationMarker.bindTooltip('현재 위치', {
                 permanent: false,
-                direction: 'top',
-                offset: [0, -25],
+                direction: 'bottom',
+                offset: [0, 12],
                 className: 'current-location-label'
             }).openTooltip();
 
@@ -580,7 +581,8 @@ function createCurrentLocationIcon() {
                      <div class="location-dot"></div>
                    </div>`,
         iconSize: [20, 20],
-        iconAnchor: [10, 10]
+        iconAnchor: [10, 10],
+        tooltipAnchor: [0, 18] // 현재 위치 툴팁도 정확한 위치에 표시
     });
 }
 
