@@ -405,20 +405,21 @@ function displayMarkers() {
 
             markerCount++;
 
-            // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
+            // 라벨은 첫 번째 장소 이름의 한글 부분만 추출
             let labelText;
             if (group.places.length === 1) {
-                labelText = group.places[0].name;
+                labelText = extractKorean(group.places[0].name);
             } else {
-                labelText = `${group.places[0].name} 외 ${group.places.length - 1}곳`;
+                const firstPlaceName = extractKorean(group.places[0].name);
+                labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
             }
 
             // 라벨 생성 및 설정
             const tooltip = L.tooltip({
                 permanent: true,
                 direction: 'bottom',
-                offset: [0, 15],
-                className: 'place-label',
+                offset: [0, 5], // 마커에 더 가깝게 배치
+                className: `place-label ${mainType}-bg`, // 마커 타입에 따른 배경색 클래스 추가
                 opacity: 0.9
             }).setContent(labelText);
 
