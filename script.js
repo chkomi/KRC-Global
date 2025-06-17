@@ -51,8 +51,8 @@ async function initMap() {
         }
         shanghaiData = data.shanghai_tourism;
         
-        // 지도 생성
-        map = L.map('map').setView([31.2304, 121.4737], 12);
+        // 지도 생성 (초기 줌 레벨 14로 설정)
+        map = L.map('map').setView([31.2304, 121.4737], 14);
         
         // 타일 레이어 추가 (심플 스타일)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -67,6 +67,19 @@ async function initMap() {
         // 지도 이동 이벤트 리스너
         map.on('moveend', () => {
             updateLabelVisibility();
+        });
+
+        // 마커 그룹 초기화
+        markerGroups = {
+            attractions: L.featureGroup(),
+            restaurants: L.featureGroup(),
+            hotels: L.featureGroup(),
+            airports: L.featureGroup()
+        };
+
+        // 마커 그룹들을 지도에 추가
+        Object.values(markerGroups).forEach(group => {
+            group.addTo(map);
         });
 
         displayMarkers();
@@ -90,6 +103,7 @@ function displayMarkers() {
         }
     });
     markers = [];
+    allMarkers = [];
 
     // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
@@ -99,7 +113,9 @@ function displayMarkers() {
         const places = shanghaiData[type];
         if (Array.isArray(places)) {
             places.forEach(place => {
-                allPlaces.push({...place, type: type});
+                if (place.latitude && place.longitude) {
+                    allPlaces.push({...place, type: type});
+                }
             });
         }
     });
@@ -107,10 +123,6 @@ function displayMarkers() {
     // 장소 그룹화
     const groups = {};
     allPlaces.forEach(place => {
-        if (!place.latitude || !place.longitude) {
-            console.warn('유효하지 않은 좌표:', place);
-            return;
-        }
         const key = `${place.latitude},${place.longitude}`;
         if (!groups[key]) {
             groups[key] = [];
@@ -153,8 +165,8 @@ function displayMarkers() {
             className: `place-label type-${highestPriorityType.type}`
         }).setContent(labelText);
 
-        marker.bindTooltip(tooltip);
-        marker.addTo(map);
+        // 마커를 해당 그룹에 추가
+        marker.addTo(markerGroups[highestPriorityType.type]);
         markers.push(marker);
 
         // 마커 정보 저장
