@@ -292,14 +292,18 @@ html, body {
     color: #333 !important;
     white-space: nowrap !important;
     opacity: 0 !important;
-    transform: scale(0.8) !important;
-    transition: opacity 0.3s ease, transform 0.3s ease !important;
+    transition: opacity 0.3s ease !important;
     pointer-events: none !important;
     font-size: 11px !important;
     line-height: 1.2 !important;
     visibility: hidden !important;
     border: none !important;
     z-index: 1000 !important;
+    /* 위치 고정을 위한 속성들 */
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    transform: none !important;
 }
 
 .custom-marker-tooltip:before {
@@ -308,8 +312,8 @@ html, body {
 
 .custom-marker-tooltip.show-label {
     opacity: 1 !important;
-    transform: scale(1) !important;
     visibility: visible !important;
+    transform: none !important;
 }
 
 /* Current Location Label */
@@ -321,7 +325,8 @@ html, body {
     font-size: 12px !important;
     padding: 6px 10px !important;
     visibility: visible !important;
-    transform: scale(1) !important;
+    transform: none !important;
+    position: relative !important;
 }
 
 /* Popup Styles */
@@ -639,6 +644,7 @@ html, body {
     .custom-marker-tooltip {
         font-size: 10px !important;
         padding: 3px 6px !important;
+        transform: none !important;
     }
 
     .circle-marker {
