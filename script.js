@@ -1,5 +1,5 @@
 // Global Variables
-let map;
+let map = null;
 let markers = [];
 let currentTileLayer;
 let shanghaiData = null;
@@ -15,10 +15,10 @@ let markerGroups = {
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
-    attractions: '#ea4335', // 관광지 (Google Red)
-    restaurants: '#34a853', // 음식점 (Google Green)
-    airports: '#9b59b6',    // 공항 (Purple)
-    hotels: '#1a73e8'      // 호텔 (Google Blue)
+    attractions: '#34a853',  // 관광지 (Google Green)
+    restaurants: '#ea4335',  // 식당 (Google Red)
+    airports: '#fbbc05',     // 공항 (Google Yellow)
+    hotels: '#1a73e8'        // 호텔 (Google Blue)
 };
 
 // 마커 타입별 우선순위 정의
@@ -221,67 +221,19 @@ function extractChineseName(text) {
 
 // 텍스트에서 한글 부분만 추출하는 함수 (라벨 표시용)
 function extractKorean(text) {
-    // 괄호 안의 한글 부분을 먼저 찾기 (예: "와이탄 (The Bund)")
-    const koreanInParentheses = text.match(/\(([가-힣\s]+)\)/);
-    if (koreanInParentheses && koreanInParentheses[1].trim() !== '') {
-        return koreanInParentheses[1].trim();
-    }
-
-    // 괄호가 없다면 전체 텍스트에서 첫 번째 한글 덩어리 추출
-    const koreanParts = text.match(/[가-힣\s]+/g);
-    if (koreanParts && koreanParts.length > 0) {
-        // 비어있는 문자열 필터링 후 첫 번째 비어있지 않은 한글 부분 반환
-        const filteredParts = koreanParts.filter(part => part.trim() !== '');
-        if (filteredParts.length > 0) {
-            return filteredParts[0].trim();
-        }
-    }
-
-    // 한글이 없다면 원본 텍스트 반환 (영어나 숫자 등)
-    return text;
+    const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]+/g;
+    const matches = text.match(koreanRegex);
+    return matches ? matches.join(' ') : text;
 }
 
 // 커스텀 아이콘 생성 함수 (원형 마커)
 function createCustomIcon(type) {
-    let iconClass, bgClass;
-
-    switch (type) {
-        case 'attractions':
-            iconClass = 'fas fa-camera';
-            bgClass = 'tourism-bg';
-            break;
-        case 'restaurants':
-            iconClass = 'fas fa-utensils';
-            bgClass = 'restaurant-bg';
-            break;
-        case 'airports':
-            iconClass = 'fas fa-plane';
-            bgClass = 'airport-bg';
-            break;
-        case 'hotels':
-            iconClass = 'fas fa-bed';
-            bgClass = 'accommodation-bg';
-            break;
-        default:
-            iconClass = 'fas fa-map-marker-alt';
-            bgClass = 'tourism-bg'; // 기본값
-    }
-
-    // L.divIcon을 사용하여 커스텀 HTML 기반 마커 생성
-    try {
-        return L.divIcon({
-            className: 'google-circle-marker',
-            html: `<div class="circle-marker ${bgClass}">
-                         <i class="${iconClass}"></i>
-                       </div>`,
-            iconSize: [18, 18],
-            iconAnchor: [9, 9], // 아이콘 중심을 마커의 중심에 맞춤
-            tooltipAnchor: [0, 15] // 툴팁이 아이콘 하단에 나타나도록 설정
-        });
-    } catch (e) {
-        console.error(`L.divIcon 생성 오류 (Type: ${type}):`, e);
-        return null; // 오류 발생 시 null 반환
-    }
+    return L.divIcon({
+        className: `custom-marker type-${type}`,
+        html: `<div class="marker-icon type-${type}"></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+    });
 }
 
 // 이벤트 리스너 설정 함수
