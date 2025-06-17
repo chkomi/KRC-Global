@@ -21,6 +21,14 @@ const markerColors = {
     hotels: '#1a73e8'      // 호텔 (Google Blue)
 };
 
+// 마커 타입별 우선순위 정의
+const typePriorities = {
+    'attractions': 4,  // 관광지
+    'restaurants': 3,  // 식당
+    'hotels': 2,       // 호텔
+    'airports': 1      // 공항
+};
+
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
     console.log('페이지 로드 완료, 지도 초기화 시작');
