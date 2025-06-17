@@ -452,30 +452,31 @@ html, body {
 
 /* 마커 타입별 팝업 헤더 색상 */
 .popup-header.type-attractions {
-    background: rgba(255, 107, 107, 0.9);
+    background: rgba(255, 107, 107, 0.9);  /* 빨간톤 */
 }
 
 .popup-header.type-restaurants {
-    background: rgba(255, 193, 7, 0.9);
+    background: rgba(76, 175, 80, 0.9);    /* 녹색톤 */
 }
 
 .popup-header.type-airports {
-    background: rgba(33, 150, 243, 0.9);
+    background: rgba(33, 150, 243, 0.9);   /* 파란톤 */
 }
 
 .popup-header.type-hotels {
-    background: rgba(76, 175, 80, 0.9);
+    background: rgba(33, 150, 243, 0.9);   /* 파란톤 */
 }
 
 /* 가격 정보 스타일 */
 .price-info {
     display: inline-block;
-    padding: 4px 8px;
-    background: rgba(76, 175, 80, 0.1);
-    color: #2E7D32;
+    padding: 2px 6px;
+    background: rgba(33, 150, 243, 0.1);
+    color: #1976D2;
     border-radius: 4px;
-    font-weight: 600;
-    margin: 8px 0;
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 4px 0;
 }
 
 /* 특징 태그 스타일 */
