@@ -816,15 +816,15 @@ html, body {
     color: white !important;
 }
 
-.place-label:before {
-    display: none !important;
+/* 가격 정보 스타일 */
+.place-label .price-info {
+    color: white !important;
+    font-size: 0.9em !important;
+    font-weight: 500 !important;
+    display: block !important;
+    margin-top: 2px !important;
 }
 
-.price-label {
-    display: block;
-    font-size: 0.9em;
-    color: #1976D2;
-    font-weight: 500;
-    margin-top: 2px;
-    white-space: nowrap;
+.place-label:before {
+    display: none !important;
 }
