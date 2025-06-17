@@ -329,81 +329,97 @@ function createCustomIcon(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    const content = document.createElement('div');
-    content.className = 'popup-content';
-    
+    const popupContent = document.createElement('div');
+    popupContent.className = 'popup-content';
+
     // 이미지 섹션
     const imageSection = document.createElement('div');
     imageSection.className = 'popup-image';
-    if (place.image) {
-        imageSection.style.backgroundImage = `url(${place.image})`;
-    } else {
-        // 기본 이미지 설정
-        imageSection.style.backgroundImage = `url('/KRC-Global/images/default-${place.type}.jpg')`;
-    }
-    content.appendChild(imageSection);
-    
+    imageSection.style.backgroundImage = `url(${place.image || 'https://via.placeholder.com/300x200?text=No+Image'})`;
+    popupContent.appendChild(imageSection);
+
     // 정보 섹션
     const infoSection = document.createElement('div');
     infoSection.className = 'popup-info';
-    
-    // 이름
-    const name = document.createElement('h3');
-    name.className = 'popup-name';
-    name.textContent = extractKorean(place.name);
-    infoSection.appendChild(name);
-    
+
+    // 이름 (맛집인 경우 대표 메뉴 추가)
+    const nameElement = document.createElement('h3');
+    nameElement.className = 'popup-name';
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        nameElement.textContent = `${place.name} (${place.menu[0]})`;
+    } else {
+        nameElement.textContent = place.name;
+    }
+    infoSection.appendChild(nameElement);
+
     // 설명
     if (place.description) {
-        const desc = document.createElement('p');
-        desc.className = 'popup-description';
-        desc.textContent = place.description;
-        infoSection.appendChild(desc);
+        const descriptionElement = document.createElement('p');
+        descriptionElement.className = 'popup-description';
+        descriptionElement.textContent = place.description;
+        infoSection.appendChild(descriptionElement);
     }
-    
-    // 주요 메뉴 (식당인 경우)
-    if (place.type === 'restaurants' && place.menu) {
+
+    // 메뉴 정보 (맛집인 경우)
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
         const menuSection = document.createElement('div');
         menuSection.className = 'popup-menu';
-        const menuTitle = document.createElement('h4');
-        menuTitle.textContent = '주요 메뉴';
-        menuSection.appendChild(menuTitle);
         
+        const menuTitle = document.createElement('h4');
+        menuTitle.innerHTML = '<i class="fas fa-utensils"></i> 대표 메뉴';
+        menuSection.appendChild(menuTitle);
+
         const menuList = document.createElement('ul');
-        place.menu.forEach(item => {
-            const menuItem = document.createElement('li');
-            menuItem.textContent = item;
-            menuList.appendChild(menuItem);
+        place.menu.forEach(menuItem => {
+            const menuItemElement = document.createElement('li');
+            menuItemElement.textContent = menuItem;
+            menuList.appendChild(menuItemElement);
         });
         menuSection.appendChild(menuList);
         infoSection.appendChild(menuSection);
     }
-    
-    content.appendChild(infoSection);
-    
+
+    // 주소
+    if (place.address) {
+        const addressElement = document.createElement('p');
+        addressElement.className = 'popup-address';
+        addressElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${place.address}`;
+        infoSection.appendChild(addressElement);
+    }
+
+    // 가격 정보 (숙소인 경우)
+    if (place.type === 'hotels' && place.price) {
+        const priceElement = document.createElement('p');
+        priceElement.className = 'popup-price';
+        priceElement.innerHTML = `<i class="fas fa-yen-sign"></i> ${place.price}`;
+        infoSection.appendChild(priceElement);
+    }
+
+    popupContent.appendChild(infoSection);
+
     // 지도 연결 버튼
     const mapLinks = document.createElement('div');
     mapLinks.className = 'map-links';
-    
-    // 구글 지도 버튼
+
+    // 구글맵 버튼
     const googleBtn = document.createElement('a');
-    googleBtn.className = 'map-btn google-btn';
-    googleBtn.href = `https://www.google.com/maps/search/${encodeURIComponent(place.name_en || place.name)}`;
+    googleBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name_en)}`;
     googleBtn.target = '_blank';
-    googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글 지도';
+    googleBtn.className = 'map-btn google-btn';
+    googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글맵';
     mapLinks.appendChild(googleBtn);
-    
-    // 가오더 지도 버튼
+
+    // 가오디맵 버튼
     const gaodeBtn = document.createElement('a');
-    gaodeBtn.className = 'map-btn gaode-btn';
-    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name_zh || place.name)}`;
+    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name)}`;
     gaodeBtn.target = '_blank';
-    gaodeBtn.innerHTML = '<i class="fas fa-map-marked-alt"></i> 가오더 지도';
+    gaodeBtn.className = 'map-btn gaode-btn';
+    gaodeBtn.innerHTML = '<i class="fas fa-map"></i> 가오디맵';
     mapLinks.appendChild(gaodeBtn);
-    
-    content.appendChild(mapLinks);
-    
-    return content;
+
+    popupContent.appendChild(mapLinks);
+
+    return popupContent;
 }
 
 // 이벤트 리스너 설정 함수
@@ -666,5 +682,27 @@ function getTypeDisplayName(type) {
         case 'hotels': return '호텔';
         default: return '기타';
     }
+}
+
+function createLabel(place) {
+    const label = document.createElement('div');
+    label.className = 'place-label';
+    
+    // 맛집인 경우 이름에 대표 메뉴 추가
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        label.textContent = `${place.name} (${place.menu[0]})`;
+    } else {
+        label.textContent = place.name;
+    }
+    
+    // 숙소인 경우 가격 정보 추가
+    if (place.type === 'hotels' && place.price) {
+        const priceInfo = document.createElement('div');
+        priceInfo.className = 'price-info';
+        priceInfo.textContent = place.price;
+        label.appendChild(priceInfo);
+    }
+    
+    return label;
 }
 
