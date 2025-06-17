@@ -50,6 +50,7 @@ async function initMap() {
             throw new Error('데이터 형식이 올바르지 않습니다.');
         }
         shanghaiData = data.shanghai_tourism;
+        console.log('데이터 로드 완료:', shanghaiData);
         
         // 지도 생성 (초기 줌 레벨 14로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 14);
@@ -96,6 +97,8 @@ function displayMarkers() {
         return;
     }
 
+    console.log('마커 표시 시작');
+
     // 기존 마커와 라벨 제거
     markers.forEach(marker => {
         if (marker && marker.remove) {
@@ -120,6 +123,8 @@ function displayMarkers() {
         }
     });
 
+    console.log('처리할 장소 수:', allPlaces.length);
+
     // 장소 그룹화
     const groups = {};
     allPlaces.forEach(place => {
@@ -129,6 +134,8 @@ function displayMarkers() {
         }
         groups[key].push(place);
     });
+
+    console.log('그룹화된 장소 수:', Object.keys(groups).length);
 
     // 각 그룹에 대해 마커 생성
     Object.values(groups).forEach(group => {
@@ -177,6 +184,8 @@ function displayMarkers() {
             visible: false
         });
     });
+
+    console.log('생성된 마커 수:', markers.length);
 
     // 라벨 가시성 업데이트
     setTimeout(() => {
@@ -230,13 +239,16 @@ function extractKorean(text) {
     return matches ? matches.join(' ') : text;
 }
 
-// 커스텀 아이콘 생성 함수 (원형 마커)
+// 커스텀 아이콘 생성 함수
 function createCustomIcon(type) {
+    const color = markerColors[type] || '#3498db';
+    
     return L.divIcon({
-        className: `custom-marker type-${type}`,
-        html: `<div class="marker-icon type-${type}"></div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
+        className: 'custom-marker-icon',
+        html: `<div class="circle-marker ${type}-bg"><i class="fas fa-map-marker-alt"></i></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+        popupAnchor: [0, -9]
     });
 }
 

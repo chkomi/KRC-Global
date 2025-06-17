@@ -252,6 +252,11 @@ html, body {
     border: none;
 }
 
+.custom-marker-icon {
+    background: transparent;
+    border: none;
+}
+
 .circle-marker {
     width: 18px;
     height: 18px;
@@ -262,7 +267,6 @@ html, body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     border: 2px solid white;
     transition: transform 0.2s ease;
-    position: relative;
 }
 
 .circle-marker:hover {
@@ -276,10 +280,10 @@ html, body {
 }
 
 /* Marker Colors */
-.tourism-bg { background-color: #ea4335; }
-.restaurant-bg { background-color: #34a853; }
-.airport-bg { background-color: #9b59b6; }
-.accommodation-bg { background-color: #1a73e8; }
+.attractions-bg { background-color: #ea4335; }
+.restaurants-bg { background-color: #34a853; }
+.airports-bg { background-color: #9b59b6; }
+.hotels-bg { background-color: #1a73e8; }
 
 /* Custom Tooltip Styles */
 .leaflet-tooltip {
