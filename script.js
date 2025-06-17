@@ -54,9 +54,9 @@ async function initMap() {
         // 지도 생성
         map = L.map('map').setView([31.2304, 121.4737], 12);
         
-        // 타일 레이어 추가
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+        // 타일 레이어 추가 (심플 스타일)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors & © CARTO'
         }).addTo(map);
 
         // 줌 변경 이벤트 리스너
@@ -84,22 +84,12 @@ function displayMarkers() {
     }
 
     // 기존 마커와 라벨 제거
-    if (markers) {
-        if (Array.isArray(markers)) {
-            markers.forEach(marker => {
-                if (marker && marker.remove) {
-                    marker.remove();
-                }
-            });
-        } else if (markers.remove) {
-            markers.remove();
+    markers.forEach(marker => {
+        if (marker && marker.remove) {
+            marker.remove();
         }
-    }
+    });
     markers = [];
-
-    // 현재 줌 레벨 확인
-    const currentZoom = map.getZoom();
-    console.log('현재 줌 레벨:', currentZoom);
 
     // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
@@ -143,7 +133,7 @@ function displayMarkers() {
             icon: createCustomIcon(highestPriorityType.type)
         });
 
-        // 라벨 텍스트 설정 (숙소인 경우 가격 정보 포함)
+        // 라벨 텍스트 설정
         let labelText = extractKorean(highestPriorityType.name);
         if (highestPriorityType.type === 'hotels' && highestPriorityType.price) {
             const price = parseInt(highestPriorityType.price);
@@ -160,19 +150,21 @@ function displayMarkers() {
             direction: 'top',
             offset: [0, -5],
             opacity: 1,
-            className: `place-label ${highestPriorityType.type}-label`
+            className: `place-label type-${highestPriorityType.type}`
         }).setContent(labelText);
 
         marker.bindTooltip(tooltip);
         marker.addTo(map);
         markers.push(marker);
-    });
 
-    // 모든 마커가 보이도록 지도 뷰 조정
-    if (markers.length > 0) {
-        const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.1));
-    }
+        // 마커 정보 저장
+        allMarkers.push({
+            marker: marker,
+            tooltip: tooltip,
+            groupType: highestPriorityType.type,
+            visible: false
+        });
+    });
 
     // 라벨 가시성 업데이트
     setTimeout(() => {
