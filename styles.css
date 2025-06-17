@@ -356,52 +356,74 @@ html, body {
 /* Popup Styles */
 .custom-popup .leaflet-popup-content-wrapper {
     padding: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    background: white;
 }
 
 .popup-content {
-    width: 300px;
+    width: 320px;
 }
 
 .popup-image {
     width: 100%;
-    height: 180px;
+    height: 200px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
+}
+
+.popup-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
 }
 
 .popup-info {
-    padding: 15px;
+    padding: 20px;
 }
 
 .popup-name {
-    margin: 0 0 10px 0;
-    font-size: 1.2em;
+    margin: 0 0 12px 0;
+    font-size: 1.3em;
     font-weight: 600;
-    color: #2c3e50;
+    color: #1a1a1a;
+    line-height: 1.4;
 }
 
 .popup-description {
-    margin: 0 0 15px 0;
-    font-size: 0.9em;
-    line-height: 1.5;
-    color: #666;
+    margin: 0 0 16px 0;
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #4a4a4a;
 }
 
 .popup-menu {
-    margin: 15px 0;
-    padding: 10px;
+    margin: 16px 0;
+    padding: 12px;
     background: #f8f9fa;
-    border-radius: 6px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
 }
 
 .popup-menu h4 {
-    margin: 0 0 8px 0;
-    font-size: 0.9em;
-    color: #2c3e50;
+    margin: 0 0 10px 0;
+    font-size: 0.95em;
+    color: #1a1a1a;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.popup-menu h4 i {
+    color: #3498db;
 }
 
 .popup-menu ul {
@@ -411,11 +433,12 @@ html, body {
 }
 
 .popup-menu li {
-    margin: 4px 0;
-    font-size: 0.85em;
-    color: #666;
-    padding-left: 15px;
+    margin: 6px 0;
+    font-size: 0.9em;
+    color: #4a4a4a;
+    padding-left: 18px;
     position: relative;
+    line-height: 1.5;
 }
 
 .popup-menu li:before {
@@ -423,13 +446,15 @@ html, body {
     position: absolute;
     left: 0;
     color: #3498db;
+    font-size: 1.2em;
 }
 
 .map-links {
     display: flex;
-    gap: 10px;
-    padding: 15px;
-    border-top: 1px solid #eee;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
 }
 
 .map-btn {
@@ -437,13 +462,14 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.85em;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9em;
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .map-btn i {
@@ -458,6 +484,8 @@ html, body {
 .google-btn:hover {
     background: #3367D6;
     color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
 }
 
 .gaode-btn {
@@ -468,17 +496,19 @@ html, body {
 .gaode-btn:hover {
     background: #0088cc;
     color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 166, 251, 0.3);
 }
 
 /* 그룹 팝업 스타일 */
 .places-list {
-    padding: 15px;
+    padding: 20px;
 }
 
 .place-item {
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .place-item:last-child {
@@ -488,15 +518,43 @@ html, body {
 }
 
 .place-item h4 {
-    margin: 0 0 8px 0;
-    font-size: 1em;
-    color: #2c3e50;
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    color: #1a1a1a;
+    font-weight: 600;
 }
 
 .place-item p {
-    margin: 4px 0;
-    font-size: 0.85em;
+    margin: 6px 0;
+    font-size: 0.9em;
+    color: #4a4a4a;
+    line-height: 1.5;
+}
+
+/* 팝업 닫기 버튼 스타일 */
+.custom-popup .leaflet-popup-close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
     color: #666;
+    z-index: 1;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.custom-popup .leaflet-popup-close-button:hover {
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* 마커 타입별 팝업 헤더 색상 */
