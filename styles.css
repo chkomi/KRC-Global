@@ -303,7 +303,7 @@ html, body {
     z-index: 1000 !important;
 }
 
-/* Leaflet 기본 툴팁 화살표 제거 */
+/* Leaflet 기본 툴크 화살표 제거 */
 .leaflet-tooltip-bottom:before,
 .leaflet-tooltip-top:before,
 .leaflet-tooltip-left:before,
@@ -356,19 +356,19 @@ html, body {
 /* Popup Styles */
 .custom-popup .leaflet-popup-content-wrapper {
     padding: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     background: white;
 }
 
 .popup-content {
-    width: 320px;
+    width: 280px;
 }
 
 .popup-image {
     width: 100%;
-    height: 200px;
+    height: 160px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -381,49 +381,50 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 40px;
     background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
 }
 
 .popup-info {
-    padding: 20px;
+    padding: 12px;
 }
 
 .popup-name {
-    margin: 0 0 12px 0;
-    font-size: 1.3em;
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
     font-weight: 600;
     color: #1a1a1a;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 .popup-description {
-    margin: 0 0 16px 0;
-    font-size: 0.95em;
-    line-height: 1.6;
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    line-height: 1.4;
     color: #4a4a4a;
 }
 
 .popup-menu {
-    margin: 16px 0;
-    padding: 12px;
+    margin: 10px 0;
+    padding: 8px;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid #e9ecef;
 }
 
 .popup-menu h4 {
-    margin: 0 0 10px 0;
-    font-size: 0.95em;
+    margin: 0 0 6px 0;
+    font-size: 0.9em;
     color: #1a1a1a;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .popup-menu h4 i {
     color: #3498db;
+    font-size: 0.9em;
 }
 
 .popup-menu ul {
@@ -433,12 +434,12 @@ html, body {
 }
 
 .popup-menu li {
-    margin: 6px 0;
-    font-size: 0.9em;
+    margin: 4px 0;
+    font-size: 0.85em;
     color: #4a4a4a;
-    padding-left: 18px;
+    padding-left: 14px;
     position: relative;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .popup-menu li:before {
@@ -446,13 +447,13 @@ html, body {
     position: absolute;
     left: 0;
     color: #3498db;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .map-links {
     display: flex;
-    gap: 12px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 10px 12px;
     border-top: 1px solid #e9ecef;
     background: #f8f9fa;
 }
@@ -462,10 +463,10 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 0.9em;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -473,7 +474,7 @@ html, body {
 }
 
 .map-btn i {
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 .google-btn {
@@ -534,16 +535,16 @@ html, body {
 /* 팝업 닫기 버튼 스타일 */
 .custom-popup .leaflet-popup-close-button {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     color: #666;
     z-index: 1;
     border: none;
@@ -879,6 +880,53 @@ html, body {
     .place-map-buttons {
         justify-content: center;
         margin-top: 12px;
+    }
+
+    .popup-content {
+        width: 240px;
+    }
+
+    .popup-image {
+        height: 140px;
+    }
+
+    .popup-info {
+        padding: 10px;
+    }
+
+    .popup-name {
+        font-size: 1em;
+        margin-bottom: 6px;
+    }
+
+    .popup-description {
+        font-size: 0.85em;
+        margin-bottom: 8px;
+    }
+
+    .popup-menu {
+        margin: 8px 0;
+        padding: 6px;
+    }
+
+    .popup-menu h4 {
+        font-size: 0.85em;
+        margin-bottom: 4px;
+    }
+
+    .popup-menu li {
+        font-size: 0.8em;
+        margin: 3px 0;
+    }
+
+    .map-links {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .map-btn {
+        padding: 6px 8px;
+        font-size: 0.8em;
     }
 }
 
