@@ -332,37 +332,77 @@ function createPopupContent(place) {
     const content = document.createElement('div');
     content.className = 'popup-content';
     
-    const header = document.createElement('div');
-    header.className = `popup-header type-${place.type}`;
-    header.innerHTML = `<h3>${extractKorean(place.name)}</h3>`;
-    content.appendChild(header);
-    
-    const info = document.createElement('div');
-    info.className = 'popup-info';
-    
-    // 주소 정보
-    if (place.address) {
-        const address = document.createElement('p');
-        address.innerHTML = `<strong>주소:</strong> ${place.address}`;
-        info.appendChild(address);
+    // 이미지 섹션
+    const imageSection = document.createElement('div');
+    imageSection.className = 'popup-image';
+    if (place.image) {
+        imageSection.style.backgroundImage = `url(${place.image})`;
+    } else {
+        // 기본 이미지 설정
+        imageSection.style.backgroundImage = `url('/KRC-Global/images/default-${place.type}.jpg')`;
     }
+    content.appendChild(imageSection);
     
-    // 가격 정보 (숙소인 경우)
-    if (place.type === 'hotels' && place.price) {
-        const price = document.createElement('p');
-        const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
-        price.innerHTML = `<strong>가격:</strong> ${formattedPrice}`;
-        info.appendChild(price);
-    }
+    // 정보 섹션
+    const infoSection = document.createElement('div');
+    infoSection.className = 'popup-info';
     
-    // 설명 정보
+    // 이름
+    const name = document.createElement('h3');
+    name.className = 'popup-name';
+    name.textContent = extractKorean(place.name);
+    infoSection.appendChild(name);
+    
+    // 설명
     if (place.description) {
         const desc = document.createElement('p');
-        desc.innerHTML = `<strong>설명:</strong> ${place.description}`;
-        info.appendChild(desc);
+        desc.className = 'popup-description';
+        desc.textContent = place.description;
+        infoSection.appendChild(desc);
     }
     
-    content.appendChild(info);
+    // 주요 메뉴 (식당인 경우)
+    if (place.type === 'restaurants' && place.menu) {
+        const menuSection = document.createElement('div');
+        menuSection.className = 'popup-menu';
+        const menuTitle = document.createElement('h4');
+        menuTitle.textContent = '주요 메뉴';
+        menuSection.appendChild(menuTitle);
+        
+        const menuList = document.createElement('ul');
+        place.menu.forEach(item => {
+            const menuItem = document.createElement('li');
+            menuItem.textContent = item;
+            menuList.appendChild(menuItem);
+        });
+        menuSection.appendChild(menuList);
+        infoSection.appendChild(menuSection);
+    }
+    
+    content.appendChild(infoSection);
+    
+    // 지도 연결 버튼
+    const mapLinks = document.createElement('div');
+    mapLinks.className = 'map-links';
+    
+    // 구글 지도 버튼
+    const googleBtn = document.createElement('a');
+    googleBtn.className = 'map-btn google-btn';
+    googleBtn.href = `https://www.google.com/maps/search/${encodeURIComponent(place.name_en || place.name)}`;
+    googleBtn.target = '_blank';
+    googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글 지도';
+    mapLinks.appendChild(googleBtn);
+    
+    // 가오더 지도 버튼
+    const gaodeBtn = document.createElement('a');
+    gaodeBtn.className = 'map-btn gaode-btn';
+    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name_zh || place.name)}`;
+    gaodeBtn.target = '_blank';
+    gaodeBtn.innerHTML = '<i class="fas fa-map-marked-alt"></i> 가오더 지도';
+    mapLinks.appendChild(gaodeBtn);
+    
+    content.appendChild(mapLinks);
+    
     return content;
 }
 
