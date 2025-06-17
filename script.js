@@ -33,7 +33,7 @@ async function initMap() {
         console.log('지도 초기화 시작');
         
         // 데이터 로드
-        const response = await fetch('data/shanghai-data.json');
+        const response = await fetch('/KRC-Global/data/shanghai-data.json');
         if (!response.ok) {
             throw new Error('데이터 로드 실패');
         }
