@@ -393,63 +393,50 @@ function displayMarkers() {
     // 각 위치 그룹에 대해 마커 생성
     Object.values(locationGroups).forEach((group, groupIndex) => {
         try {
-            // 동일 좌표에 여러 타입의 장소가 있을 경우, 아이콘 표시 우선순위를 결정
+            // 그룹에서 가장 우선순위가 높은 타입으로 마커 아이콘 결정
             const priorityOrder = { 'airports': 1, 'attractions': 2, 'hotels': 3, 'restaurants': 4 };
-            const mainType = group.places.reduce((prev, curr) =>
-                (priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr)
+            const mainType = group.places.reduce((prev, curr) => 
+                priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr
             ).type;
 
-            // 마커 생성 및 해당 마커 그룹에 추가
-            const customIcon = createCustomIcon(mainType);
-            if (!customIcon) {
-                console.error(`아이콘 생성 실패 for group ${groupIndex} (Type: ${mainType}). 이 마커는 표시되지 않습니다.`);
-                return;
-            }
-
             const marker = L.marker([group.latitude, group.longitude], {
-                icon: customIcon
+                icon: createCustomIcon(mainType)
             }).addTo(markerGroups[mainType]);
 
             markerCount++;
 
-            // 라벨 텍스트 생성 (한글 부분만 추출)
+            // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
             let labelText;
             if (group.places.length === 1) {
-                const place = group.places[0];
-                labelText = extractKorean(place.name);
-                if (place.type === 'hotels' && place.price) {
-                    const formattedPrice = `₩${parseInt(place.price).toLocaleString('ko-KR')}`;
-                    labelText += `<br><span style="font-size:0.8em; color:#555;">${formattedPrice}</span>`;
-                }
+                labelText = group.places[0].name;
             } else {
-                const firstPlaceName = extractKorean(group.places[0].name);
-                labelText = `${firstPlaceName} 외 ${group.places.length - 1}곳`;
+                labelText = `${group.places[0].name} 외 ${group.places.length - 1}곳`;
             }
 
-            // 마커 클릭 시 팝업 표시 및 지도를 해당 위치로 이동
-            marker.on('click', () => {
-                console.log(`마커 클릭됨: ${group.places[0].name}`);
-                displayGroupDetailsAsPopup(marker, group); // 팝업으로 변경된 함수 호출
-                map.flyTo([group.latitude, group.longitude], 15); // 클릭 시 줌 레벨 15로 확대
-            });
-
-            // 툴팁(라벨)을 마커 하단에 바인딩
-            const tooltip = marker.bindTooltip(labelText, {
+            // 라벨 생성 및 설정
+            const tooltip = L.tooltip({
                 permanent: true,
                 direction: 'bottom',
-                offset: [0, 12], // 마커 하단에서 좀 더 떨어뜨리기
-                className: 'custom-marker-tooltip',
-                opacity: 1
+                offset: [0, 15],
+                className: 'place-label',
+                opacity: 0.9
+            }).setContent(labelText);
+
+            // 마커에 라벨 바인딩
+            marker.bindTooltip(tooltip);
+
+            marker.on('click', () => {
+                displayGroupDetails(group);
+                map.flyTo([group.latitude, group.longitude], 15);
             });
 
-            // 라벨 가시성 제어를 위해 마커 정보를 배열에 저장
+            // 마커 정보를 배열에 저장
             allMarkers.push({
                 marker: marker,
-                labelText: labelText,
+                tooltip: tooltip,
                 group: group,
-                labelVisible: false,
-                groupType: mainType,
-                tooltip: tooltip
+                visible: true,
+                groupType: mainType
             });
 
         } catch (error) {
@@ -478,25 +465,10 @@ function displayMarkers() {
         console.warn('표시할 마커가 없어 지도 뷰를 조정할 수 없습니다.');
     }
 
-    // 툴팁 엘리먼트들이 DOM에 추가된 후에 참조를 설정
+    // 초기 라벨 가시성 설정
     setTimeout(() => {
-        let tooltipCount = 0;
-        allMarkers.forEach((markerData, index) => {
-            try {
-                const tooltipElement = markerData.marker._tooltip._container;
-                if (tooltipElement) {
-                    markerData.tooltipElement = tooltipElement;
-                    markerData.tooltip.options.borderLeft = `4px solid ${markerColors[markerData.groupType] || '#3498db'}`;
-                    tooltipCount++;
-                }
-            } catch (error) {
-                console.warn(`툴팁 설정 실패 (마커 ${index}):`, error);
-            }
-        });
-        console.log(`${tooltipCount}개의 툴팁이 설정되었습니다.`);
         updateLabelVisibility();
-        console.log('툴팁 엘리먼트 설정 및 라벨 가시성 업데이트 완료.');
-    }, 300);
+    }, 500);
 }
 
 // 내 위치 찾기 함수
@@ -591,104 +563,21 @@ function updateLabelVisibility() {
     const currentZoom = map.getZoom();
     const minZoomForLabels = 14;
     const bounds = map.getBounds();
-    const mapSize = map.getSize();
     
-    // 모든 라벨 숨기기
     allMarkers.forEach(markerData => {
-        if (markerData.visible) {
-            markerData.tooltip.removeFrom(map);
-            markerData.visible = false;
-        }
-    });
-
-    // 현재 보이는 마커 그룹의 마커들만 필터링
-    const visibleMarkers = allMarkers.filter(markerData => {
-        const latLng = markerData.marker.getLatLng();
-        const isInBounds = bounds.contains(latLng);
         const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
-        return isInBounds && isGroupVisible;
-    });
-
-    if (visibleMarkers.length === 0) return;
-
-    // 각 마커에 대해 최적의 라벨 위치 찾기
-    visibleMarkers.forEach(markerData => {
-        const markerPos = map.latLngToContainerPoint(markerData.marker.getLatLng());
-        const directions = ['right', 'left', 'top', 'bottom', 'topright', 'topleft', 'bottomright', 'bottomleft'];
+        const isInBounds = bounds.contains(markerData.marker.getLatLng());
         
-        let bestDirection = 'right';
-        let bestScore = -1;
-
-        // 각 방향에 대해 점수 계산
-        for (const direction of directions) {
-            const offset = getTooltipOffset(direction);
-            const labelPos = {
-                x: markerPos.x + offset[0],
-                y: markerPos.y + offset[1]
-            };
-
-            let score = 100; // 기본 점수
-
-            // 화면 경계 체크 (경계를 벗어나면 점수 감소)
-            const labelWidth = markerData.tooltip._content.length * 8; // 라벨 너비 추정
-            const labelHeight = 24; // 라벨 높이 추정
-            
-            // 화면 경계에서의 여유 공간
-            const margin = 20;
-            
-            if (labelPos.x < margin) score -= 50;
-            if (labelPos.x + labelWidth > mapSize.x - margin) score -= 50;
-            if (labelPos.y < margin) score -= 50;
-            if (labelPos.y + labelHeight > mapSize.y - margin) score -= 50;
-
-            // 마커와의 거리 체크 (너무 가까우면 점수 감소)
-            const distanceToMarker = Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
-            if (distanceToMarker < 25) score -= 30;
-
-            // 다른 라벨과의 겹침 체크
-            visibleMarkers.forEach(otherMarker => {
-                if (otherMarker !== markerData && otherMarker.visible) {
-                    const otherPos = map.latLngToContainerPoint(otherMarker.marker.getLatLng());
-                    const otherOffset = getTooltipOffset(otherMarker.tooltip.options.direction);
-                    const otherLabelPos = {
-                        x: otherPos.x + otherOffset[0],
-                        y: otherPos.y + otherOffset[1]
-                    };
-
-                    // 라벨 간 거리 계산
-                    const labelDistance = Math.sqrt(
-                        Math.pow(labelPos.x - otherLabelPos.x, 2) +
-                        Math.pow(labelPos.y - otherLabelPos.y, 2)
-                    );
-
-                    if (labelDistance < 30) score -= 40;
-                }
-            });
-
-            // 우선순위 방향 (오른쪽과 왼쪽을 선호)
-            if (direction === 'right') score += 15;
-            if (direction === 'left') score += 12;
-            if (direction === 'top' || direction === 'bottom') score += 8;
-            if (direction.includes('right')) score += 5;
-            if (direction.includes('left')) score += 3;
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestDirection = direction;
+        if (currentZoom >= minZoomForLabels && isGroupVisible && isInBounds) {
+            if (!markerData.visible) {
+                markerData.marker.bindTooltip(markerData.tooltip);
+                markerData.visible = true;
             }
-        }
-
-        // 최소 점수 이상이면 라벨 표시
-        if (bestScore >= 0) {
-            const offset = getTooltipOffset(bestDirection);
-            
-            // 툴팁 설정 및 표시
-            markerData.tooltip.options.direction = bestDirection;
-            markerData.tooltip.options.offset = offset;
-            markerData.tooltip.options.opacity = 0.9;
-            
-            markerData.marker.bindTooltip(markerData.tooltip);
-            markerData.visible = true;
+        } else {
+            if (markerData.visible) {
+                markerData.marker.unbindTooltip();
+                markerData.visible = false;
+            }
         }
     });
 }
