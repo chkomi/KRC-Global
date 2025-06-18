@@ -108,6 +108,42 @@
         "description": "운하와 고대 다리가 아름다운 '동양의 베니스'라 불리는 고풍스러운 수상 마을",
         "features": ["수상 마을", "전통 문화", "운하"],
         "image": "images/attractions/zhujiajiao.jpg"
+      },
+      {
+        "name": "上海影视乐园 (상하이영화테마파크, Shanghai Film Park)",
+        "address": "上海市松江区车墩镇北松公路4915号",
+        "latitude": 31.0167,
+        "longitude": 121.3167,
+        "description": "1930년대 상하이 거리를 재현한 영화 촬영지로, 영화 '색계' 등 유명 작품의 배경이 된 테마파크",
+        "features": ["영화촬영지", "1930년대 복원", "테마파크"],
+        "image": "images/attractions/shanghai-film-park.jpg"
+      },
+      {
+        "name": "泰晤士小镇 (태무사타운, Thames Town)",
+        "address": "上海市松江区三新北路900弄",
+        "latitude": 31.0333,
+        "longitude": 121.1833,
+        "description": "영국 런던의 태무사강변을 모델로 한 영국풍 마을로, 고딕 양식의 교회와 빅토리아 시대 건물들이 특징",
+        "features": ["영국풍 마을", "고딕 건축", "사진촬영"],
+        "image": "images/attractions/thames-town.jpg"
+      },
+      {
+        "name": "新场古镇 (신창고진, Xinchang Ancient Town)",
+        "address": "上海市浦东新区新场镇",
+        "latitude": 31.0333,
+        "longitude": 121.6500,
+        "description": "명청 시대의 전통 건축물이 잘 보존된 고대 마을로, 상하이에서 가장 오래된 수상 마을 중 하나",
+        "features": ["고대 마을", "명청 건축", "수상 마을"],
+        "image": "images/attractions/xinchang-ancient-town.jpg"
+      },
+      {
+        "name": "复旦大学邯郸校区 (푸단대학한단캠퍼스, Fudan University Handan Campus)",
+        "address": "上海市杨浦区邯郸路220号",
+        "latitude": 31.3000,
+        "longitude": 121.5000,
+        "description": "중국 최고 명문대학 중 하나인 푸단대학의 메인 캠퍼스로, 아름다운 캠퍼스와 역사적인 건물들이 유명",
+        "features": ["명문대학", "캠퍼스 관광", "역사적 건물"],
+        "image": "images/attractions/fudan-university.jpg"
       }
     ],
     "restaurants": [
