@@ -131,45 +131,48 @@ html, body {
     }
 }
 
-/* Map Controls */
-.map-controls {
+/* Map Tile Selection Control */
+.map-tile-control {
     position: absolute;
     bottom: 15px;
     left: 15px;
-    background: white;
-    padding: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
     border-radius: 8px;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.map-controls h3 {
-    margin: 0 0 12px 0;
-    font-size: 16px;
-    color: #333;
+.map-tile-control h4 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 0.9em;
+    font-weight: 600;
 }
 
-.map-btn {
+.tile-option {
     display: block;
-    width: 100%;
-    padding: 8px 12px;
-    margin-bottom: 5px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin: 4px 0;
+    font-size: 0.8em;
     cursor: pointer;
-    font-size: 13px;
-    transition: all 0.2s ease;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    user-select: none;
 }
 
-.map-btn:hover {
-    background: #e9ecef;
+.tile-option input[type="radio"] {
+    display: none;
 }
 
-.map-btn.active {
-    background: #007bff;
+.tile-option:hover {
+    background-color: #f8f9fa;
+}
+
+.tile-option.active {
+    background-color: #3498db;
     color: white;
-    border-color: #007bff;
 }
 
 /* Legend Box */
@@ -177,18 +180,24 @@ html, body {
     position: absolute;
     bottom: 15px;
     right: 15px;
-    background: white;
-    padding: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px;
     border-radius: 8px;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    max-width: 160px;
 }
 
 .legend-box h3 {
-    margin: 0 0 12px 0;
-    font-size: 16px;
-    color: #333;
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 0.9em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .legend-box ul {
@@ -200,34 +209,27 @@ html, body {
 .legend-box li {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    font-size: 0.8em;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.legend-item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
 }
 
 .legend-item input[type="checkbox"] {
-    margin: 0;
+    margin-right: 8px;
     cursor: pointer;
-}
-
-.legend-item label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 0;
-}
-
-.legend-item label i {
-    width: 16px;
-    text-align: center;
 }
 
 .marker-icon {
@@ -418,7 +420,7 @@ html, body {
 }
 
 .price-info {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
     color: white !important;
     padding: 8px 12px;
     border-radius: 8px;
@@ -477,10 +479,12 @@ html, body {
 .map-buttons .map-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: white;
 }
 
 .map-btn i {
     font-size: 14px;
+    color: white;
 }
 
 .google-btn {
@@ -523,43 +527,38 @@ html, body {
 /* 모바일 반응형 */
 @media (max-width: 768px) {
     .custom-popup {
-        max-width: 196px; /* 280px * 0.7 */
+        max-width: 280px;
         border-radius: 12px;
-        font-size: 60%; /* 70%에서 60%로 더 축소 */
     }
+    
     .popup-header {
-        padding: 8px; /* 11px에서 8px로 축소 */
+        padding: 16px;
     }
+    
     .popup-header h3 {
-        font-size: 10px; /* 11.2px에서 10px로 축소 */
-        margin: 0 0 4px 0; /* 여백 축소 */
+        font-size: 16px;
     }
+    
     .popup-info {
-        padding: 8px; /* 11px에서 8px로 축소 */
+        padding: 16px;
     }
+    
     .popup-info p {
-        font-size: 8px; /* 9.1px에서 8px로 축소 */
-        margin: 0 0 6px 0; /* 여백 축소 */
+        font-size: 13px;
     }
+    
     .map-links {
-        padding: 6px 8px; /* 8.4px, 11.2px에서 6px, 8px로 축소 */
+        padding: 12px 16px;
     }
-    .map-links h4 {
-        font-size: 9px; /* 기본 크기에서 축소 */
-        margin: 0 0 6px 0; /* 여백 축소 */
-    }
+    
     .map-buttons {
         flex-direction: column;
-        gap: 3px; /* 4.2px에서 3px로 축소 */
+        gap: 6px;
     }
+    
     .map-btn {
-        padding: 4px 6px; /* 5.6px, 8.4px에서 4px, 6px로 축소 */
-        font-size: 7px; /* 8.4px에서 7px로 축소 */
-        max-width: 100%;
-        box-sizing: border-box;
-        width: 100%;
-        min-width: 0;
-        word-break: break-all;
+        padding: 8px 12px;
+        font-size: 12px;
     }
 }
 
@@ -704,54 +703,4 @@ html, body {
 
 .popup-info .price-info i {
     color: white !important;
-}
-
-/* 클러스터 아이콘 스타일 */
-.custom-cluster-icon {
-    background: transparent !important;
-    border: none !important;
-}
-
-.custom-cluster-icon div {
-    transition: all 0.3s ease;
-}
-
-.custom-cluster-icon:hover div {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
-}
-
-/* 범례 마커 스타일 */
-.legend-marker {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    border: 2px solid white;
-    margin-right: 8px;
-    transition: transform 0.2s ease;
-}
-
-.legend-marker:hover {
-    transform: scale(1.1);
-}
-
-.legend-marker i {
-    color: white;
-    font-size: 9px;
-    font-weight: bold;
-}
-
-/* 범례 마커 색상 */
-.attractions-marker { background-color: #ea4335; }
-.restaurants-marker { background-color: #34a853; }
-.hotels-marker { background-color: #1a73e8; }
-.airports-marker { background-color: #fbbc05; }
-
-/* 기존 타일 옵션 스타일 제거 */
-.map-tile-control {
-    display: none;
 }

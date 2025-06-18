@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상하이 11월 여행 계획</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="map-tile-control">
+        <h4>🗺️ 지도 종류</h4>
+        <label class="tile-option active" id="cartodb-option">
+            <input type="radio" name="tile-layer" value="cartodb" checked>
+            🎨 심플
+        </label>
+        <label class="tile-option" id="street-option">
+            <input type="radio" name="tile-layer" value="street">
+            🛣️ 도로
+        </label>
+        <label class="tile-option" id="satellite-option">
+            <input type="radio" name="tile-layer" value="satellite">
+            🛰️ 위성
+        </label>
+    </div>
+
+    <div class="location-control">
+        <button id="locate-btn" class="locate-button" title="내 위치 찾기">
+            <i class="fas fa-location-crosshairs"></i>
+        </button>
+    </div>
+
+    <div class="legend-box">
+        <h3><i class="fas fa-list"></i> 범례</h3>
+        <ul>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="attractions-toggle" checked>
+                    <div class="marker-icon tourism-marker">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    관광지
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="restaurants-toggle" checked>
+                    <div class="marker-icon restaurant-marker">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    음식점
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="airports-toggle" checked>
+                    <div class="marker-icon airport-marker">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    공항
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="hotels-toggle" checked>
+                    <div class="marker-icon accommodation-marker">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    호텔
+                </label>
+            </li>
+        </ul>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

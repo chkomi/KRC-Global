@@ -3,80 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상하이 11월 여행 계획</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>상하이 여행지도</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <div class="map-tile-control">
-        <h4>🗺️ 지도 종류</h4>
-        <label class="tile-option active" id="cartodb-option">
-            <input type="radio" name="tile-layer" value="cartodb" checked>
-            🎨 심플
-        </label>
-        <label class="tile-option" id="street-option">
-            <input type="radio" name="tile-layer" value="street">
-            🛣️ 도로
-        </label>
-        <label class="tile-option" id="satellite-option">
-            <input type="radio" name="tile-layer" value="satellite">
-            🛰️ 위성
-        </label>
-    </div>
-
-    <div class="location-control">
+    <!-- 지도 컨테이너 -->
+    <div id="map"></div>
+    
+    <!-- 제어 패널 -->
+    <div class="control-panel">
+        <!-- 위치 찾기 버튼 -->
         <button id="locate-btn" class="locate-button" title="내 위치 찾기">
             <i class="fas fa-location-crosshairs"></i>
         </button>
+        
+        <!-- 범례 -->
+        <div class="legend-box">
+            <h3>범례</h3>
+            <ul>
+                <li class="legend-item">
+                    <input type="checkbox" id="attractions-toggle" data-type="attractions" checked>
+                    <label for="attractions-toggle">
+                        <div class="legend-marker attractions-marker">
+                            <i class="fas fa-landmark"></i>
+                        </div> 관광지
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="restaurants-toggle" data-type="restaurants" checked>
+                    <label for="restaurants-toggle">
+                        <div class="legend-marker restaurants-marker">
+                            <i class="fas fa-utensils"></i>
+                        </div> 맛집
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="hotels-toggle" data-type="hotels" checked>
+                    <label for="hotels-toggle">
+                        <div class="legend-marker hotels-marker">
+                            <i class="fas fa-hotel"></i>
+                        </div> 숙소
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="airports-toggle" data-type="airports" checked>
+                    <label for="airports-toggle">
+                        <div class="legend-marker airports-marker">
+                            <i class="fas fa-plane"></i>
+                        </div> 공항
+                    </label>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 지도 타입 선택 -->
+        <div class="map-controls">
+            <h3>지도 타입</h3>
+            <button class="map-btn active" data-type="osm">심플 지도</button>
+            <button class="map-btn" data-type="terrain">도로 지도</button>
+            <button class="map-btn" data-type="satellite">위성 지도</button>
+            <hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;">
+            <button class="map-btn" data-type="subway_transport">교통 지도</button>
+        </div>
     </div>
-
-    <div class="legend-box">
-        <h3><i class="fas fa-list"></i> 범례</h3>
-        <ul>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="attractions-toggle" checked>
-                    <div class="marker-icon tourism-marker">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    관광지
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="restaurants-toggle" checked>
-                    <div class="marker-icon restaurant-marker">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    음식점
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="airports-toggle" checked>
-                    <div class="marker-icon airport-marker">
-                        <i class="fas fa-plane"></i>
-                    </div>
-                    공항
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="hotels-toggle" checked>
-                    <div class="marker-icon accommodation-marker">
-                        <i class="fas fa-bed"></i>
-                    </div>
-                    호텔
-                </label>
-            </li>
-        </ul>
-    </div>
-
-    <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <!-- Custom JS -->
     <script src="script.js"></script>
 </body>
-</html>
+</html> 

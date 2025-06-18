@@ -15,8 +15,8 @@ let markerGroups = {
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
-    attractions: '#ea4335',  // 관광지 (Google Red)
-    restaurants: '#34a853',  // 식당 (Google Green)
+    attractions: '#34a853',  // 관광지 (Google Green)
+    restaurants: '#ea4335',  // 식당 (Google Red)
     airports: '#fbbc05',     // 공항 (Google Yellow)
     hotels: '#1a73e8'        // 호텔 (Google Blue)
 };
@@ -27,105 +27,6 @@ const typePriorities = {
     'restaurants': 3,  // 식당
     'hotels': 2,       // 호텔
     'airports': 1      // 공항
-};
-
-// 지도 타일 레이어 정의
-const tileLayers = {
-    osm: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors & © CARTO'
-    }),
-    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '© Esri'
-    }),
-    terrain: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }),
-    // 지하철 노선이 잘 보이는 교통 지도
-    subway_transport: L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors & © Thunderforest'
-    })
-};
-
-let currentTileLayerType = 'osm';
-
-// 클러스터 그룹들
-let clusterGroups = {
-    attractions: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 40,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    restaurants: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    hotels: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 60,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    airports: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 70,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    })
 };
 
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
@@ -154,9 +55,42 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
+        // 타일 레이어 정의
+        const tileLayers = {
+            'simple': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap contributors & © CARTO'
+            }),
+            'road': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }),
+            'satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri'
+            })
+        };
+
         // 기본 타일 레이어 설정
-        tileLayers.osm.addTo(map);
-        currentTileLayerType = 'osm';
+        currentTileLayer = tileLayers['simple'];
+        currentTileLayer.addTo(map);
+
+        // 타일 레이어 변경 이벤트 리스너
+        document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    // 기존 타일 레이어 제거
+                    map.removeLayer(currentTileLayer);
+                    
+                    // 새 타일 레이어 추가
+                    currentTileLayer = tileLayers[this.value];
+                    currentTileLayer.addTo(map);
+                    
+                    // 활성 상태 업데이트
+                    document.querySelectorAll('.tile-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    this.parentElement.classList.add('active');
+                }
+            });
+        });
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
@@ -176,25 +110,12 @@ async function initMap() {
             airports: L.featureGroup()
         };
 
-        // 클러스터 그룹들을 지도에 추가
-        Object.values(clusterGroups).forEach(group => {
+        // 마커 그룹들을 지도에 추가
+        Object.values(markerGroups).forEach(group => {
             group.addTo(map);
-            
-            // 클러스터 이벤트 리스너 추가
-            group.on('animationend', updateLabelVisibility);
-            group.on('spiderfied', updateLabelVisibility);
-            group.on('unspiderfied', updateLabelVisibility);
-            group.on('clusterclick', updateLabelVisibility);
-            group.on('clustermouseover', updateLabelVisibility);
-            group.on('clustermouseout', updateLabelVisibility);
         });
 
         displayMarkers();
-        
-        // 범례 체크박스 기능 초기화
-        setupLegendControls();
-        // 지도 타입 버튼 이벤트 리스너 연결
-        setupEventListeners();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
         alert('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -219,11 +140,6 @@ function displayMarkers() {
     markers = [];
     allMarkers = [];
 
-    // 클러스터 그룹 초기화
-    Object.values(clusterGroups).forEach(group => {
-        group.clearLayers();
-    });
-
     // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
     const types = ['attractions', 'restaurants', 'hotels', 'airports'];
@@ -241,22 +157,42 @@ function displayMarkers() {
 
     console.log('처리할 장소 수:', allPlaces.length);
 
-    // 각 장소에 대해 마커 생성
+    // 장소 그룹화
+    const groups = {};
     allPlaces.forEach(place => {
+        const key = `${place.latitude},${place.longitude}`;
+        if (!groups[key]) {
+            groups[key] = [];
+        }
+        groups[key].push(place);
+    });
+
+    console.log('그룹화된 장소 수:', Object.keys(groups).length);
+
+    // 각 그룹에 대해 마커 생성
+    Object.values(groups).forEach(group => {
+        if (group.length === 0) return;
+
+        // 그룹의 우선순위가 가장 높은 타입 결정
+        const highestPriorityType = group.reduce((highest, place) => {
+            const currentPriority = typePriorities[place.type] || 0;
+            return currentPriority > (typePriorities[highest?.type] || 0) ? place : highest;
+        }, group[0]);
+
         // 마커 생성
-        const marker = L.marker([place.latitude, place.longitude], {
-            icon: createCustomIcon(place.type),
-            type: place.type
+        const marker = L.marker([highestPriorityType.latitude, highestPriorityType.longitude], {
+            icon: createCustomIcon(highestPriorityType.type)
         });
 
         // 라벨 텍스트 설정
-        let labelText = extractKorean(place.name);
-        if (place.type === 'hotels' && place.price) {
-            // 엔화를 원화로 변환 (1엔 = 약 8.5원)
-            const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-            const wonPrice = Math.round(yenPrice * 8.5);
-            const formattedPrice = wonPrice.toLocaleString('ko-KR');
-            labelText += `<br><span class="price-label">${formattedPrice}원</span>`;
+        let labelText = extractKorean(highestPriorityType.name);
+        if (highestPriorityType.type === 'hotels' && highestPriorityType.price) {
+            const price = parseInt(highestPriorityType.price);
+            const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
+            labelText += `<br><span class="price-label">${formattedPrice}</span>`;
+        }
+        if (group.length > 1) {
+            labelText += ` (${group.length})`;
         }
 
         // 툴팁 생성 및 설정
@@ -265,36 +201,66 @@ function displayMarkers() {
             direction: 'top',
             offset: [0, -5],
             opacity: 1,
-            className: `place-label type-${place.type}`
+            className: `place-label type-${highestPriorityType.type}`
         }).setContent(labelText);
 
         // 팝업 생성 및 설정
         const popup = L.popup({
             maxWidth: 300,
-            className: `custom-popup type-${place.type}`
+            className: `custom-popup type-${highestPriorityType.type}`
         });
 
-        popup.setContent(createPopupContent(place));
+        // 그룹에 장소가 하나인 경우
+        if (group.length === 1) {
+            popup.setContent(createPopupContent(highestPriorityType));
+        } else {
+            // 여러 장소가 있는 경우 그룹 팝업 생성
+            const groupContent = document.createElement('div');
+            groupContent.className = 'popup-content';
+            
+            const header = document.createElement('div');
+            header.className = `popup-header type-${highestPriorityType.type}`;
+            header.innerHTML = `<h3>${group.length}개의 장소</h3>`;
+            groupContent.appendChild(header);
+            
+            const placesList = document.createElement('div');
+            placesList.className = 'places-list';
+            
+            group.forEach(place => {
+                const placeItem = document.createElement('div');
+                placeItem.className = 'place-item';
+                placeItem.innerHTML = `
+                    <h4>${extractKorean(place.name)}</h4>
+                    ${place.address ? `<p><strong>주소:</strong> ${place.address}</p>` : ''}
+                    ${place.type === 'hotels' && place.price ? 
+                        `<p><strong>가격:</strong> ₩${parseInt(place.price).toLocaleString('ko-KR')}</p>` : ''}
+                `;
+                placesList.appendChild(placeItem);
+            });
+            
+            groupContent.appendChild(placesList);
+            popup.setContent(groupContent);
+        }
+
         marker.bindPopup(popup);
+        marker.addTo(markerGroups[highestPriorityType.type]);
+        markers.push(marker);
 
-        // 마커를 클러스터 그룹에 추가
-        clusterGroups[place.type].addLayer(marker);
-
-        // 마커 정보 저장 (라벨 가시성 관리용)
+        // 마커 정보 저장
         allMarkers.push({
             marker: marker,
             tooltip: tooltip,
-            visible: false,
-            groupType: place.type
+            groupType: highestPriorityType.type,
+            visible: false
         });
-
-        markers.push(marker);
     });
 
-    console.log('마커 생성 완료:', markers.length);
+    console.log('생성된 마커 수:', markers.length);
 
-    // 초기 라벨 가시성 설정
-    updateLabelVisibility();
+    // 라벨 가시성 업데이트
+    setTimeout(() => {
+        updateLabelVisibility();
+    }, 100);
 }
 
 // 영문명 추출 함수 (구글지도용)
@@ -374,102 +340,101 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    const content = document.createElement('div');
-    content.className = 'custom-popup';
-    
-    // 팝업 헤더
-    const header = document.createElement('div');
-    header.className = 'popup-header';
-    header.innerHTML = `
-        <h3>${place.name}</h3>
-        <span class="place-type-badge type-${place.type}">${getTypeLabel(place.type)}</span>
-    `;
-    content.appendChild(header);
+    const popupContent = document.createElement('div');
+    popupContent.className = 'popup-content';
 
-    // 팝업 본문
-    const body = document.createElement('div');
-    body.className = 'popup-body';
-    
-    // 기본 정보
-    const info = document.createElement('div');
-    info.className = 'popup-info';
-    
-    let infoHTML = '';
-    
-    // 주소 정보
-    if (place.address) {
-        infoHTML += `<p><i class="fas fa-map-marker-alt"></i> ${place.address}</p>`;
+    // 이미지 섹션
+    const imageSection = document.createElement('div');
+    imageSection.className = 'popup-image';
+    imageSection.style.backgroundImage = `url(${place.image || 'https://via.placeholder.com/300x200?text=No+Image'})`;
+    popupContent.appendChild(imageSection);
+
+    // 정보 섹션
+    const infoSection = document.createElement('div');
+    infoSection.className = 'popup-info';
+
+    // 이름 (맛집인 경우 대표 메뉴 추가)
+    const nameElement = document.createElement('h3');
+    nameElement.className = 'popup-name';
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        nameElement.textContent = `${place.name} (${place.menu[0]})`;
+    } else {
+        nameElement.textContent = place.name;
     }
-    
-    // 설명 정보
+    infoSection.appendChild(nameElement);
+
+    // 설명
     if (place.description) {
-        infoHTML += `<p><i class="fas fa-info-circle"></i> ${place.description}</p>`;
+        const descriptionElement = document.createElement('p');
+        descriptionElement.className = 'popup-description';
+        descriptionElement.textContent = place.description;
+        infoSection.appendChild(descriptionElement);
     }
-    
-    // 가격 정보 (숙소인 경우)
-    if (place.price) {
+
+    // 메뉴 정보 (맛집인 경우)
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        const menuSection = document.createElement('div');
+        menuSection.className = 'popup-menu';
+        
+        const menuTitle = document.createElement('h4');
+        menuTitle.innerHTML = '<i class="fas fa-utensils"></i> 대표 메뉴';
+        menuSection.appendChild(menuTitle);
+
+        const menuList = document.createElement('ul');
+        place.menu.forEach(menuItem => {
+            const menuItemElement = document.createElement('li');
+            menuItemElement.textContent = menuItem;
+            menuList.appendChild(menuItemElement);
+        });
+        menuSection.appendChild(menuList);
+        infoSection.appendChild(menuSection);
+    }
+
+    // 주소
+    if (place.address) {
+        const addressElement = document.createElement('p');
+        addressElement.className = 'popup-address';
+        addressElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${place.address}`;
+        infoSection.appendChild(addressElement);
+    }
+
+    // 가격 정보 (숙소인 경우) - 원화로 변경
+    if (place.type === 'hotels' && place.price) {
+        const priceElement = document.createElement('p');
+        priceElement.className = 'popup-price';
         // 엔화를 원화로 변환 (1엔 = 약 8.5원)
         const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
         const wonPrice = Math.round(yenPrice * 8.5);
-        const formattedPrice = wonPrice.toLocaleString('ko-KR');
-        infoHTML += `<p class="price-info"><i class="fas fa-won-sign"></i> ${formattedPrice}원</p>`;
+        const formattedPrice = `₩${wonPrice.toLocaleString('ko-KR')}`;
+        priceElement.innerHTML = `<i class="fas fa-won-sign"></i> ${formattedPrice}`;
+        infoSection.appendChild(priceElement);
     }
-    
-    // 특징 정보
-    if (place.features && place.features.length > 0) {
-        infoHTML += `<p><i class="fas fa-star"></i> ${place.features.join(', ')}</p>`;
-    }
-    
-    // 메뉴 정보 (맛집인 경우)
-    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
-        infoHTML += `<p><i class="fas fa-utensils"></i> 대표 메뉴: ${place.menu.slice(0, 3).join(', ')}${place.menu.length > 3 ? '...' : ''}</p>`;
-    }
-    
-    info.innerHTML = infoHTML;
-    body.appendChild(info);
 
-    // 지도 링크 버튼
+    popupContent.appendChild(infoSection);
+
+    // 지도 연결 버튼
     const mapLinks = document.createElement('div');
     mapLinks.className = 'map-links';
-    
-    // 이름에서 한국어명과 중국어명 추출
-    const nameParts = place.name.split('(');
-    const koreanName = nameParts[0].trim();
-    const chineseName = nameParts[1]?.split(')')[0]?.trim() || '';
-    
-    // 모바일 감지
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    let googleUrl, amapUrl;
-    
-    if (isMobile) {
-        // 모바일: 앱으로 연결
-        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}&z=15`;
-        // 고덕지도 앱 연결 - 여러 스키마 시도
-        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}&src=web`;
-    } else {
-        // 데스크톱: 웹으로 연결
-        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}`;
-        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}`;
-    }
-    
-    mapLinks.innerHTML = `
-        <h4><i class="fas fa-map"></i> 지도에서 보기</h4>
-        <div class="map-buttons">
-            <a href="${googleUrl}" 
-               target="_blank" class="map-btn google-btn">
-                <i class="fab fa-google"></i> Google Maps
-            </a>
-            <a href="${amapUrl}" 
-               target="_blank" class="map-btn amap-btn">
-                <i class="fas fa-map-marked-alt"></i> 高德地图
-            </a>
-        </div>
-    `;
-    body.appendChild(mapLinks);
 
-    content.appendChild(body);
-    return content;
+    // 구글맵 버튼
+    const googleBtn = document.createElement('a');
+    googleBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name_en)}`;
+    googleBtn.target = '_blank';
+    googleBtn.className = 'map-btn google-btn';
+    googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글맵';
+    mapLinks.appendChild(googleBtn);
+
+    // 가오디맵 버튼
+    const gaodeBtn = document.createElement('a');
+    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name)}`;
+    gaodeBtn.target = '_blank';
+    gaodeBtn.className = 'map-btn gaode-btn';
+    gaodeBtn.innerHTML = '<i class="fas fa-map"></i> 가오디맵';
+    mapLinks.appendChild(gaodeBtn);
+
+    popupContent.appendChild(mapLinks);
+
+    return popupContent;
 }
 
 // 이벤트 리스너 설정 함수
@@ -499,40 +464,24 @@ function setupEventListeners() {
     document.getElementById('locate-btn').addEventListener('click', function() {
         findMyLocation();
     });
-
-    // 지도 타입 버튼 이벤트 리스너
-    document.querySelectorAll('.map-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const type = this.getAttribute('data-type');
-            changeTileLayer(type);
-            
-            // 활성 버튼 상태 업데이트
-            document.querySelectorAll('.map-btn').forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
 }
 
 // 마커 그룹 토글 함수 (범례 체크박스와 연동)
 function toggleMarkerGroup(type, show) {
     if (show) {
-        showMarkerGroup(type);
+        markerGroups[type].addTo(map); // 그룹 보이기
     } else {
-        hideMarkerGroup(type);
+        map.removeLayer(markerGroups[type]); // 그룹 숨기기
     }
-}
 
-// 마커 그룹 표시/숨김 함수
-function showMarkerGroup(type) {
-    if (clusterGroups[type]) {
-        map.addLayer(clusterGroups[type]);
+    // 그룹 가시성 변경 후 라벨 가시성 업데이트 (디바운싱 적용)
+    if (labelUpdateTimeout) {
+        clearTimeout(labelUpdateTimeout);
     }
-}
-
-function hideMarkerGroup(type) {
-    if (clusterGroups[type]) {
-        map.removeLayer(clusterGroups[type]);
-    }
+    // 150ms 후에 라벨 업데이트 (레이어 변경 후 부드러운 전환을 위해)
+    labelUpdateTimeout = setTimeout(() => {
+        updateLabelVisibility();
+    }, 150);
 }
 
 // 내 위치 찾기 함수
@@ -625,25 +574,21 @@ function createCurrentLocationIcon() {
 // 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
+    const minZoomForLabels = 14;
     const bounds = map.getBounds();
     
     allMarkers.forEach(markerData => {
-        const marker = markerData.marker;
-        const isInBounds = bounds.contains(marker.getLatLng());
+        const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
+        const isInBounds = bounds.contains(markerData.marker.getLatLng());
         
-        // 클러스터 상태 확인
-        const isClustered = marker._icon && marker._icon.parentNode && 
-                           marker._icon.parentNode.classList.contains('marker-cluster');
-        
-        // 클러스터링되지 않은 마커는 줌 레벨에 상관없이 라벨 표시
-        if (!isClustered && isInBounds) {
+        if (currentZoom >= minZoomForLabels && isGroupVisible && isInBounds) {
             if (!markerData.visible) {
-                marker.bindTooltip(markerData.tooltip);
+                markerData.marker.bindTooltip(markerData.tooltip);
                 markerData.visible = true;
             }
         } else {
             if (markerData.visible) {
-                marker.unbindTooltip();
+                markerData.marker.unbindTooltip();
                 markerData.visible = false;
             }
         }
@@ -732,67 +677,46 @@ function openAmapSearch(name, lat, lng) {
     window.open(url, '_blank');
 }
 
-// 지도 타일 변경 함수
-function changeTileLayer(type) {
-    if (tileLayers[type] && currentTileLayerType !== type) {
-        // 현재 타일 레이어 제거
-        if (tileLayers[currentTileLayerType]) {
-            map.removeLayer(tileLayers[currentTileLayerType]);
-        }
-        
-        // 새로운 타일 레이어 추가
-        tileLayers[type].addTo(map);
-        currentTileLayerType = type;
-        
-        // 모든 지도 타입에서 마커들 보이기
-        showAllTourismMarkers();
-        
-        console.log('지도 타입 변경:', type);
+// 타입별 아이콘 반환 함수
+function getTypeIcon(type) {
+    switch (type) {
+        case 'attractions': return '📷';
+        case 'restaurants': return '🍴';
+        case 'airports': return '✈️';
+        case 'hotels': return '🏨';
+        default: return '📍';
     }
 }
 
-// 모든 관광지 마커 숨기기
-function hideAllTourismMarkers() {
-    Object.values(clusterGroups).forEach(group => {
-        if (map.hasLayer(group)) {
-            map.removeLayer(group);
-        }
-    });
+// 타입별 한국어 이름 반환 함수
+function getTypeDisplayName(type) {
+    switch (type) {
+        case 'attractions': return '관광지';
+        case 'restaurants': return '음식점';
+        case 'airports': return '공항';
+        case 'hotels': return '호텔';
+        default: return '기타';
+    }
 }
 
-// 모든 관광지 마커 보이기
-function showAllTourismMarkers() {
-    Object.values(clusterGroups).forEach(group => {
-        if (!map.hasLayer(group)) {
-            group.addTo(map);
-        }
-    });
-}
-
-// 타일 옵션 스타일 업데이트
-function updateTileOptionStyles(activeType) {
-    const tileOptions = document.querySelectorAll('.tile-option');
-    tileOptions.forEach(option => {
-        option.classList.remove('active');
-        if (option.getAttribute('onclick').includes(activeType)) {
-            option.classList.add('active');
-        }
-    });
-}
-
-// 범례 체크박스 기능
-function setupLegendControls() {
-    const legendItems = document.querySelectorAll('.legend-item');
-    legendItems.forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        const type = checkbox.getAttribute('data-type');
-        
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                showMarkerGroup(type);
-            } else {
-                hideMarkerGroup(type);
-            }
-        });
-    });
+function createLabel(place) {
+    const label = document.createElement('div');
+    label.className = 'place-label';
+    
+    // 맛집인 경우 이름에 대표 메뉴 추가
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        label.textContent = `${place.name} (${place.menu[0]})`;
+    } else {
+        label.textContent = place.name;
+    }
+    
+    // 숙소인 경우 가격 정보 추가
+    if (place.type === 'hotels' && place.price) {
+        const priceInfo = document.createElement('div');
+        priceInfo.className = 'price-info';
+        priceInfo.textContent = place.price;
+        label.appendChild(priceInfo);
+    }
+    
+    return label;
 }
