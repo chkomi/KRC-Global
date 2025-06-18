@@ -466,274 +466,54 @@ html, body {
 }
 
 .map-btn {
-    flex: 1;
-    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    margin: 5px;
     border: none;
     border-radius: 4px;
-    font-size: 0.85em;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    transition: all 0.2s;
-    color: white !important;
-    font-weight: 500;
+    transition: background-color 0.3s;
 }
 
 .map-btn i {
-    font-size: 1.1em;
-    color: white !important;
+    margin-right: 8px;
+    color: white;
 }
 
 .google-btn {
-    background: #4285F4;
+    background-color: #4285F4;
 }
 
 .google-btn:hover {
-    background: #3367D6;
+    background-color: #357ABD;
 }
 
 .amap-btn {
-    background: #FF6B6B;
+    background-color: #00C853;
 }
 
 .amap-btn:hover {
-    background: #FF5252;
+    background-color: #00A844;
 }
 
-/* 그룹 팝업 스타일 */
-.places-list {
-    padding: 20px;
-}
-
-.place-item {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.place-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.place-item h4 {
-    margin: 0 0 10px 0;
-    font-size: 1.1em;
-    color: #1a1a1a;
-    font-weight: 600;
-}
-
-.place-item p {
-    margin: 6px 0;
-    font-size: 0.9em;
-    color: #4a4a4a;
-    line-height: 1.5;
-}
-
-/* 팝업 닫기 버튼 스타일 */
-.custom-popup .leaflet-popup-close-button {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 24px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: #666;
-    z-index: 1;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
-}
-
-.custom-popup .leaflet-popup-close-button:hover {
-    background: white;
-    color: #333;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* 마커 타입별 팝업 헤더 색상 */
-.custom-popup.type-attractions .popup-header {
-    background: rgba(234, 67, 53, 0.9);
-}
-
-.custom-popup.type-restaurants .popup-header {
-    background: rgba(52, 168, 83, 0.9);
-}
-
-.custom-popup.type-airports .popup-header {
-    background: rgba(155, 89, 182, 0.9);
-}
-
-.custom-popup.type-hotels .popup-header {
-    background: rgba(26, 115, 232, 0.9);
-}
-
-/* 가격 정보 스타일 */
-.price-info {
-    display: inline-block;
-    padding: 2px 6px;
-    background: rgba(33, 150, 243, 0.1);
-    color: #1976D2;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 0.9em;
-    margin: 4px 0;
-}
-
-/* 특징 태그 스타일 */
-.features-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin: 8px 0;
-}
-
-.feature-tag {
-    padding: 2px 8px;
-    background: #f0f0f0;
-    border-radius: 12px;
-    font-size: 0.8em;
-    color: #666;
-}
-
-/* 메뉴 스타일 */
-.menu-list {
-    margin: 8px 0;
-    padding-left: 0;
-    list-style: none;
-}
-
-.menu-list li {
-    padding: 4px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.menu-list li:last-child {
-    border-bottom: none;
-}
-
-/* Place Type Badge */
-.place-type-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    color: white;
-    font-size: 0.7em;
-    font-weight: bold;
-    margin-bottom: 8px;
-    margin-right: 8px;
-}
-
-.place-type-badge.type-attractions { background-color: #ea4335; }
-.place-type-badge.type-restaurants { background-color: #34a853; }
-.place-type-badge.type-airports { background-color: #9b59b6; }
-.place-type-badge.type-hotels { background-color: #1a73e8; }
-
-/* Group Header */
-.group-header h3 {
-    margin: 0 0 15px 0;
-    color: #2c3e50;
-    font-size: 1.1em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.place-count-badge {
-    background: #3498db;
-    color: white;
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 0.7em;
-    font-weight: bold;
-    margin-left: auto;
-}
-
-.place-group-item {
-    margin-bottom: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.03);
-    border-left: 4px solid;
-}
-
-.place-group-item h4 {
-    margin: 0 0 8px 0;
-    color: #2c3e50;
-    font-size: 1em;
-    font-weight: 600;
-}
-
-.place-group-item p {
-    font-size: 0.8em;
-    margin: 4px 0;
-}
-
-.place-group-item.type-attractions { border-left-color: #ea4335; }
-.place-group-item.type-restaurants { border-left-color: #34a853; }
-.place-group-item.type-hotels { border-left-color: #1a73e8; }
-.place-group-item.type-airports { border-left-color: #9b59b6; }
-
-.place-separator {
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
-    margin: 15px 0;
-}
-
-/* Map Link Buttons */
-.map-links, .group-map-links {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+.map-links {
+    margin-top: 15px;
     text-align: center;
 }
 
-.map-links h4, .group-map-links h4 {
-    margin: 0 0 12px 0;
-    font-size: 0.9em;
-    color: #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+.map-links h4 {
+    margin-bottom: 10px;
+    color: #666;
 }
 
 .map-buttons {
     display: flex;
     justify-content: center;
-    gap: 12px;
-}
-
-.map-btn, .map-btn-small {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: center;
-    color: white;
-    font-weight: 500;
-}
-
-.map-btn.google-btn, .map-btn-small.google-btn { 
-    background: #4285f4; 
-}
-
-.map-btn.amap-btn, .map-btn-small.amap-btn { 
-    background: #00a6fb; 
+    gap: 10px;
 }
 
 .map-btn:hover {
@@ -900,8 +680,12 @@ html, body {
 
     .map-btn {
         width: 100%;
-        padding: 8px;
-        font-size: 0.9em;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .map-btn i {
+        margin-right: 6px;
     }
 
     .place-map-buttons {
@@ -952,8 +736,12 @@ html, body {
     }
 
     .map-btn {
-        padding: 6px 8px;
-        font-size: 0.8em;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .map-btn i {
+        margin-right: 6px;
     }
 }
 

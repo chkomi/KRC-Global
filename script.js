@@ -329,97 +329,52 @@ function createCustomIcon(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    const popupContent = document.createElement('div');
-    popupContent.className = 'popup-content';
+    const content = document.createElement('div');
+    content.className = 'custom-popup';
+    
+    // 팝업 헤더
+    const header = document.createElement('div');
+    header.className = 'popup-header';
+    header.innerHTML = `
+        <h3>${place.name}</h3>
+        <span class="place-type-badge type-${place.type}">${getTypeLabel(place.type)}</span>
+    `;
+    content.appendChild(header);
 
-    // 이미지 섹션
-    const imageSection = document.createElement('div');
-    imageSection.className = 'popup-image';
-    imageSection.style.backgroundImage = `url(${place.image || 'https://via.placeholder.com/300x200?text=No+Image'})`;
-    popupContent.appendChild(imageSection);
+    // 팝업 본문
+    const body = document.createElement('div');
+    body.className = 'popup-body';
+    
+    // 기본 정보
+    const info = document.createElement('div');
+    info.className = 'popup-info';
+    info.innerHTML = `
+        <p><i class="fas fa-map-marker-alt"></i> ${place.address}</p>
+        ${place.description ? `<p><i class="fas fa-info-circle"></i> ${place.description}</p>` : ''}
+        ${place.price ? `<p class="price-info"><i class="fas fa-yen-sign"></i> ${place.price}</p>` : ''}
+    `;
+    body.appendChild(info);
 
-    // 정보 섹션
-    const infoSection = document.createElement('div');
-    infoSection.className = 'popup-info';
-
-    // 이름 (맛집인 경우 대표 메뉴 추가)
-    const nameElement = document.createElement('h3');
-    nameElement.className = 'popup-name';
-    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
-        nameElement.textContent = `${place.name} (${place.menu[0]})`;
-    } else {
-        nameElement.textContent = place.name;
-    }
-    infoSection.appendChild(nameElement);
-
-    // 설명
-    if (place.description) {
-        const descriptionElement = document.createElement('p');
-        descriptionElement.className = 'popup-description';
-        descriptionElement.textContent = place.description;
-        infoSection.appendChild(descriptionElement);
-    }
-
-    // 메뉴 정보 (맛집인 경우)
-    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
-        const menuSection = document.createElement('div');
-        menuSection.className = 'popup-menu';
-        
-        const menuTitle = document.createElement('h4');
-        menuTitle.innerHTML = '<i class="fas fa-utensils"></i> 대표 메뉴';
-        menuSection.appendChild(menuTitle);
-
-        const menuList = document.createElement('ul');
-        place.menu.forEach(menuItem => {
-            const menuItemElement = document.createElement('li');
-            menuItemElement.textContent = menuItem;
-            menuList.appendChild(menuItemElement);
-        });
-        menuSection.appendChild(menuList);
-        infoSection.appendChild(menuSection);
-    }
-
-    // 주소
-    if (place.address) {
-        const addressElement = document.createElement('p');
-        addressElement.className = 'popup-address';
-        addressElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${place.address}`;
-        infoSection.appendChild(addressElement);
-    }
-
-    // 가격 정보 (숙소인 경우)
-    if (place.type === 'hotels' && place.price) {
-        const priceElement = document.createElement('p');
-        priceElement.className = 'popup-price';
-        priceElement.innerHTML = `<i class="fas fa-yen-sign"></i> ${place.price}`;
-        infoSection.appendChild(priceElement);
-    }
-
-    popupContent.appendChild(infoSection);
-
-    // 지도 연결 버튼
+    // 지도 링크 버튼
     const mapLinks = document.createElement('div');
     mapLinks.className = 'map-links';
+    mapLinks.innerHTML = `
+        <h4><i class="fas fa-map"></i> 지도에서 보기</h4>
+        <div class="map-buttons">
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name.split('(')[0].trim())}" 
+               target="_blank" class="map-btn google-btn">
+                <i class="fab fa-google"></i> Google Maps
+            </a>
+            <a href="https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(place.name.split('(')[1]?.split(')')[0] || place.name.split('(')[0].trim())}" 
+               target="_blank" class="map-btn amap-btn">
+                <i class="fas fa-map-marked-alt"></i> 高德地图
+            </a>
+        </div>
+    `;
+    body.appendChild(mapLinks);
 
-    // 구글맵 버튼
-    const googleBtn = document.createElement('a');
-    googleBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name_en)}`;
-    googleBtn.target = '_blank';
-    googleBtn.className = 'map-btn google-btn';
-    googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글맵';
-    mapLinks.appendChild(googleBtn);
-
-    // 가오디맵 버튼
-    const gaodeBtn = document.createElement('a');
-    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name)}`;
-    gaodeBtn.target = '_blank';
-    gaodeBtn.className = 'map-btn gaode-btn';
-    gaodeBtn.innerHTML = '<i class="fas fa-map"></i> 가오디맵';
-    mapLinks.appendChild(gaodeBtn);
-
-    popupContent.appendChild(mapLinks);
-
-    return popupContent;
+    content.appendChild(body);
+    return content;
 }
 
 // 이벤트 리스너 설정 함수
