@@ -42,7 +42,7 @@ const tileLayers = {
     })
 };
 
-let currentTileLayerType = 'osm';
+let currentTileLayerType = 'terrain';
 
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,9 +70,9 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
-        // 기본 타일 레이어 설정
-        tileLayers.osm.addTo(map);
-        currentTileLayerType = 'osm';
+        // 기본 타일 레이어 설정 (테스트 버전은 도로 지도)
+        tileLayers.terrain.addTo(map);
+        currentTileLayerType = 'terrain';
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
