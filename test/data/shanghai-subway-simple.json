@@ -1,0 +1,80 @@
+{
+  "subway_lines": [
+    {
+      "id": "line1",
+      "name": "1호선",
+      "color": "#FF0000",
+      "stations": [
+        {
+          "id": "xinzhuang",
+          "name": "신좡",
+          "coordinates": [31.1234, 121.5678]
+        },
+        {
+          "id": "xujiahui",
+          "name": "서가회",
+          "coordinates": [31.1956, 121.4367]
+        },
+        {
+          "id": "peoples_square",
+          "name": "인민광장",
+          "coordinates": [31.2334, 121.4756]
+        },
+        {
+          "id": "the_bund",
+          "name": "외탄",
+          "coordinates": [31.2345, 121.4901]
+        }
+      ]
+    },
+    {
+      "id": "line2",
+      "name": "2호선",
+      "color": "#00FF00",
+      "stations": [
+        {
+          "id": "hongqiao_airport",
+          "name": "홍교공항",
+          "coordinates": [31.1978, 121.3367]
+        },
+        {
+          "id": "peoples_square",
+          "name": "인민광장",
+          "coordinates": [31.2334, 121.4756]
+        },
+        {
+          "id": "nanjing_road",
+          "name": "난징로",
+          "coordinates": [31.2345, 121.4801]
+        },
+        {
+          "id": "lujiazui",
+          "name": "육가취",
+          "coordinates": [31.2390, 121.4998]
+        }
+      ]
+    },
+    {
+      "id": "line10",
+      "name": "10호선",
+      "color": "#0000FF",
+      "stations": [
+        {
+          "id": "hongqiao_airport",
+          "name": "홍교공항",
+          "coordinates": [31.1978, 121.3367]
+        },
+        {
+          "id": "hongqiao_road",
+          "name": "홍교로",
+          "coordinates": [31.2012, 121.3456]
+        },
+        {
+          "id": "songyuan_road",
+          "name": "송원로",
+          "coordinates": [31.2089, 121.3567]
+        }
+      ]
+    }
+  ]
+} 
