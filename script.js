@@ -358,14 +358,20 @@ function createPopupContent(place) {
     // 지도 링크 버튼
     const mapLinks = document.createElement('div');
     mapLinks.className = 'map-links';
+    
+    // 이름에서 영어명과 중국어명 추출
+    const nameParts = place.name.split('(');
+    const koreanName = nameParts[0].trim();
+    const chineseName = nameParts[1]?.split(')')[0]?.trim() || '';
+    
     mapLinks.innerHTML = `
         <h4><i class="fas fa-map"></i> 지도에서 보기</h4>
         <div class="map-buttons">
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name.split('(')[0].trim())}" 
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}" 
                target="_blank" class="map-btn google-btn">
                 <i class="fab fa-google"></i> Google Maps
             </a>
-            <a href="https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(place.name.split('(')[1]?.split(')')[0] || place.name.split('(')[0].trim())}" 
+            <a href="https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}" 
                target="_blank" class="map-btn amap-btn">
                 <i class="fas fa-map-marked-alt"></i> 高德地图
             </a>
