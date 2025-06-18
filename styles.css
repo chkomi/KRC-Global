@@ -420,7 +420,7 @@ html, body {
 }
 
 .price-info {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
     color: white !important;
     padding: 8px 12px;
     border-radius: 8px;
@@ -458,7 +458,7 @@ html, body {
     gap: 8px;
 }
 
-.map-btn {
+.map-buttons .map-btn {
     flex: 1;
     display: inline-flex;
     align-items: center;
@@ -476,29 +476,35 @@ html, body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.map-btn:hover {
+.map-buttons .map-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: white;
 }
 
 .map-btn i {
     font-size: 14px;
+    color: white;
 }
 
 .google-btn {
     background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    color: white;
 }
 
 .google-btn:hover {
     background: linear-gradient(135deg, #3367d6 0%, #2d8f47 100%);
+    color: white;
 }
 
 .amap-btn {
     background: linear-gradient(135deg, #00c853 0%, #00bcd4 100%);
+    color: white;
 }
 
 .amap-btn:hover {
     background: linear-gradient(135deg, #00a844 0%, #00acc1 100%);
+    color: white;
 }
 
 /* 타입별 색상 */
