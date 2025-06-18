@@ -327,7 +327,7 @@
         "longitude": 121.480127,
         "description": "예원역 근처 편리한 위치의 고급 부티크 호텔 , 가족 단위와비즈니스 여행객 모두에게 적합한 프리미엄 숙박시설",
         "features": ["고급 호텔", "반려동물 불가"],
-        "price": "1733454",
+        "price": "1739190",
         "image": "images/hotels/ssaw-boutique-hotel-shanghai-bund.jpg"
       },
       {
@@ -337,7 +337,7 @@
         "longitude": 121.501451,
         "description": "진마오타워 54-87층에 위치한 세계 최고층 호텔, 상하이 스카이라인과 황푸강을 내려다보는 초럭셔리 호텔로 독특한아트리움 디자인이 특징",
         "features": ["초고층전망", "아트리움디자인", "미슐랭레스토랑", "럭셔리스파"],
-        "price": "1971066",
+        "price": "2163516",
         "image": "images/hotels/grand-hyatt-shanghai.jpg"
       },
       {
@@ -347,7 +347,7 @@
         "longitude": 121.496794,
         "description": "상하이 국제금융센터 내 위치한 최고급 럭셔리 호텔, 와이탄과 푸동 스카이라인을 동시에 감상할 수 있는 프리미엄 위치의 5성급 호텔",
         "features": ["5성급럭셔리", "와이탄뷰", "미슐랭다이닝", "리츠칼튼서비스"],
-        "price": "4938597",
+        "price": "4971609",
         "image": "images/hotels/ritz-carlton-shanghai-pudong.jpg"
       },
       {
@@ -357,7 +357,7 @@
         "longitude": 121.5059,
         "description": "푸동 금융지구 중심가에 위치한 프리미엄 럭셔리 호텔. 황푸강과 와이탄의 장관을 감상할 수 있는 최고급 서비스와 시설을 자랑하는 5성급 호텔.",
         "features": ["5성급럭셔리", "금융지구중심", "강변뷰", "프리미엄서비스"],
-        "price": "2605905",
+        "price": "2623326",
         "image": "images/hotels/regent-shanghai-pudong.jpg"
       }
     ],
