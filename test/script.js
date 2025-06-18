@@ -252,9 +252,11 @@ function displayMarkers() {
         // 라벨 텍스트 설정
         let labelText = extractKorean(place.name);
         if (place.type === 'hotels' && place.price) {
-            const price = parseInt(place.price);
-            const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
-            labelText += `<br><span class="price-label">${formattedPrice}</span>`;
+            // 엔화를 원화로 변환 (1엔 = 약 8.5원)
+            const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
+            const wonPrice = Math.round(yenPrice * 8.5);
+            const formattedPrice = wonPrice.toLocaleString('ko-KR');
+            labelText += `<br><span class="price-label">${formattedPrice}원</span>`;
         }
 
         // 툴팁 생성 및 설정
@@ -406,7 +408,11 @@ function createPopupContent(place) {
     
     // 가격 정보 (숙소인 경우)
     if (place.price) {
-        infoHTML += `<p class="price-info"><i class="fas fa-yen-sign"></i> ${place.price}</p>`;
+        // 엔화를 원화로 변환 (1엔 = 약 8.5원)
+        const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
+        const wonPrice = Math.round(yenPrice * 8.5);
+        const formattedPrice = wonPrice.toLocaleString('ko-KR');
+        infoHTML += `<p class="price-info"><i class="fas fa-won-sign"></i> ${formattedPrice}원</p>`;
     }
     
     // 특징 정보

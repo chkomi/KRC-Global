@@ -172,29 +172,6 @@ html, body {
     border-color: #007bff;
 }
 
-/* 지하철 지도 버튼 스타일 */
-.subway-btn {
-    background: #6c757d !important;
-    color: white !important;
-    border-color: #6c757d !important;
-}
-
-.subway-btn:hover {
-    background: #5a6268 !important;
-    color: white !important;
-}
-
-.subway-btn.active {
-    background: #28a745 !important;
-    color: white !important;
-    border-color: #28a745 !important;
-}
-
-/* 기존 타일 옵션 스타일 제거 */
-.map-tile-control {
-    display: none;
-}
-
 /* Legend Box */
 .legend-box {
     position: absolute;
@@ -773,3 +750,8 @@ html, body {
 .restaurants-marker { background-color: #34a853; }
 .hotels-marker { background-color: #1a73e8; }
 .airports-marker { background-color: #fbbc05; }
+
+/* 기존 타일 옵션 스타일 제거 */
+.map-tile-control {
+    display: none;
+}
