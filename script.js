@@ -409,13 +409,11 @@ function createPopupContent(place) {
     googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글맵';
     mapLinks.appendChild(googleBtn);
 
-    // 가오디맵 버튼
-    const gaodeBtn = document.createElement('a');
-    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name)}`;
-    gaodeBtn.target = '_blank';
-    gaodeBtn.className = 'map-btn gaode-btn';
-    gaodeBtn.innerHTML = '<i class="fas fa-map"></i> 가오디맵';
-    mapLinks.appendChild(gaodeBtn);
+    // 가오더 지도 (중국어명으로 검색)
+    const chineseName = place.name.split('(')[1]?.split(')')[0]?.trim() || place.name_en;
+    content += `<button class="map-btn amap-btn" onclick="openAmapSearch('${chineseName}', ${place.latitude}, ${place.longitude})">
+        <i class="fas fa-map"></i> 가오더지도
+    </button>`;
 
     popupContent.appendChild(mapLinks);
 

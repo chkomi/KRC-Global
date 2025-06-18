@@ -371,6 +371,7 @@ html, body {
     margin-bottom: 12px;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .popup-image img {
@@ -378,6 +379,11 @@ html, body {
     height: 200px;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.popup-image img:hover {
+    transform: scale(1.02);
 }
 
 .popup-content p {
@@ -461,45 +467,39 @@ html, body {
 
 .map-btn {
     flex: 1;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85em;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 0.85em;
+    gap: 5px;
+    transition: all 0.2s;
+    color: white !important;
     font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .map-btn i {
-    font-size: 1em;
+    font-size: 1.1em;
+    color: white !important;
 }
 
 .google-btn {
     background: #4285F4;
-    color: white;
 }
 
 .google-btn:hover {
     background: #3367D6;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
 }
 
-.gaode-btn {
-    background: #00a6fb;
-    color: white;
+.amap-btn {
+    background: #FF6B6B;
 }
 
-.gaode-btn:hover {
-    background: #0088cc;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 166, 251, 0.3);
+.amap-btn:hover {
+    background: #FF5252;
 }
 
 /* 그룹 팝업 스타일 */
