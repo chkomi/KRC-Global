@@ -39,6 +39,16 @@ const tileLayers = {
     }),
     terrain: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
+    }),
+    // 지하철 전용 지도 타입들 추가
+    subway_carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors & © CARTO'
+    }),
+    subway_osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }),
+    subway_custom: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors & © CARTO'
     })
 };
 
@@ -734,8 +744,36 @@ function changeTileLayer(type) {
         tileLayers[type].addTo(map);
         currentTileLayerType = type;
         
+        // 지하철 지도 타입인지 확인
+        const isSubwayMap = type.startsWith('subway_');
+        
+        // 지하철 지도일 때는 기존 마커들 숨기기
+        if (isSubwayMap) {
+            hideAllTourismMarkers();
+        } else {
+            showAllTourismMarkers();
+        }
+        
         console.log('지도 타입 변경:', type);
     }
+}
+
+// 모든 관광지 마커 숨기기
+function hideAllTourismMarkers() {
+    Object.values(clusterGroups).forEach(group => {
+        if (map.hasLayer(group)) {
+            map.removeLayer(group);
+        }
+    });
+}
+
+// 모든 관광지 마커 보이기
+function showAllTourismMarkers() {
+    Object.values(clusterGroups).forEach(group => {
+        if (!map.hasLayer(group)) {
+            group.addTo(map);
+        }
+    });
 }
 
 // 타일 옵션 스타일 업데이트
