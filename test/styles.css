@@ -461,24 +461,51 @@ html, body {
     gap: 8px;
 }
 
+.map-buttons .map-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.map-buttons .map-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 .map-btn i {
     font-size: 14px;
 }
 
 .google-btn {
     background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    color: white;
 }
 
 .google-btn:hover {
     background: linear-gradient(135deg, #3367d6 0%, #2d8f47 100%);
+    color: white;
 }
 
 .amap-btn {
     background: linear-gradient(135deg, #00c853 0%, #00bcd4 100%);
+    color: white;
 }
 
 .amap-btn:hover {
     background: linear-gradient(135deg, #00a844 0%, #00acc1 100%);
+    color: white;
 }
 
 /* 타입별 색상 */
