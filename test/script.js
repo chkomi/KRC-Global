@@ -51,7 +51,8 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
+        maxClusterRadius: 60,
+        disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
             const type = cluster.getAllChildMarkers()[0].options.type;
@@ -69,7 +70,8 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
+        maxClusterRadius: 70,
+        disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
             const type = cluster.getAllChildMarkers()[0].options.type;
@@ -87,7 +89,8 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
+        maxClusterRadius: 80,
+        disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
             const type = cluster.getAllChildMarkers()[0].options.type;
@@ -105,7 +108,8 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
+        maxClusterRadius: 90,
+        disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
             const type = cluster.getAllChildMarkers()[0].options.type;
@@ -176,6 +180,9 @@ async function initMap() {
             group.on('animationend', updateLabelVisibility);
             group.on('spiderfied', updateLabelVisibility);
             group.on('unspiderfied', updateLabelVisibility);
+            group.on('clusterclick', updateLabelVisibility);
+            group.on('clustermouseover', updateLabelVisibility);
+            group.on('clustermouseout', updateLabelVisibility);
         });
 
         displayMarkers();
@@ -616,8 +623,8 @@ function updateLabelVisibility() {
         const isClustered = marker._icon && marker._icon.parentNode && 
                            marker._icon.parentNode.classList.contains('marker-cluster');
         
-        // 클러스터가 해제되었고, 줌 레벨이 충분하고, 화면에 보이는 경우에만 라벨 표시
-        if (!isClustered && currentZoom >= 14 && isInBounds) {
+        // 클러스터링되지 않은 마커는 줌 레벨에 상관없이 라벨 표시
+        if (!isClustered && isInBounds) {
             if (!markerData.visible) {
                 marker.bindTooltip(markerData.tooltip);
                 markerData.visible = true;
