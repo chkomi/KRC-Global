@@ -44,6 +44,82 @@ const tileLayers = {
 
 let currentTileLayerType = 'osm';
 
+// 클러스터 그룹들
+let clusterGroups = {
+    attractions: L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            const type = cluster.getAllChildMarkers()[0].options.type;
+            const color = markerColors[type];
+            return L.divIcon({
+                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
+                className: 'custom-cluster-icon',
+                iconSize: L.point(30, 30),
+                iconAnchor: L.point(15, 15)
+            });
+        }
+    }),
+    restaurants: L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            const type = cluster.getAllChildMarkers()[0].options.type;
+            const color = markerColors[type];
+            return L.divIcon({
+                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
+                className: 'custom-cluster-icon',
+                iconSize: L.point(30, 30),
+                iconAnchor: L.point(15, 15)
+            });
+        }
+    }),
+    hotels: L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            const type = cluster.getAllChildMarkers()[0].options.type;
+            const color = markerColors[type];
+            return L.divIcon({
+                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
+                className: 'custom-cluster-icon',
+                iconSize: L.point(30, 30),
+                iconAnchor: L.point(15, 15)
+            });
+        }
+    }),
+    airports: L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 50,
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            const type = cluster.getAllChildMarkers()[0].options.type;
+            const color = markerColors[type];
+            return L.divIcon({
+                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
+                className: 'custom-cluster-icon',
+                iconSize: L.point(30, 30),
+                iconAnchor: L.point(15, 15)
+            });
+        }
+    })
+};
+
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
     console.log('페이지 로드 완료, 지도 초기화 시작');
@@ -92,9 +168,14 @@ async function initMap() {
             airports: L.featureGroup()
         };
 
-        // 마커 그룹들을 지도에 추가
-        Object.values(markerGroups).forEach(group => {
+        // 클러스터 그룹들을 지도에 추가
+        Object.values(clusterGroups).forEach(group => {
             group.addTo(map);
+            
+            // 클러스터 이벤트 리스너 추가
+            group.on('animationend', updateLabelVisibility);
+            group.on('spiderfied', updateLabelVisibility);
+            group.on('unspiderfied', updateLabelVisibility);
         });
 
         displayMarkers();
@@ -125,6 +206,11 @@ function displayMarkers() {
     markers = [];
     allMarkers = [];
 
+    // 클러스터 그룹 초기화
+    Object.values(clusterGroups).forEach(group => {
+        group.clearLayers();
+    });
+
     // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
     const types = ['attractions', 'restaurants', 'hotels', 'airports'];
@@ -142,42 +228,20 @@ function displayMarkers() {
 
     console.log('처리할 장소 수:', allPlaces.length);
 
-    // 장소 그룹화
-    const groups = {};
+    // 각 장소에 대해 마커 생성
     allPlaces.forEach(place => {
-        const key = `${place.latitude},${place.longitude}`;
-        if (!groups[key]) {
-            groups[key] = [];
-        }
-        groups[key].push(place);
-    });
-
-    console.log('그룹화된 장소 수:', Object.keys(groups).length);
-
-    // 각 그룹에 대해 마커 생성
-    Object.values(groups).forEach(group => {
-        if (group.length === 0) return;
-
-        // 그룹의 우선순위가 가장 높은 타입 결정
-        const highestPriorityType = group.reduce((highest, place) => {
-            const currentPriority = typePriorities[place.type] || 0;
-            return currentPriority > (typePriorities[highest?.type] || 0) ? place : highest;
-        }, group[0]);
-
         // 마커 생성
-        const marker = L.marker([highestPriorityType.latitude, highestPriorityType.longitude], {
-            icon: createCustomIcon(highestPriorityType.type)
+        const marker = L.marker([place.latitude, place.longitude], {
+            icon: createCustomIcon(place.type),
+            type: place.type
         });
 
         // 라벨 텍스트 설정
-        let labelText = extractKorean(highestPriorityType.name);
-        if (highestPriorityType.type === 'hotels' && highestPriorityType.price) {
-            const price = parseInt(highestPriorityType.price);
+        let labelText = extractKorean(place.name);
+        if (place.type === 'hotels' && place.price) {
+            const price = parseInt(place.price);
             const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
             labelText += `<br><span class="price-label">${formattedPrice}</span>`;
-        }
-        if (group.length > 1) {
-            labelText += ` (${group.length})`;
         }
 
         // 툴팁 생성 및 설정
@@ -186,66 +250,36 @@ function displayMarkers() {
             direction: 'top',
             offset: [0, -5],
             opacity: 1,
-            className: `place-label type-${highestPriorityType.type}`
+            className: `place-label type-${place.type}`
         }).setContent(labelText);
 
         // 팝업 생성 및 설정
         const popup = L.popup({
             maxWidth: 300,
-            className: `custom-popup type-${highestPriorityType.type}`
+            className: `custom-popup type-${place.type}`
         });
 
-        // 그룹에 장소가 하나인 경우
-        if (group.length === 1) {
-            popup.setContent(createPopupContent(highestPriorityType));
-        } else {
-            // 여러 장소가 있는 경우 그룹 팝업 생성
-            const groupContent = document.createElement('div');
-            groupContent.className = 'popup-content';
-            
-            const header = document.createElement('div');
-            header.className = `popup-header type-${highestPriorityType.type}`;
-            header.innerHTML = `<h3>${group.length}개의 장소</h3>`;
-            groupContent.appendChild(header);
-            
-            const placesList = document.createElement('div');
-            placesList.className = 'places-list';
-            
-            group.forEach(place => {
-                const placeItem = document.createElement('div');
-                placeItem.className = 'place-item';
-                placeItem.innerHTML = `
-                    <h4>${extractKorean(place.name)}</h4>
-                    ${place.address ? `<p><strong>주소:</strong> ${place.address}</p>` : ''}
-                    ${place.type === 'hotels' && place.price ? 
-                        `<p><strong>가격:</strong> ₩${parseInt(place.price).toLocaleString('ko-KR')}</p>` : ''}
-                `;
-                placesList.appendChild(placeItem);
-            });
-            
-            groupContent.appendChild(placesList);
-            popup.setContent(groupContent);
-        }
-
+        popup.setContent(createPopupContent(place));
         marker.bindPopup(popup);
-        marker.addTo(markerGroups[highestPriorityType.type]);
-        markers.push(marker);
 
-        // 마커 정보 저장
+        // 마커를 클러스터 그룹에 추가
+        clusterGroups[place.type].addLayer(marker);
+
+        // 마커 정보 저장 (라벨 가시성 관리용)
         allMarkers.push({
             marker: marker,
             tooltip: tooltip,
-            groupType: highestPriorityType.type,
-            visible: false
+            visible: false,
+            groupType: place.type
         });
+
+        markers.push(marker);
     });
 
-    console.log('생성된 마커 수:', markers.length);
+    console.log('마커 생성 완료:', markers.length);
 
-    // 라벨 가시성 업데이트
-    setTimeout(() => {
-        updateLabelVisibility();
-    }, 100);
+    // 초기 라벨 가시성 설정
+    updateLabelVisibility();
 }
 
 // 영문명 추출 함수 (구글지도용)
@@ -463,19 +497,23 @@ function setupEventListeners() {
 // 마커 그룹 토글 함수 (범례 체크박스와 연동)
 function toggleMarkerGroup(type, show) {
     if (show) {
-        markerGroups[type].addTo(map); // 그룹 보이기
+        showMarkerGroup(type);
     } else {
-        map.removeLayer(markerGroups[type]); // 그룹 숨기기
+        hideMarkerGroup(type);
     }
+}
 
-    // 그룹 가시성 변경 후 라벨 가시성 업데이트 (디바운싱 적용)
-    if (labelUpdateTimeout) {
-        clearTimeout(labelUpdateTimeout);
+// 마커 그룹 표시/숨김 함수
+function showMarkerGroup(type) {
+    if (clusterGroups[type]) {
+        map.addLayer(clusterGroups[type]);
     }
-    // 150ms 후에 라벨 업데이트 (레이어 변경 후 부드러운 전환을 위해)
-    labelUpdateTimeout = setTimeout(() => {
-        updateLabelVisibility();
-    }, 150);
+}
+
+function hideMarkerGroup(type) {
+    if (clusterGroups[type]) {
+        map.removeLayer(clusterGroups[type]);
+    }
 }
 
 // 내 위치 찾기 함수
@@ -568,21 +606,25 @@ function createCurrentLocationIcon() {
 // 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
     const currentZoom = map.getZoom();
-    const minZoomForLabels = 14;
     const bounds = map.getBounds();
     
     allMarkers.forEach(markerData => {
-        const isGroupVisible = map.hasLayer(markerGroups[markerData.groupType]);
-        const isInBounds = bounds.contains(markerData.marker.getLatLng());
+        const marker = markerData.marker;
+        const isInBounds = bounds.contains(marker.getLatLng());
         
-        if (currentZoom >= minZoomForLabels && isGroupVisible && isInBounds) {
+        // 클러스터 상태 확인
+        const isClustered = marker._icon && marker._icon.parentNode && 
+                           marker._icon.parentNode.classList.contains('marker-cluster');
+        
+        // 클러스터가 해제되었고, 줌 레벨이 충분하고, 화면에 보이는 경우에만 라벨 표시
+        if (!isClustered && currentZoom >= 14 && isInBounds) {
             if (!markerData.visible) {
-                markerData.marker.bindTooltip(markerData.tooltip);
+                marker.bindTooltip(markerData.tooltip);
                 markerData.visible = true;
             }
         } else {
             if (markerData.visible) {
-                markerData.marker.unbindTooltip();
+                marker.unbindTooltip();
                 markerData.visible = false;
             }
         }
@@ -674,12 +716,16 @@ function openAmapSearch(name, lat, lng) {
 // 지도 타일 변경 함수
 function changeTileLayer(type) {
     if (tileLayers[type] && currentTileLayerType !== type) {
-        map.removeLayer(tileLayers[currentTileLayerType]);
+        // 현재 타일 레이어 제거
+        if (tileLayers[currentTileLayerType]) {
+            map.removeLayer(tileLayers[currentTileLayerType]);
+        }
+        
+        // 새로운 타일 레이어 추가
         tileLayers[type].addTo(map);
         currentTileLayerType = type;
         
-        // 활성화된 타일 옵션 스타일 업데이트
-        updateTileOptionStyles(type);
+        console.log('지도 타입 변경:', type);
     }
 }
 
@@ -709,17 +755,4 @@ function setupLegendControls() {
             }
         });
     });
-}
-
-// 마커 그룹 표시/숨김 함수
-function showMarkerGroup(type) {
-    if (markerGroups[type]) {
-        map.addLayer(markerGroups[type]);
-    }
-}
-
-function hideMarkerGroup(type) {
-    if (markerGroups[type]) {
-        map.removeLayer(markerGroups[type]);
-    }
 }
