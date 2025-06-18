@@ -40,25 +40,9 @@ const tileLayers = {
     terrain: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }),
-    // 지하철 노선이 잘 보이는 배경 지도들
+    // 지하철 노선이 잘 보이는 교통 지도
     subway_transport: L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors & © Thunderforest'
-    }),
-    subway_carto_voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors & © CARTO'
-    }),
-    subway_carto_positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors & © CARTO'
-    }),
-    // 추가 지하철 친화적 지도들
-    subway_osm_standard: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }),
-    subway_carto_dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors & © CARTO'
-    }),
-    subway_stamen_terrain: L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png', {
-        attribution: '© Stamen Design & © OpenStreetMap contributors'
     })
 };
 
@@ -754,15 +738,8 @@ function changeTileLayer(type) {
         tileLayers[type].addTo(map);
         currentTileLayerType = type;
         
-        // 지하철 지도 타입인지 확인
-        const isSubwayMap = type.startsWith('subway_');
-        
-        // 지하철 지도일 때는 기존 마커들 숨기기
-        if (isSubwayMap) {
-            hideAllTourismMarkers();
-        } else {
-            showAllTourismMarkers();
-        }
+        // 모든 지도 타입에서 마커들 보이기
+        showAllTourismMarkers();
         
         console.log('지도 타입 변경:', type);
     }
