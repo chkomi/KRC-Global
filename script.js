@@ -407,7 +407,8 @@ function createPopupContent(place) {
     if (isMobile) {
         // 모바일: 앱으로 연결
         googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}&z=15`;
-        amapUrl = `amapuri://route/poi?name=${encodeURIComponent(chineseName)}&lat=${place.lat}&lon=${place.lng}`;
+        // 고덕지도 앱 연결 - 여러 스키마 시도
+        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}&src=web`;
     } else {
         // 데스크톱: 웹으로 연결
         googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}`;
@@ -716,4 +717,3 @@ function createLabel(place) {
     
     return label;
 }
-
