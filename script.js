@@ -3,7 +3,7 @@ let map = null;
 let markers = [];
 let currentTileLayer;
 let shanghaiData = null;
-let allMarkers = [];
+let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시성 포함)
 let currentLocationMarker = null; // 현재 위치 마커
 let labelUpdateTimeout = null; // 라벨 업데이트 디바운싱을 위한 타이머
 let markerGroups = {
@@ -14,22 +14,22 @@ let markerGroups = {
 };
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
-const typeColors = {
-    attractions: '#4CAF50', // 녹색
-    restaurants: '#FF5722', // 주황색
-    hotels: '#2196F3',     // 파란색
-    airports: '#9C27B0'    // 보라색
+const markerColors = {
+    attractions: '#34a853',  // 관광지 (Google Green)
+    restaurants: '#ea4335',  // 식당 (Google Red)
+    airports: '#fbbc05',     // 공항 (Google Yellow)
+    hotels: '#1a73e8'        // 호텔 (Google Blue)
 };
 
-// 마커 타입 우선순위 (숫자가 낮을수록 높은 우선순위)
+// 마커 타입별 우선순위 정의
 const typePriorities = {
-    'airports': 1,
-    'attractions': 2,
-    'hotels': 3,
-    'restaurants': 4
+    'attractions': 4,  // 관광지
+    'restaurants': 3,  // 식당
+    'hotels': 2,       // 호텔
+    'airports': 1      // 공항
 };
 
-// 페이지 로드 시 지도 초기화
+// 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
     console.log('페이지 로드 완료, 지도 초기화 시작');
     initMap();
@@ -102,6 +102,19 @@ async function initMap() {
             updateLabelVisibility();
         });
 
+        // 마커 그룹 초기화
+        markerGroups = {
+            attractions: L.featureGroup(),
+            restaurants: L.featureGroup(),
+            hotels: L.featureGroup(),
+            airports: L.featureGroup()
+        };
+
+        // 마커 그룹들을 지도에 추가
+        Object.values(markerGroups).forEach(group => {
+            group.addTo(map);
+        });
+
         displayMarkers();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
@@ -117,7 +130,7 @@ function displayMarkers() {
     }
 
     console.log('마커 표시 시작');
-    
+
     // 기존 마커와 라벨 제거
     markers.forEach(marker => {
         if (marker && marker.remove) {
@@ -126,7 +139,7 @@ function displayMarkers() {
     });
     markers = [];
     allMarkers = [];
-    
+
     // 모든 장소 데이터를 하나의 배열로 합치기
     const allPlaces = [];
     const types = ['attractions', 'restaurants', 'hotels', 'airports'];
@@ -153,9 +166,9 @@ function displayMarkers() {
         }
         groups[key].push(place);
     });
-    
+
     console.log('그룹화된 장소 수:', Object.keys(groups).length);
-    
+
     // 각 그룹에 대해 마커 생성
     Object.values(groups).forEach(group => {
         if (group.length === 0) return;
@@ -241,7 +254,7 @@ function displayMarkers() {
             visible: false
         });
     });
-    
+
     console.log('생성된 마커 수:', markers.length);
 
     // 라벨 가시성 업데이트
@@ -250,10 +263,80 @@ function displayMarkers() {
     }, 100);
 }
 
+// 영문명 추출 함수 (구글지도용)
+function extractEnglishName(text) {
+    // 괄호 안에서 영문명 찾기 (예: "The Bund", "Oriental Pearl TV Tower")
+    const englishInParentheses = text.match(/\(([^,]*,\s*)?([A-Za-z\s\-'\.&]+)\)/);
+    if (englishInParentheses && englishInParentheses[2] && englishInParentheses[2].trim() !== '') {
+        return englishInParentheses[2].trim();
+    }
+
+    // 괄호가 없거나 영문명이 없으면 전체 텍스트에서 영문 부분 추출
+    const englishParts = text.match(/[A-Za-z\s\-'\.&]+/g);
+    if (englishParts && englishParts.length > 0) {
+        const filteredParts = englishParts.filter(part => part.trim() !== '' && part.trim().length > 2);
+        if (filteredParts.length > 0) {
+            return filteredParts[filteredParts.length - 1].trim(); // 마지막 영문 부분 (보통 정식 영문명)
+        }
+    }
+
+    // 영문명이 없으면 원본 텍스트 반환
+    return text;
+}
+
+// 중국어명 추출 함수 (가오더지도용)
+function extractChineseName(text) {
+    // 첫 번째 공백이나 괄호 전까지의 중국어 부분 추출
+    const chineseMatch = text.match(/^([^\s\(（]+)/);
+    if (chineseMatch && chineseMatch[1]) {
+        return chineseMatch[1].trim();
+    }
+
+    // 위 방법이 실패하면 중국어 문자 부분만 추출
+    const chineseParts = text.match(/[\u4e00-\u9fff]+/g);
+    if (chineseParts && chineseParts.length > 0) {
+        return chineseParts[0]; // 첫 번째 중국어 부분
+    }
+
+    // 중국어가 없으면 원본 텍스트 반환
+    return text;
+}
+
+// 텍스트에서 한글 부분만 추출하는 함수 (라벨 표시용)
+function extractKorean(text) {
+    const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]+/g;
+    const matches = text.match(koreanRegex);
+    return matches ? matches.join(' ') : text;
+}
+
+// 커스텀 아이콘 생성 함수
+function createCustomIcon(type) {
+    const iconMap = {
+        attractions: 'fa-landmark',
+        restaurants: 'fa-utensils',
+        airports: 'fa-plane',
+        hotels: 'fa-hotel'
+    };
+    
+    return L.divIcon({
+        className: 'custom-marker-icon',
+        html: `<div class="circle-marker ${type}-bg"><i class="fas ${iconMap[type]}"></i></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+        popupAnchor: [0, -9]
+    });
+}
+
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
     const popupContent = document.createElement('div');
     popupContent.className = 'popup-content';
+
+    // 이미지 섹션
+    const imageSection = document.createElement('div');
+    imageSection.className = 'popup-image';
+    imageSection.style.backgroundImage = `url(${place.image || 'https://via.placeholder.com/300x200?text=No+Image'})`;
+    popupContent.appendChild(imageSection);
 
     // 정보 섹션
     const infoSection = document.createElement('div');
@@ -326,82 +409,17 @@ function createPopupContent(place) {
     googleBtn.innerHTML = '<i class="fab fa-google"></i> 구글맵';
     mapLinks.appendChild(googleBtn);
 
-    // 가오더 지도 (중국어명으로 검색)
-    const chineseName = place.name.split('(')[1]?.split(')')[0]?.trim() || place.name_en;
-    const amapBtn = document.createElement('a');
-    amapBtn.href = `https://uri.amap.com/search?keyword=${encodeURIComponent(chineseName)}&location=${place.longitude},${place.latitude}`;
-    amapBtn.target = '_blank';
-    amapBtn.className = 'map-btn amap-btn';
-    amapBtn.innerHTML = '<i class="fas fa-map"></i> 가오더지도';
-    mapLinks.appendChild(amapBtn);
+    // 가오디맵 버튼
+    const gaodeBtn = document.createElement('a');
+    gaodeBtn.href = `https://ditu.amap.com/search?query=${encodeURIComponent(place.name)}`;
+    gaodeBtn.target = '_blank';
+    gaodeBtn.className = 'map-btn gaode-btn';
+    gaodeBtn.innerHTML = '<i class="fas fa-map"></i> 가오디맵';
+    mapLinks.appendChild(gaodeBtn);
 
     popupContent.appendChild(mapLinks);
 
     return popupContent;
-}
-
-// 영문명 추출 함수 (구글지도용)
-function extractEnglishName(text) {
-    // 괄호 안에서 영문명 찾기 (예: "The Bund", "Oriental Pearl TV Tower")
-    const englishInParentheses = text.match(/\(([^,]*,\s*)?([A-Za-z\s\-'\.&]+)\)/);
-    if (englishInParentheses && englishInParentheses[2] && englishInParentheses[2].trim() !== '') {
-        return englishInParentheses[2].trim();
-    }
-
-    // 괄호가 없거나 영문명이 없으면 전체 텍스트에서 영문 부분 추출
-    const englishParts = text.match(/[A-Za-z\s\-'\.&]+/g);
-    if (englishParts && englishParts.length > 0) {
-        const filteredParts = englishParts.filter(part => part.trim() !== '' && part.trim().length > 2);
-        if (filteredParts.length > 0) {
-            return filteredParts[filteredParts.length - 1].trim(); // 마지막 영문 부분 (보통 정식 영문명)
-        }
-    }
-
-    // 영문명이 없으면 원본 텍스트 반환
-    return text;
-}
-
-// 중국어명 추출 함수 (가오더지도용)
-function extractChineseName(text) {
-    // 첫 번째 공백이나 괄호 전까지의 중국어 부분 추출
-    const chineseMatch = text.match(/^([^\s\(（]+)/);
-    if (chineseMatch && chineseMatch[1]) {
-        return chineseMatch[1].trim();
-    }
-
-    // 위 방법이 실패하면 중국어 문자 부분만 추출
-    const chineseParts = text.match(/[\u4e00-\u9fff]+/g);
-    if (chineseParts && chineseParts.length > 0) {
-        return chineseParts[0]; // 첫 번째 중국어 부분
-    }
-
-    // 중국어가 없으면 원본 텍스트 반환
-    return text;
-}
-
-// 텍스트에서 한글 부분만 추출하는 함수 (라벨 표시용)
-function extractKorean(text) {
-    const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]+/g;
-    const matches = text.match(koreanRegex);
-    return matches ? matches.join(' ') : text;
-}
-
-// 커스텀 아이콘 생성 함수
-function createCustomIcon(type) {
-    const iconMap = {
-        attractions: 'fa-landmark',
-        restaurants: 'fa-utensils',
-        airports: 'fa-plane',
-        hotels: 'fa-hotel'
-    };
-    
-    return L.divIcon({
-        className: 'custom-marker-icon',
-        html: `<div class="circle-marker ${type}-bg"><i class="fas ${iconMap[type]}"></i></div>`,
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
-        popupAnchor: [0, -9]
-    });
 }
 
 // 이벤트 리스너 설정 함수
@@ -572,36 +590,63 @@ function displayGroupDetails(group) {
         className: 'custom-popup'
     });
 
-    // 그룹에 장소가 하나인 경우
-    if (group.places.length === 1) {
-        const place = group.places[0];
-        const content = createPopupContent(place);
-        popup.setContent(content);
-    } else {
-        // 여러 장소가 있는 경우 그룹 팝업 생성
-        let content = '<div class="popup-content">';
-        content += '<div class="popup-header">';
-        content += `<h3>${group.places.length}개의 장소</h3>`;
-        content += '</div>';
-        
-        content += '<div class="places-list">';
-        group.places.forEach(place => {
-            content += '<div class="place-item">';
-            content += `<h4>${extractKorean(place.name)}</h4>`;
-            if (place.address) {
-                content += `<p><strong>주소:</strong> ${place.address}</p>`;
-            }
-            if (place.type === 'hotels' && place.price) {
-                content += `<p><strong>가격:</strong> ₩${parseInt(place.price).toLocaleString('ko-KR')}</p>`;
-            }
-            content += '</div>';
-        });
-        content += '</div>';
-        content += '</div>';
-        
-        popup.setContent(content);
+    const place = group.places[0];
+    let content = `<div class="popup-header type-${place.type}">`;
+    content += `<h3>${extractKorean(place.name)}</h3>`;
+    content += '</div>';
+    
+    content += '<div class="popup-content">';
+
+    // 주소 정보
+    if (place.address && place.address !== "N/A") {
+        content += `<p><strong>주소:</strong> ${place.address}</p>`;
     }
 
+    // 설명
+    if (place.description) {
+        content += `<p><strong>설명:</strong> ${place.description}</p>`;
+    }
+
+    // 특징
+    if (place.features && place.features.length > 0) {
+        content += '<div class="features-tags">';
+        place.features.forEach(feature => {
+            content += `<span class="feature-tag">${feature}</span>`;
+        });
+        content += '</div>';
+    }
+
+    // 메뉴 (식당인 경우)
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        content += '<p><strong>대표 메뉴:</strong></p>';
+        content += '<ul class="menu-list">';
+        place.menu.forEach(item => {
+            content += `<li>${item}</li>`;
+        });
+        content += '</ul>';
+    }
+
+    // 외부 지도 링크
+    content += '<div class="map-links">';
+    content += '<h4>외부 지도에서 보기</h4>';
+    content += '<div class="map-buttons">';
+    
+    // 구글 지도 (영어명으로 검색)
+    const englishName = place.name.split('(')[0].trim();
+    content += `<button class="map-btn google-btn" onclick="openGoogleMaps('${englishName}', ${place.latitude}, ${place.longitude})">
+        <i class="fab fa-google"></i> 구글지도
+    </button>`;
+    
+    // 가오더 지도 (중국어명으로 검색)
+    const chineseName = place.name.split('(')[1]?.split(')')[0]?.trim() || englishName;
+    content += `<button class="map-btn amap-btn" onclick="openAmapSearch('${chineseName}', ${place.latitude}, ${place.longitude})">
+        <i class="fas fa-map"></i> 가오더지도
+    </button>`;
+    
+    content += '</div></div>';
+    content += '</div>';
+
+    popup.setContent(content);
     popup.setLatLng([group.latitude, group.longitude]);
     popup.openOn(map);
 }
