@@ -327,6 +327,17 @@ function createCustomIcon(type) {
     });
 }
 
+// 장소 타입을 한글로 변환하는 함수
+function getTypeLabel(type) {
+    const typeLabels = {
+        'attractions': '관광지',
+        'restaurants': '맛집',
+        'hotels': '숙소',
+        'airports': '공항'
+    };
+    return typeLabels[type] || type;
+}
+
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
     const content = document.createElement('div');
