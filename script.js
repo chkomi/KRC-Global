@@ -52,8 +52,8 @@ async function initMap() {
         shanghaiData = data.shanghai_tourism;
         console.log('데이터 로드 완료:', shanghaiData);
         
-        // 지도 생성 (초기 줌 레벨 11로 설정)
-        map = L.map('map').setView([31.2304, 121.4737], 11);
+        // 지도 생성 (초기 줌 레벨 9로 설정)
+        map = L.map('map').setView([31.2304, 121.4737], 9);
         
         // 타일 레이어 정의
         const tileLayers = {
