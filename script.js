@@ -597,6 +597,13 @@ function displayGroupDetails(group) {
     
     content += '<div class="popup-content">';
 
+    // 이미지 추가
+    if (place.image) {
+        content += `<div class="popup-image">
+            <img src="${place.image}" alt="${extractKorean(place.name)}" loading="lazy">
+        </div>`;
+    }
+
     // 주소 정보
     if (place.address && place.address !== "N/A") {
         content += `<p><strong>주소:</strong> ${place.address}</p>`;

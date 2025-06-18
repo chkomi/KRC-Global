@@ -7,7 +7,8 @@
         "latitude": 31.2366,
         "longitude": 121.4856,
         "description": "번영과 역사의 흔적이 공존하는 야경 명소",
-        "features": ["풍경", "음식", "문화역사"]
+        "features": ["풍경", "음식", "문화역사"],
+        "image": "images/attractions/the-bund.jpg"
       },
       {
         "name": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
@@ -15,7 +16,8 @@
         "latitude": 31.242,
         "longitude": 121.495,
         "description": "황푸강 양쪽 전경을 감상할 수 있는 대표적인 전망대",
-        "features": ["전망대", "독특한 건축"]
+        "features": ["전망대", "독특한 건축"],
+        "image": "images/attractions/oriental-pearl-tower.jpg"
       },
       {
         "name": "上海博物馆 (상하이 박물관, Shanghai Museum)",
@@ -23,7 +25,8 @@
         "latitude": 31.2248,
         "longitude": 121.469,
         "description": "풍부한 중국 예술품과 역사 컬렉션을 전시하는 문화시설",
-        "features": ["무료 입장", "문화시설"]
+        "features": ["무료 입장", "문화시설"],
+        "image": "images/attractions/shanghai-museum.jpg"
       },
       {
         "name": "豫园 (예원, Yu Garden)",
@@ -31,7 +34,8 @@
         "latitude": 31.229078,
         "longitude": 121.487846,
         "description": "중국 전통 정원이 잘 보존된 휴식처",
-        "features": ["역사적", "전통정원"]
+        "features": ["역사적", "전통정원"],
+        "image": "images/attractions/yu-garden.jpg"
       },
       {
         "name": "南京东路 (난징동루, Nanjing Road East)",
@@ -39,7 +43,8 @@
         "latitude": 31.238967,
         "longitude": 121.478968,
         "description": "쇼핑과 문화가 공존하는 도심 보행자 거리",
-        "features": ["쇼핑", "문화"]
+        "features": ["쇼핑", "문화"],
+        "image": "images/attractions/nanjing-road-east.jpg"
       },
       {
         "name": "新天地 (신천지, Xintiandi)",
@@ -47,7 +52,8 @@
         "latitude": 31.221775,
         "longitude": 121.470391,
         "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역",
-        "features": ["트렌디", "레스토랑"]
+        "features": ["트렌디", "레스토랑"],
+        "image": "images/attractions/xintiandi.jpg"
       },
       {
         "name": "上海中心大厦 (상하이 타워, Shanghai Tower)",
@@ -55,7 +61,8 @@
         "latitude": 31.235614,
         "longitude": 121.501161,
         "description": "현대 상하이의 랜드마크 건물",
-        "features": ["현대", "전망"]
+        "features": ["현대", "전망"],
+        "image": "images/attractions/shanghai-tower.jpg"
       },
       {
         "name": "上海环球金融中心 (상하이 세계금융센터, Shanghai World Financial Center)",
@@ -63,7 +70,8 @@
         "latitude": 31.23631,
         "longitude": 121.5034,
         "description": "비즈니스와 금융 중심의 상징적 랜드마크",
-        "features": ["현대", "비즈니스"]
+        "features": ["현대", "비즈니스"],
+        "image": "images/attractions/shanghai-world-financial-center.jpg"
       },
       {
         "name": "田子坊 (텐즈팡, Tianzifang)",
@@ -71,7 +79,8 @@
         "latitude": 31.21047,
         "longitude": 121.46371,
         "description": "예술, 문화, 쇼핑이 결합된 독특한 공간",
-        "features": ["예술", "문화"]
+        "features": ["예술", "문화"],
+        "image": "images/attractions/tianzifang.jpg"
       },
       {
         "name": "大韩民国上海临时政府 (대한민국 상하이임시정부, Provisional Government of the Republic of Korea in Shanghai)",
@@ -79,7 +88,8 @@
         "latitude": 31.219137,
         "longitude": 121.470138,
         "description": "1919년 4월 상하이 프랑스 조계지에 설립된 독립운동의 성지, 27년간 항일투쟁의 중심지 역할",
-        "features": ["역사교육", "독립운동사", "유적지"]
+        "features": ["역사교육", "독립운동사", "유적지"],
+        "image": "images/attractions/korean-provisional-government.jpg"
       },
       {
         "name": "武康大楼（우캉맨션, WuKangDaLou）",
@@ -87,7 +97,8 @@
         "latitude": 31.206224,
         "longitude": 121.433711,
         "description": "독특한 삼각형 외관으로 유명한 상하이의 역사적인 건축물",
-        "features": ["역사적 건축", "독특한 디자인"]
+        "features": ["역사적 건축", "독특한 디자인"],
+        "image": "images/attractions/wukang-building.jpg"
       },
       {
         "name": "朱家角古镇(주가각, ZhuJiaJiao)",
@@ -95,7 +106,8 @@
         "latitude": 31.11734,
         "longitude": 121.04837,
         "description": "운하와 고대 다리가 아름다운 '동양의 베니스'라 불리는 고풍스러운 수상 마을",
-        "features": ["수상 마을", "전통 문화", "운하"]
+        "features": ["수상 마을", "전통 문화", "운하"],
+        "image": "images/attractions/zhujiajiao.jpg"
       }
     ],
     "restaurants": [
@@ -105,7 +117,8 @@
         "latitude": 31.219697,
         "longitude": 121.461928,
         "description": "5년 연속 미슐랭 빕구르망 선정 전통 국수 전문점, 조기국수( 황유미엔 )와 곧창국수( 따창미엔 )가 시그니처 메뉴인 상하이 대표 로컬 맛집",
-        "menu": ["황유미엔(조기국수)", "따창미엔(곧창국수)", "시아런미엔(새우국수)", "미슐랭5년"]
+        "menu": ["황유미엔(조기국수)", "따창미엔(곧창국수)", "시아런미엔(새우국수)", "미슐랭5년"],
+        "image": "images/restaurants/aniang-noodle-restaurant.jpg"
       },
       {
         "name": "四季民福烤鸭店(香港广场店) (사계민복, Sihai Minfu)",
@@ -113,7 +126,8 @@
         "latitude": 31.225798,
         "longitude": 121.470208,
         "description": "1840년대 프랑스 조계지 시절의 역사를 간직한 공원, 동서양 문화 교류의 흔적",
-        "menu": ["역사공원", "프랑스조계", "문화유산"]
+        "menu": ["역사공원", "프랑스조계", "문화유산"],
+        "image": "images/restaurants/sihai-minfu.jpg"
       },
       {
         "name": "桂满陇(上海世茂广场店) (계이문롱, Guimanlong)",
@@ -121,7 +135,8 @@
         "latitude": 31.236261,
         "longitude": 121.471657,
         "description": "항저우 요리를 전문으로 하는 인기 레스토랑. 대표 메뉴: 叫化鸡 (거지닭)",
-        "menu": ["叫化鸡(거지닭)"]
+        "menu": ["叫化鸡(거지닭)"],
+        "image": "images/restaurants/guimanlong.jpg"
       },
       {
         "name": "蟹小友·蟹黄面·手工点心(南京东路店) (시에소우, Xie Xiaoyou)",
@@ -129,7 +144,8 @@
         "latitude": 31.237807,
         "longitude": 121.474958,
         "description": "게 요리 전문점으로 신선한 게살을 이용한 다양한 음식을 맛볼 수 있는 곳. 추천 메뉴: 게살떡국 (58위안), 게살비빔면 (128위안)",
-        "menu": ["게살떡국", "게살비빔면"]
+        "menu": ["게살떡국", "게살비빔면"],
+        "image": "images/restaurants/xie-xiaoyou.jpg"
       },
       {
         "name": "叶马(环贸iapm)(예마, YeMa)",
@@ -143,7 +159,8 @@
           "Braised Pork and Abalone with Bamboo Shoots (138위안)",
           "Sautéed Seasonal Vegetable (36위안)",
           "Fried Rice with Beef and Salty Vegetable (42위안)"
-        ]
+        ],
+        "image": "images/restaurants/ye-ma.jpg"
       },
       {
         "name": "老吉士(环贸iapm)",
@@ -151,7 +168,8 @@
         "latitude": 31.217265,
         "longitude": 121.4536,
         "description": "전통적인 상하이 가정식을 맛볼 수 있는 레스토랑.",
-        "menu": ["芦蒿炒干丝", "葱油拌면"]
+        "menu": ["芦蒿炒干丝", "葱油拌면"],
+        "image": "images/restaurants/lao-jishi.jpg"
       },
       {
         "name": "利苑酒家(IAPM店) (리위안, Li Yuan)",
@@ -162,7 +180,8 @@
         "menu": [
           "龙虾汤贵妃泡饭 (¥160/¥218)",
           "山西枣皇糕 (35위안)"
-        ]
+        ],
+        "image": "images/restaurants/li-yuan.jpg"
       },
       {
         "name": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
@@ -170,7 +189,8 @@
         "latitude": 31.234697,
         "longitude": 121.475275,
         "description": "육즙 가득한 셩지엔(군만두)으로 유명한 상하이 대표 맛집. 겉은 바삭하고 속은 촉촉한 만두피와 풍부한 육즙이 특징입니다.",
-        "menu": ["셩지엔", "상하이 대표 맛집"]
+        "menu": ["셩지엔", "상하이 대표 맛집"],
+        "image": "images/restaurants/xiaoyang-shengjian.jpg"
       },
       {
         "name": "点都德(环宇荟店)(디엔또우더, DianDouDe)",
@@ -178,7 +198,8 @@
         "latitude": 31.213669,
         "longitude": 121.471944,
         "description": "광동식 딤섬 전문점으로 시진핑이 인정한 미식명소, 5성급서비스와 전통 딤섬의 완벽한 조화",
-        "menu": ["홍미창펀", "하가우", "시우마이", "차슈번"]
+        "menu": ["홍미창펀", "하가우", "시우마이", "차슈번"],
+        "image": "images/restaurants/dian-dou-de.jpg"
       },
       {
         "name": "夜上海(예상하이, YeShangHai)",
@@ -186,7 +207,8 @@
         "latitude": 31.222628,
         "longitude": 121.473282,
         "description": "상하이 전통 야경 레스토랑으로 황푸강 뷰를 감상하며 즐기는 고급 중식당",
-        "menu": ["야경뷰", "고급중식", "황푸강전망", "프리미엄다이닝"]
+        "menu": ["야경뷰", "고급중식", "황푸강전망", "프리미엄다이닝"],
+        "image": "images/restaurants/ye-shang-hai.jpg"
       },
       {
         "name": "鼎泰丰(新天地时尚一期店)(딘타이펑, DinTaiFeng)",
@@ -194,7 +216,8 @@
         "latitude": 31.220972,
         "longitude": 121.470798,
         "description": "대만 본점의 정통 레시피로 만든 세계적인 샤오롱바오 전문점, 얇은 피와 풍부한 육즙이 특징",
-        "menu": ["샤오롱바오", "홍유샤", "볶음밥", "훈툰"]
+        "menu": ["샤오롱바오", "홍유샤", "볶음밥", "훈툰"],
+        "image": "images/restaurants/din-tai-feng.jpg"
       },
       {
         "name": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
@@ -202,7 +225,8 @@
         "latitude": 31.208943,
         "longitude": 121.402836,
         "description": "상하이 3대 샤오롱바오 맛집 중 하나로 단황시엔 샤오롱바오(계란노른자 포함)가 시그니처 메뉴",
-        "menu": ["단황시엔샤오롱바오", "샹요우산쓰샤렌샤오룽", "전통상하이맛"]
+        "menu": ["단황시엔샤오롱바오", "샹요우산쓰샤렌샤오룽", "전통상하이맛"],
+        "image": "images/restaurants/fu-chun-xiao-long.jpg"
       },
       {
         "name": "南京大牌档(人民广场店)(난징대패당, NanJingDaPaiDang)",
@@ -210,7 +234,8 @@
         "latitude": 31.234335,
         "longitude": 121.466252,
         "description": "강소요리 전문점으로 천황오리만두와 꿀연근이 대표 메뉴인전통 중식 레스토랑, 난징 현지 음식의 정수",
-        "menu": ["천황오리만두", "꿀연근", "진링카오야", "강소요리"]
+        "menu": ["천황오리만두", "꿀연근", "진링카오야", "강소요리"],
+        "image": "images/restaurants/nan-jing-da-pai-dang.jpg"
       },
       {
         "name": "海底捞火锅(外滩店)(하이디라오, HaiDiLao)",
@@ -218,7 +243,8 @@
         "latitude": 31.240233,
         "longitude": 121.483142,
         "description": "중국 최고의 훠궈 체인점으로 뛰어난 서비스와 다양한 육수, 신선한 재료가 특징인 프리미엄 훠궈 전문점",
-        "menu": ["토마토탕", "백탕", "마라탕", "프리미엄서비스"]
+        "menu": ["토마토탕", "백탕", "마라탕", "프리미엄서비스"],
+        "image": "images/restaurants/hai-di-lao.jpg"
       },
       {
         "name": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
@@ -226,7 +252,8 @@
         "latitude": 31.28084,
         "longitude": 121.472574,
         "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점, 게살 샤오롱바오가 시그니처 메뉴인 현지인 맛집",
-        "menu": ["게살샤오롱바오", "일반샤오롱바오", "훈툰", "미슐랭"]
+        "menu": ["게살샤오롱바오", "일반샤오롱바오", "훈툰", "미슐랭"],
+        "image": "images/restaurants/lai-lai-xiao-long.jpg"
       },
       {
         "name": "鹿港小镇(루강샤오쩐, LuGangXiaoZhen)",
@@ -234,7 +261,8 @@
         "latitude": 31.24403,
         "longitude": 121.49905,
         "description": "벨라지오로도 알려진 대만음식 전문점, 파인애플볶음밥과굴전이 유명한 대만 가정식 레스토랑",
-        "menu": ["파인애플볶음밥", "굴전", "대만가정식", "허자이지엔"]
+        "menu": ["파인애플볶음밥", "굴전", "대만가정식", "허자이지엔"],
+        "image": "images/restaurants/lu-gang-xiao-zhen.jpg"
       },
       {
         "name": "外婆家(上海静安大悦城店)(와이포지아, WaiPoJia)",
@@ -242,7 +270,8 @@
         "latitude": 31.2144771,
         "longitude": 121.467395,
         "description": "외할머니집이라는 뜻의 중국 가정식 전문점, 마늘새우당면찜이 시그니처 메뉴인 가성비 맛집으로 현지인과 관광객 모두에게 인기",
-        "menu": ["마늘새우당면찜", "동파육", "마파두부", "중국가정식"]
+        "menu": ["마늘새우당면찜", "동파육", "마파두부", "중국가정식"],
+        "image": "images/restaurants/wai-po-jia.jpg"
       },
       {
         "name": "很久以前羊肉串(光音广场店)（옛날옛적에, HenJiuYiQian）",
@@ -250,7 +279,35 @@
         "latitude": 31.2447,
         "longitude": 121.509234,
         "description": "정통 신장 스타일의 양꼬치 전문점",
-        "menu": ["양꼬치"]
+        "menu": ["양꼬치"],
+        "image": "images/restaurants/hen-jiu-yi-qian.jpg"
+      },
+      {
+        "name": "南翔馒头店 (난샹만두점, Nanxiang Steamed Bun Restaurant)",
+        "address": "上海市黄浦区豫园路85号",
+        "latitude": 31.227401,
+        "longitude": 121.492729,
+        "description": "상하이의 유명한 만두 전문점, 특히 샤오롱바오로 유명",
+        "menu": ["샤오롱바오", "만두", "국수"],
+        "image": "images/restaurants/nan-xiang-steamed-bun-restaurant.jpg"
+      },
+      {
+        "name": "老饭店 (라오판뎬, Old Restaurant)",
+        "address": "上海市黄浦区福佑路242号",
+        "latitude": 31.227401,
+        "longitude": 121.492729,
+        "description": "상하이의 전통 요리를 맛볼 수 있는 레스토랑",
+        "menu": ["홍샤오러우", "샤오롱바오", "양춘면"],
+        "image": "images/restaurants/old-restaurant.jpg"
+      },
+      {
+        "name": "绿波廊 (루보랑, Green Wave Restaurant)",
+        "address": "上海市黄浦区豫园路115号",
+        "latitude": 31.227401,
+        "longitude": 121.492729,
+        "description": "상하이의 전통 요리를 맛볼 수 있는 레스토랑",
+        "menu": ["샤오롱바오", "만두", "국수"],
+        "image": "images/restaurants/green-wave-restaurant.jpg"
       }
     ],
     "hotels": [
@@ -261,7 +318,8 @@
         "longitude": 121.480127,
         "description": "예원역 근처 편리한 위치의 고급 부티크 호텔 , 가족 단위와비즈니스 여행객 모두에게 적합한 프리미엄 숙박시설",
         "features": ["고급 호텔", "반려동물 불가"],
-        "price": "1733454"
+        "price": "1733454",
+        "image": "images/hotels/ssaw-boutique-hotel-shanghai-bund.jpg"
       },
       {
         "name": "上海金茂君悦大酒店(상하이 그랜드 하얏트)",
@@ -270,7 +328,8 @@
         "longitude": 121.501451,
         "description": "진마오타워 54-87층에 위치한 세계 최고층 호텔, 상하이 스카이라인과 황푸강을 내려다보는 초럭셔리 호텔로 독특한아트리움 디자인이 특징",
         "features": ["초고층전망", "아트리움디자인", "미슐랭레스토랑", "럭셔리스파"],
-        "price": "1971066"
+        "price": "1971066",
+        "image": "images/hotels/grand-hyatt-shanghai.jpg"
       },
       {
         "name": "上海浦东丽思卡尔顿酒店(상하이 리츠칼튼 푸동)",
@@ -279,7 +338,8 @@
         "longitude": 121.496794,
         "description": "상하이 국제금융센터 내 위치한 최고급 럭셔리 호텔, 와이탄과 푸동 스카이라인을 동시에 감상할 수 있는 프리미엄 위치의 5성급 호텔",
         "features": ["5성급럭셔리", "와이탄뷰", "미슐랭다이닝", "리츠칼튼서비스"],
-        "price": "4938597"
+        "price": "4938597",
+        "image": "images/hotels/ritz-carlton-shanghai-pudong.jpg"
       },
       {
         "name": "上海浦东丽晶酒店大堂(리젠트 상하이 푸동, Regent Shanghai Pudong)",
@@ -288,7 +348,28 @@
         "longitude": 121.5059,
         "description": "푸동 금융지구 중심가에 위치한 프리미엄 럭셔리 호텔. 황푸강과 와이탄의 장관을 감상할 수 있는 최고급 서비스와 시설을 자랑하는 5성급 호텔.",
         "features": ["5성급럭셔리", "금융지구중심", "강변뷰", "프리미엄서비스"],
-        "price": "2605905"
+        "price": "2605905",
+        "image": "images/hotels/regent-shanghai-pudong.jpg"
+      },
+      {
+        "name": "上海浦东四季酒店 (상하이 푸동 포시즌스 호텔, Four Seasons Hotel Shanghai at Pudong)",
+        "address": "上海市浦东新区世纪大道210号",
+        "latitude": 31.239692,
+        "longitude": 121.505317,
+        "description": "상하이의 고급 호텔, 현대적인 시설과 서비스",
+        "features": ["레스토랑", "스파", "피트니스"],
+        "price": "350000",
+        "image": "images/hotels/four-seasons-hotel-shanghai-at-pudong.jpg"
+      },
+      {
+        "name": "上海思南公馆 (상하이 사우 부티크 호텔, SSAW Boutique Hotel Shanghai)",
+        "address": "上海市黄浦区思南路51号",
+        "latitude": 31.219692,
+        "longitude": 121.475654,
+        "description": "상하이의 전통적인 건물을 개조한 부티크 호텔",
+        "features": ["레스토랑", "카페", "정원"],
+        "price": "200000",
+        "image": "images/hotels/ssaw-boutique-hotel.jpg"
       }
     ],
     "airports": [
@@ -298,7 +379,8 @@
         "latitude": 31.1443,
         "longitude": 121.8058,
         "description": "중국 최대 규모의 국제공항 중 하나로 연간 7천만 명이 이용하는 동북아시아 항공 허브, 최신 시설과 다양한 면세점, 레스토랑 보유",
-        "features": ["국제항공허브", "면세쇼핑", "다양한식당", "마그레브연결"]
+        "features": ["국제항공허브", "면세쇼핑", "다양한식당", "마그레브연결"],
+        "image": "images/airports/pudong-international-airport.jpg"
       }
     ]
   }
