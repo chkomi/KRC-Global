@@ -189,6 +189,8 @@ async function initMap() {
         
         // 범례 체크박스 기능 초기화
         setupLegendControls();
+        // 지도 타입 버튼 이벤트 리스너 연결
+        setupEventListeners();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
         alert('데이터를 불러오는 중 오류가 발생했습니다.');
