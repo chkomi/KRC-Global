@@ -516,10 +516,36 @@ function displayGroupDetails(group) {
         className: 'custom-popup'
     });
 
-    const place = group.places[0];
-    const content = createPopupContent(place);
+    // 그룹에 장소가 하나인 경우
+    if (group.places.length === 1) {
+        const place = group.places[0];
+        const content = createPopupContent(place);
+        popup.setContent(content);
+    } else {
+        // 여러 장소가 있는 경우 그룹 팝업 생성
+        let content = '<div class="popup-content">';
+        content += '<div class="popup-header">';
+        content += `<h3>${group.places.length}개의 장소</h3>`;
+        content += '</div>';
+        
+        content += '<div class="places-list">';
+        group.places.forEach(place => {
+            content += '<div class="place-item">';
+            content += `<h4>${extractKorean(place.name)}</h4>`;
+            if (place.address) {
+                content += `<p><strong>주소:</strong> ${place.address}</p>`;
+            }
+            if (place.type === 'hotels' && place.price) {
+                content += `<p><strong>가격:</strong> ₩${parseInt(place.price).toLocaleString('ko-KR')}</p>`;
+            }
+            content += '</div>';
+        });
+        content += '</div>';
+        content += '</div>';
+        
+        popup.setContent(content);
+    }
 
-    popup.setContent(content);
     popup.setLatLng([group.latitude, group.longitude]);
     popup.openOn(map);
 }
