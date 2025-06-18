@@ -676,3 +676,25 @@ html, body {
 .place-label:before {
     display: none !important;
 }
+
+/* 숙소 라벨 가격 스타일 */
+.price-label {
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+/* 기존 팝업 내 가격 스타일과 구분 */
+.popup-info .price-info {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white !important;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 12px 0 !important;
+    font-weight: 500;
+}
+
+.popup-info .price-info i {
+    color: white !important;
+}

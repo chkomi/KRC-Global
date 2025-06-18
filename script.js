@@ -189,7 +189,7 @@ function displayMarkers() {
         if (highestPriorityType.type === 'hotels' && highestPriorityType.price) {
             const price = parseInt(highestPriorityType.price);
             const formattedPrice = `₩${price.toLocaleString('ko-KR')}`;
-            labelText += `<br><span class="price-info">${formattedPrice}</span>`;
+            labelText += `<br><span class="price-label">${formattedPrice}</span>`;
         }
         if (group.length > 1) {
             labelText += ` (${group.length})`;
@@ -399,14 +399,29 @@ function createPopupContent(place) {
     const koreanName = nameParts[0].trim();
     const chineseName = nameParts[1]?.split(')')[0]?.trim() || '';
     
+    // 모바일 감지
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    let googleUrl, amapUrl;
+    
+    if (isMobile) {
+        // 모바일: 앱으로 연결
+        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}&z=15`;
+        amapUrl = `amapuri://route/poi?name=${encodeURIComponent(chineseName)}&lat=${place.lat}&lon=${place.lng}`;
+    } else {
+        // 데스크톱: 웹으로 연결
+        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}`;
+        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}`;
+    }
+    
     mapLinks.innerHTML = `
         <h4><i class="fas fa-map"></i> 지도에서 보기</h4>
         <div class="map-buttons">
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}" 
+            <a href="${googleUrl}" 
                target="_blank" class="map-btn google-btn">
                 <i class="fab fa-google"></i> Google Maps
             </a>
-            <a href="https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}" 
+            <a href="${amapUrl}" 
                target="_blank" class="map-btn amap-btn">
                 <i class="fas fa-map-marked-alt"></i> 高德地图
             </a>
