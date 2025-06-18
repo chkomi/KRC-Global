@@ -359,18 +359,42 @@ function createPopupContent(place) {
     // 기본 정보
     const info = document.createElement('div');
     info.className = 'popup-info';
-    info.innerHTML = `
-        <p><i class="fas fa-map-marker-alt"></i> ${place.address}</p>
-        ${place.description ? `<p><i class="fas fa-info-circle"></i> ${place.description}</p>` : ''}
-        ${place.price ? `<p class="price-info"><i class="fas fa-yen-sign"></i> ${place.price}</p>` : ''}
-    `;
+    
+    let infoHTML = '';
+    
+    // 주소 정보
+    if (place.address) {
+        infoHTML += `<p><i class="fas fa-map-marker-alt"></i> ${place.address}</p>`;
+    }
+    
+    // 설명 정보
+    if (place.description) {
+        infoHTML += `<p><i class="fas fa-info-circle"></i> ${place.description}</p>`;
+    }
+    
+    // 가격 정보 (숙소인 경우)
+    if (place.price) {
+        infoHTML += `<p class="price-info"><i class="fas fa-yen-sign"></i> ${place.price}</p>`;
+    }
+    
+    // 특징 정보
+    if (place.features && place.features.length > 0) {
+        infoHTML += `<p><i class="fas fa-star"></i> ${place.features.join(', ')}</p>`;
+    }
+    
+    // 메뉴 정보 (맛집인 경우)
+    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
+        infoHTML += `<p><i class="fas fa-utensils"></i> 대표 메뉴: ${place.menu.slice(0, 3).join(', ')}${place.menu.length > 3 ? '...' : ''}</p>`;
+    }
+    
+    info.innerHTML = infoHTML;
     body.appendChild(info);
 
     // 지도 링크 버튼
     const mapLinks = document.createElement('div');
     mapLinks.className = 'map-links';
     
-    // 이름에서 영어명과 중국어명 추출
+    // 이름에서 한국어명과 중국어명 추출
     const nameParts = place.name.split('(');
     const koreanName = nameParts[0].trim();
     const chineseName = nameParts[1]?.split(')')[0]?.trim() || '';
