@@ -743,3 +743,33 @@ html, body {
     transform: scale(1.1);
     box-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
 }
+
+/* 범례 마커 스타일 */
+.legend-marker {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid white;
+    margin-right: 8px;
+    transition: transform 0.2s ease;
+}
+
+.legend-marker:hover {
+    transform: scale(1.1);
+}
+
+.legend-marker i {
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+/* 범례 마커 색상 */
+.attractions-marker { background-color: #ea4335; }
+.restaurants-marker { background-color: #34a853; }
+.hotels-marker { background-color: #1a73e8; }
+.airports-marker { background-color: #fbbc05; }
