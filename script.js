@@ -7,10 +7,10 @@ let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시�
 let currentLocationMarker = null; // 현재 위치 마커
 let labelUpdateTimeout = null; // 라벨 업데이트 디바운싱을 위한 타이머
 let markerGroups = {
-    attractions: L.featureGroup(),
-    restaurants: L.featureGroup(),
-    hotels: L.featureGroup(),
-    airports: L.featureGroup()
+    attractions: L.layerGroup().addTo(map),
+    restaurants: L.layerGroup().addTo(map),
+    hotels: L.layerGroup().addTo(map),
+    airports: L.layerGroup().addTo(map)
 };
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
@@ -102,19 +102,6 @@ async function initMap() {
             updateLabelVisibility();
         });
 
-        // 마커 그룹 초기화
-        markerGroups = {
-            attractions: L.featureGroup(),
-            restaurants: L.featureGroup(),
-            hotels: L.featureGroup(),
-            airports: L.featureGroup()
-        };
-
-        // 마커 그룹들을 지도에 추가
-        Object.values(markerGroups).forEach(group => {
-            group.addTo(map);
-        });
-
         displayMarkers();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
@@ -163,9 +150,10 @@ function displayMarkers() {
             priorityOrder[prev.type] < priorityOrder[curr.type] ? prev : curr
         ).type;
 
+        // 마커 생성 및 그룹에 추가
         const marker = L.marker([group.latitude, group.longitude], {
             icon: createCustomIcon(mainType)
-        }).addTo(markerGroups[mainType]);
+        });
 
         // 라벨은 첫 번째 장소 이름 또는 그룹 수가 많으면 "여러 장소"로 표시
         let labelText;
@@ -188,6 +176,10 @@ function displayMarkers() {
             displayGroupDetails(group);
             map.flyTo([group.latitude, group.longitude], 15);
         });
+
+        // 마커를 해당 그룹에 추가
+        marker.addTo(markerGroups[mainType]);
+        markers.push(marker);
 
         // 마커 정보를 배열에 저장
         allMarkers.push({
