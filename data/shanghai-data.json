@@ -281,33 +281,6 @@
         "description": "정통 신장 스타일의 양꼬치 전문점",
         "menu": ["양꼬치"],
         "image": "images/restaurants/hen-jiu-yi-qian.jpg"
-      },
-      {
-        "name": "南翔馒头店 (난샹만두점, Nanxiang Steamed Bun Restaurant)",
-        "address": "上海市黄浦区豫园路85号",
-        "latitude": 31.227401,
-        "longitude": 121.492729,
-        "description": "상하이의 유명한 만두 전문점, 특히 샤오롱바오로 유명",
-        "menu": ["샤오롱바오", "만두", "국수"],
-        "image": "images/restaurants/nan-xiang-steamed-bun-restaurant.jpg"
-      },
-      {
-        "name": "老饭店 (라오판뎬, Old Restaurant)",
-        "address": "上海市黄浦区福佑路242号",
-        "latitude": 31.227401,
-        "longitude": 121.492729,
-        "description": "상하이의 전통 요리를 맛볼 수 있는 레스토랑",
-        "menu": ["홍샤오러우", "샤오롱바오", "양춘면"],
-        "image": "images/restaurants/old-restaurant.jpg"
-      },
-      {
-        "name": "绿波廊 (루보랑, Green Wave Restaurant)",
-        "address": "上海市黄浦区豫园路115号",
-        "latitude": 31.227401,
-        "longitude": 121.492729,
-        "description": "상하이의 전통 요리를 맛볼 수 있는 레스토랑",
-        "menu": ["샤오롱바오", "만두", "국수"],
-        "image": "images/restaurants/green-wave-restaurant.jpg"
       }
     ],
     "hotels": [
@@ -360,16 +333,6 @@
         "features": ["레스토랑", "스파", "피트니스"],
         "price": "350000",
         "image": "images/hotels/four-seasons-hotel-shanghai-at-pudong.jpg"
-      },
-      {
-        "name": "上海思南公馆 (상하이 사우 부티크 호텔, SSAW Boutique Hotel Shanghai)",
-        "address": "上海市黄浦区思南路51号",
-        "latitude": 31.219692,
-        "longitude": 121.475654,
-        "description": "상하이의 전통적인 건물을 개조한 부티크 호텔",
-        "features": ["레스토랑", "카페", "정원"],
-        "price": "200000",
-        "image": "images/hotels/ssaw-boutique-hotel.jpg"
       }
     ],
     "airports": [
