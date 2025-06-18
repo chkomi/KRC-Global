@@ -15,8 +15,8 @@ let markerGroups = {
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
-    attractions: '#34a853',  // 관광지 (Google Green)
-    restaurants: '#ea4335',  // 식당 (Google Red)
+    attractions: '#ea4335',  // 관광지 (Google Red)
+    restaurants: '#34a853',  // 식당 (Google Green)
     airports: '#fbbc05',     // 공항 (Google Yellow)
     hotels: '#1a73e8'        // 호텔 (Google Blue)
 };
@@ -51,7 +51,7 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 60,
+        maxClusterRadius: 40,
         disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
@@ -70,7 +70,7 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 70,
+        maxClusterRadius: 50,
         disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
@@ -89,7 +89,7 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 80,
+        maxClusterRadius: 60,
         disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
@@ -108,7 +108,7 @@ let clusterGroups = {
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 90,
+        maxClusterRadius: 70,
         disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
