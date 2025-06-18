@@ -323,16 +323,6 @@
         "features": ["5성급럭셔리", "금융지구중심", "강변뷰", "프리미엄서비스"],
         "price": "2605905",
         "image": "images/hotels/regent-shanghai-pudong.jpg"
-      },
-      {
-        "name": "上海浦东四季酒店 (상하이 푸동 포시즌스 호텔, Four Seasons Hotel Shanghai at Pudong)",
-        "address": "上海市浦东新区世纪大道210号",
-        "latitude": 31.239692,
-        "longitude": 121.505317,
-        "description": "상하이의 고급 호텔, 현대적인 시설과 서비스",
-        "features": ["레스토랑", "스파", "피트니스"],
-        "price": "350000",
-        "image": "images/hotels/four-seasons-hotel-shanghai-at-pudong.jpg"
       }
     ],
     "airports": [
