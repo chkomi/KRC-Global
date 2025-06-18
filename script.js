@@ -1,17 +1,12 @@
 // Global Variables
-let map = null;
+let map;
 let markers = [];
 let currentTileLayer;
 let shanghaiData = null;
 let allMarkers = []; // 모든 마커 정보를 저장할 배열 (라벨 가시성 포함)
 let currentLocationMarker = null; // 현재 위치 마커
 let labelUpdateTimeout = null; // 라벨 업데이트 디바운싱을 위한 타이머
-let markerGroups = {
-    attractions: L.layerGroup().addTo(map),
-    restaurants: L.layerGroup().addTo(map),
-    hotels: L.layerGroup().addTo(map),
-    airports: L.layerGroup().addTo(map)
-};
+let markerGroups = {}; // 마커 그룹을 저장할 객체
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
@@ -40,72 +35,59 @@ async function initMap() {
     try {
         console.log('지도 초기화 시작');
         
-        // 데이터 로드
-        const response = await fetch('/KRC-Global/data/shanghai-data.json');
-        if (!response.ok) {
-            throw new Error('데이터 로드 실패');
-        }
-        const data = await response.json();
-        if (!data.shanghai_tourism) {
-            throw new Error('데이터 형식이 올바르지 않습니다.');
-        }
-        shanghaiData = data.shanghai_tourism;
-        console.log('데이터 로드 완료:', shanghaiData);
-        
-        // 지도 생성 (초기 줌 레벨 14로 설정)
-        map = L.map('map').setView([31.2304, 121.4737], 14);
-        
-        // 타일 레이어 정의
-        const tileLayers = {
-            'simple': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors & © CARTO'
-            }),
-            'road': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }),
-            'satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '© Esri'
-            })
+        // 지도 초기화
+        map = L.map('map', {
+            center: [31.2304, 121.4737], // 상하이 중심 좌표
+            zoom: 12,
+            zoomControl: false
+        });
+
+        // 마커 그룹 초기화
+        markerGroups = {
+            attractions: L.layerGroup().addTo(map),
+            restaurants: L.layerGroup().addTo(map),
+            hotels: L.layerGroup().addTo(map),
+            airports: L.layerGroup().addTo(map)
         };
 
-        // 기본 타일 레이어 설정
-        currentTileLayer = tileLayers['simple'];
-        currentTileLayer.addTo(map);
+        // 지도 컨트롤 추가
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
 
-        // 타일 레이어 변경 이벤트 리스너
-        document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.checked) {
-                    // 기존 타일 레이어 제거
-                    map.removeLayer(currentTileLayer);
-                    
-                    // 새 타일 레이어 추가
-                    currentTileLayer = tileLayers[this.value];
-                    currentTileLayer.addTo(map);
-                    
-                    // 활성 상태 업데이트
-                    document.querySelectorAll('.tile-option').forEach(option => {
-                        option.classList.remove('active');
-                    });
-                    this.parentElement.classList.add('active');
-                }
-            });
-        });
+        // 타일 레이어 추가
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-        // 줌 변경 이벤트 리스너
-        map.on('zoomend', () => {
-            updateLabelVisibility();
-        });
+        // 데이터 로드
+        try {
+            const response = await fetch('data/shanghai-data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            shanghaiData = await response.json();
+            console.log('데이터 로드 완료:', shanghaiData);
+        } catch (error) {
+            console.error('데이터 로드 중 오류:', error);
+            return;
+        }
+
+        // 마커 표시
+        displayMarkers();
 
         // 지도 이동 이벤트 리스너
         map.on('moveend', () => {
-            updateLabelVisibility();
+            if (labelUpdateTimeout) {
+                clearTimeout(labelUpdateTimeout);
+            }
+            labelUpdateTimeout = setTimeout(() => {
+                updateLabelVisibility();
+            }, 150);
         });
 
-        displayMarkers();
     } catch (error) {
-        console.error('데이터 로드 중 오류:', error);
-        alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error('지도 초기화 중 오류:', error);
     }
 }
 
