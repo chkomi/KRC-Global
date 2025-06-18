@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상하이 여행지도 - 테스트 버전</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        .test-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-banner::before {
+            content: "🧪 테스트 버전 - 개발 중";
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 테스트 배너 -->
+    <div class="test-banner"></div>
+    
+    <!-- 지도 컨테이너 -->
+    <div id="map"></div>
+    
+    <!-- 제어 패널 -->
+    <div class="control-panel">
+        <!-- 위치 찾기 버튼 -->
+        <button id="locate-btn" class="locate-button" title="내 위치 찾기">
+            <i class="fas fa-location-crosshairs"></i>
+        </button>
+        
+        <!-- 범례 -->
+        <div class="legend-box">
+            <h3>범례</h3>
+            <ul>
+                <li><i class="fas fa-landmark attractions-color"></i> 관광지</li>
+                <li><i class="fas fa-utensils restaurants-color"></i> 맛집</li>
+                <li><i class="fas fa-hotel hotels-color"></i> 숙소</li>
+                <li><i class="fas fa-plane airports-color"></i> 공항</li>
+            </ul>
+        </div>
+        
+        <!-- 지도 타일 선택 -->
+        <div class="map-tile-control">
+            <h4>지도 스타일</h4>
+            <div class="tile-option" onclick="changeTileLayer('osm')">OpenStreetMap</div>
+            <div class="tile-option" onclick="changeTileLayer('satellite')">위성지도</div>
+            <div class="tile-option" onclick="changeTileLayer('terrain')">지형지도</div>
+        </div>
+    </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    
+    <script>
+        // 테스트용 추가 기능들
+        console.log('🧪 테스트 버전 로드됨');
+        
+        // 테스트용 함수들
+        function testImageLoading() {
+            console.log('이미지 로딩 테스트 시작');
+            // 이미지 로딩 테스트 로직
+        }
+        
+        function testPopupDesign() {
+            console.log('팝업 디자인 테스트 시작');
+            // 팝업 디자인 테스트 로직
+        }
+        
+        // 테스트용 전역 변수
+        window.isTestMode = true;
+    </script>
+</body>
+</html> 
