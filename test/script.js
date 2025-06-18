@@ -29,6 +29,21 @@ const typePriorities = {
     'airports': 1      // 공항
 };
 
+// 지도 타일 레이어 정의
+const tileLayers = {
+    osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }),
+    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '© Esri'
+    }),
+    terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenTopoMap'
+    })
+};
+
+let currentTileLayerType = 'osm';
+
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
     console.log('페이지 로드 완료, 지도 초기화 시작');
@@ -55,42 +70,9 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
-        // 타일 레이어 정의
-        const tileLayers = {
-            'simple': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors & © CARTO'
-            }),
-            'road': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }),
-            'satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '© Esri'
-            })
-        };
-
         // 기본 타일 레이어 설정
-        currentTileLayer = tileLayers['simple'];
-        currentTileLayer.addTo(map);
-
-        // 타일 레이어 변경 이벤트 리스너
-        document.querySelectorAll('input[name="tile-layer"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.checked) {
-                    // 기존 타일 레이어 제거
-                    map.removeLayer(currentTileLayer);
-                    
-                    // 새 타일 레이어 추가
-                    currentTileLayer = tileLayers[this.value];
-                    currentTileLayer.addTo(map);
-                    
-                    // 활성 상태 업데이트
-                    document.querySelectorAll('.tile-option').forEach(option => {
-                        option.classList.remove('active');
-                    });
-                    this.parentElement.classList.add('active');
-                }
-            });
-        });
+        tileLayers.osm.addTo(map);
+        currentTileLayerType = 'osm';
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
@@ -116,6 +98,9 @@ async function initMap() {
         });
 
         displayMarkers();
+        
+        // 범례 체크박스 기능 초기화
+        setupLegendControls();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
         alert('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -674,46 +659,55 @@ function openAmapSearch(name, lat, lng) {
     window.open(url, '_blank');
 }
 
-// 타입별 아이콘 반환 함수
-function getTypeIcon(type) {
-    switch (type) {
-        case 'attractions': return '📷';
-        case 'restaurants': return '🍴';
-        case 'airports': return '✈️';
-        case 'hotels': return '🏨';
-        default: return '📍';
+// 지도 타일 변경 함수
+function changeTileLayer(type) {
+    if (tileLayers[type] && currentTileLayerType !== type) {
+        map.removeLayer(tileLayers[currentTileLayerType]);
+        tileLayers[type].addTo(map);
+        currentTileLayerType = type;
+        
+        // 활성화된 타일 옵션 스타일 업데이트
+        updateTileOptionStyles(type);
     }
 }
 
-// 타입별 한국어 이름 반환 함수
-function getTypeDisplayName(type) {
-    switch (type) {
-        case 'attractions': return '관광지';
-        case 'restaurants': return '음식점';
-        case 'airports': return '공항';
-        case 'hotels': return '호텔';
-        default: return '기타';
+// 타일 옵션 스타일 업데이트
+function updateTileOptionStyles(activeType) {
+    const tileOptions = document.querySelectorAll('.tile-option');
+    tileOptions.forEach(option => {
+        option.classList.remove('active');
+        if (option.getAttribute('onclick').includes(activeType)) {
+            option.classList.add('active');
+        }
+    });
+}
+
+// 범례 체크박스 기능
+function setupLegendControls() {
+    const legendItems = document.querySelectorAll('.legend-item');
+    legendItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const type = checkbox.getAttribute('data-type');
+        
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                showMarkerGroup(type);
+            } else {
+                hideMarkerGroup(type);
+            }
+        });
+    });
+}
+
+// 마커 그룹 표시/숨김 함수
+function showMarkerGroup(type) {
+    if (markerGroups[type]) {
+        map.addLayer(markerGroups[type]);
     }
 }
 
-function createLabel(place) {
-    const label = document.createElement('div');
-    label.className = 'place-label';
-    
-    // 맛집인 경우 이름에 대표 메뉴 추가
-    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
-        label.textContent = `${place.name} (${place.menu[0]})`;
-    } else {
-        label.textContent = place.name;
+function hideMarkerGroup(type) {
+    if (markerGroups[type]) {
+        map.removeLayer(markerGroups[type]);
     }
-    
-    // 숙소인 경우 가격 정보 추가
-    if (place.type === 'hotels' && place.price) {
-        const priceInfo = document.createElement('div');
-        priceInfo.className = 'price-info';
-        priceInfo.textContent = place.price;
-        label.appendChild(priceInfo);
-    }
-    
-    return label;
 }

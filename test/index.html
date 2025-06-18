@@ -70,19 +70,39 @@
         <div class="legend-box">
             <h3>범례</h3>
             <ul>
-                <li><i class="fas fa-landmark attractions-color"></i> 관광지</li>
-                <li><i class="fas fa-utensils restaurants-color"></i> 맛집</li>
-                <li><i class="fas fa-hotel hotels-color"></i> 숙소</li>
-                <li><i class="fas fa-plane airports-color"></i> 공항</li>
+                <li class="legend-item">
+                    <input type="checkbox" id="attractions-toggle" data-type="attractions" checked>
+                    <label for="attractions-toggle">
+                        <i class="fas fa-landmark attractions-color"></i> 관광지
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="restaurants-toggle" data-type="restaurants" checked>
+                    <label for="restaurants-toggle">
+                        <i class="fas fa-utensils restaurants-color"></i> 맛집
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="hotels-toggle" data-type="hotels" checked>
+                    <label for="hotels-toggle">
+                        <i class="fas fa-hotel hotels-color"></i> 숙소
+                    </label>
+                </li>
+                <li class="legend-item">
+                    <input type="checkbox" id="airports-toggle" data-type="airports" checked>
+                    <label for="airports-toggle">
+                        <i class="fas fa-plane airports-color"></i> 공항
+                    </label>
+                </li>
             </ul>
         </div>
         
         <!-- 지도 타일 선택 -->
         <div class="map-tile-control">
             <h4>지도 스타일</h4>
-            <div class="tile-option" onclick="changeTileLayer('osm')">OpenStreetMap</div>
-            <div class="tile-option" onclick="changeTileLayer('satellite')">위성지도</div>
-            <div class="tile-option" onclick="changeTileLayer('terrain')">지형지도</div>
+            <div class="tile-option active" onclick="changeTileLayer('osm')">심플</div>
+            <div class="tile-option" onclick="changeTileLayer('terrain')">도로</div>
+            <div class="tile-option" onclick="changeTileLayer('satellite')">위성</div>
         </div>
     </div>
     
