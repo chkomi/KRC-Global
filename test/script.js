@@ -31,18 +31,18 @@ const typePriorities = {
 
 // 지도 타일 레이어 정의
 const tileLayers = {
-    osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+    osm: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors & © CARTO'
     }),
     satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: '© Esri'
     }),
-    terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenTopoMap'
+    terrain: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
     })
 };
 
-let currentTileLayerType = 'terrain';
+let currentTileLayerType = 'osm';
 
 // 문서 로드 완료 시 초기화 - 더 안전한 방법
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,9 +70,9 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
-        // 기본 타일 레이어 설정 (테스트 버전은 도로 지도)
-        tileLayers.terrain.addTo(map);
-        currentTileLayerType = 'terrain';
+        // 기본 타일 레이어 설정 (테스트 버전은 심플 지도)
+        tileLayers.osm.addTo(map);
+        currentTileLayerType = 'osm';
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
@@ -445,6 +445,18 @@ function setupEventListeners() {
     // 위치 찾기 버튼 이벤트 리스너
     document.getElementById('locate-btn').addEventListener('click', function() {
         findMyLocation();
+    });
+
+    // 지도 타입 버튼 이벤트 리스너
+    document.querySelectorAll('.map-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            changeTileLayer(type);
+            
+            // 활성 버튼 상태 업데이트
+            document.querySelectorAll('.map-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
     });
 }
 

@@ -131,8 +131,8 @@ html, body {
     }
 }
 
-/* Map Tile Selection Control */
-.map-tile-control {
+/* Map Controls */
+.map-controls {
     position: absolute;
     bottom: 15px;
     left: 15px;
@@ -143,36 +143,38 @@ html, body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.map-tile-control h4 {
+.map-controls h3 {
     margin: 0 0 12px 0;
     font-size: 16px;
     color: #333;
 }
 
-.tile-option {
+.map-btn {
+    display: block;
+    width: 100%;
     padding: 8px 12px;
-    margin: 4px 0;
+    margin-bottom: 5px;
     background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 13px;
     transition: all 0.2s ease;
 }
 
-.tile-option input[type="radio"] {
-    display: none;
-}
-
-.tile-option:hover {
+.map-btn:hover {
     background: #e9ecef;
-    border-color: #dee2e6;
 }
 
-.tile-option.active {
+.map-btn.active {
     background: #007bff;
     color: white;
     border-color: #007bff;
+}
+
+/* 기존 타일 옵션 스타일 제거 */
+.map-tile-control {
+    display: none;
 }
 
 /* Legend Box */
@@ -457,29 +459,6 @@ html, body {
 .map-buttons {
     display: flex;
     gap: 8px;
-}
-
-.map-btn {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    gap: 6px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.map-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .map-btn i {
