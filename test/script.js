@@ -140,7 +140,7 @@ async function initMap() {
         console.log('지도 초기화 시작');
         
         // 데이터 로드
-        const response = await fetch('/KRC-Global/data/shanghai-data.json');
+        const response = await fetch('../data/shanghai-data.json');
         if (!response.ok) {
             throw new Error('데이터 로드 실패');
         }
@@ -252,9 +252,8 @@ function displayMarkers() {
         // 라벨 텍스트 설정
         let labelText = extractKorean(place.name);
         if (place.type === 'hotels' && place.price) {
-            // 엔화를 원화로 변환 (1엔 = 약 8.5원)
-            const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-            const wonPrice = Math.round(yenPrice * 8.5);
+            // 가격이 이미 원화로 되어 있으므로 그대로 사용
+            const wonPrice = parseInt(place.price.replace(/[^\d]/g, ''));
             const formattedPrice = wonPrice.toLocaleString('ko-KR');
             labelText += `<br><span class="price-label">${formattedPrice}원</span>`;
         }
@@ -408,9 +407,8 @@ function createPopupContent(place) {
     
     // 가격 정보 (숙소인 경우)
     if (place.price) {
-        // 엔화를 원화로 변환 (1엔 = 약 8.5원)
-        const yenPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-        const wonPrice = Math.round(yenPrice * 8.5);
+        // 가격이 이미 원화로 되어 있으므로 그대로 사용
+        const wonPrice = parseInt(place.price.replace(/[^\d]/g, ''));
         const formattedPrice = wonPrice.toLocaleString('ko-KR');
         infoHTML += `<p class="price-info"><i class="fas fa-won-sign"></i> ${formattedPrice}원</p>`;
     }
