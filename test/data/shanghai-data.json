@@ -377,20 +377,20 @@
         "arrival": {
           "time": "09:00",
           "location": "上海浦东国际机场 (상하이 푸동국제공항, Shanghai Pudong International Airport)",
-          "description": "상하이 푸동국제공항 도착"
+          "description": "상하이 푸동국제공항 도착 및 입국 수속"
         },
         "morning": {
-          "time": "11:00-13:00",
+          "time": "11:00-12:30",
           "location": "豫园 (예원, Yu Garden)",
           "description": "중국 전통 정원에서 아름다운 풍경 감상"
         },
         "lunch": {
-          "time": "13:30",
+          "time": "13:00",
           "location": "阿娘面馆(锡荣别墅店) (아량면관, ANiang Noodle Restaurant)",
           "description": "상하이 대표 로컬 맛집에서 전통 국수"
         },
         "afternoon": {
-          "time": "15:00-17:30",
+          "time": "14:30-17:00",
           "location": "南京东路 (난징동루, Nanjing Road East)",
           "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
         },
@@ -399,15 +399,15 @@
           "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
           "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔"
         },
+        "hotel": {
+          "time": "19:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 체크인 및 휴식"
+        },
         "evening": {
-          "time": "19:30-21:00",
+          "time": "20:30-22:00",
           "location": "外滩 (와이탄, The Bund)",
           "description": "황푸강 야경과 상하이의 번화한 밤 풍경 감상"
-        },
-        "hotel": {
-          "time": "21:30",
-          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
-          "description": "숙소 복귀 및 휴식"
         }
       },
       "day2": {

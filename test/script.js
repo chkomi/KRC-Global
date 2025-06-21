@@ -848,8 +848,8 @@ function displayItinerary(dayKey) {
             { key: 'lunch', label: '🍽️ 점심식사' },
             { key: 'afternoon', label: '🌤️ 오후일정' },
             { key: 'dinner', label: '🍴 저녁식사' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
+            { key: 'hotel', label: '🏨 숙소복귀' },
+            { key: 'evening', label: '🌙 저녁일정' }
         ];
     } else if (dayKey === 'day4') {
         scheduleItems = [
@@ -924,6 +924,10 @@ function filterMarkersByDay(dayKey) {
 
 // 페이지 로드 시 일정 패널 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    initializeMap();
-    initializeItineraryPanel();
+    console.log('테스트 페이지 로드 완료');
+    initMap();
+    // 지도 초기화 완료 후 일정 패널 초기화
+    setTimeout(() => {
+        initializeItineraryPanel();
+    }, 1000);
 });
