@@ -290,6 +290,9 @@ function displayMarkers() {
         markers.push(marker);
     });
 
+    // 전역 변수에 마커 저장 (필터링 기능용)
+    window.markers = markers;
+
     console.log('마커 생성 완료:', markers.length);
 
     // 초기 라벨 가시성 설정
@@ -806,12 +809,14 @@ function initializeItineraryPanel() {
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
             
-            // 초기 일정 표시 (1일차)
-            displayItinerary('day1');
+            // 초기 일정 표시 (전체)
+            displayItinerary('all');
             
             // 일차 선택 이벤트 리스너
             daySelector.addEventListener('change', (e) => {
-                displayItinerary(e.target.value);
+                const selectedDay = e.target.value;
+                displayItinerary(selectedDay);
+                filterMarkersByDay(selectedDay);
             });
         })
         .catch(error => {
@@ -821,6 +826,12 @@ function initializeItineraryPanel() {
 
 function displayItinerary(dayKey) {
     const itineraryContent = document.getElementById('itinerary-content');
+    
+    if (dayKey === 'all') {
+        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">전체 일정을 선택하셨습니다.<br>지도에서 모든 장소를 확인하세요.</p>';
+        return;
+    }
+    
     const dayData = window.itineraryData[dayKey];
     
     if (!dayData) {
@@ -828,15 +839,37 @@ function displayItinerary(dayKey) {
         return;
     }
     
-    const scheduleItems = [
-        { key: 'breakfast', label: '🌅 아침식사' },
-        { key: 'morning', label: '☀️ 오전일정' },
-        { key: 'lunch', label: '🍽️ 점심식사' },
-        { key: 'afternoon', label: '🌤️ 오후일정' },
-        { key: 'dinner', label: '🍴 저녁식사' },
-        { key: 'evening', label: '🌙 저녁일정' },
-        { key: 'hotel', label: '🏨 숙소복귀' }
-    ];
+    let scheduleItems = [];
+    
+    if (dayKey === 'day1') {
+        scheduleItems = [
+            { key: 'arrival', label: '✈️ 공항도착' },
+            { key: 'morning', label: '☀️ 오전일정' },
+            { key: 'lunch', label: '🍽️ 점심식사' },
+            { key: 'afternoon', label: '🌤️ 오후일정' },
+            { key: 'dinner', label: '🍴 저녁식사' },
+            { key: 'evening', label: '🌙 저녁일정' },
+            { key: 'hotel', label: '🏨 숙소복귀' }
+        ];
+    } else if (dayKey === 'day4') {
+        scheduleItems = [
+            { key: 'breakfast', label: '🌅 아침식사' },
+            { key: 'morning', label: '☀️ 오전일정' },
+            { key: 'afternoon', label: '🌤️ 오후일정' },
+            { key: 'evening', label: '🌙 저녁일정' },
+            { key: 'hotel', label: '🏨 숙소복귀' }
+        ];
+    } else {
+        scheduleItems = [
+            { key: 'breakfast', label: '🌅 아침식사' },
+            { key: 'morning', label: '☀️ 오전일정' },
+            { key: 'lunch', label: '🍽️ 점심식사' },
+            { key: 'afternoon', label: '🌤️ 오후일정' },
+            { key: 'dinner', label: '🍴 저녁식사' },
+            { key: 'evening', label: '🌙 저녁일정' },
+            { key: 'hotel', label: '🏨 숙소복귀' }
+        ];
+    }
     
     let html = '';
     
@@ -854,6 +887,39 @@ function displayItinerary(dayKey) {
     });
     
     itineraryContent.innerHTML = html;
+}
+
+function filterMarkersByDay(dayKey) {
+    if (!window.markers) return;
+    
+    // 모든 마커 숨기기
+    window.markers.forEach(marker => {
+        marker.setOpacity(0.3);
+    });
+    
+    if (dayKey === 'all') {
+        // 전체 선택 시 모든 마커 표시
+        window.markers.forEach(marker => {
+            marker.setOpacity(1);
+        });
+        return;
+    }
+    
+    // 선택된 일차의 장소들만 표시
+    const dayData = window.itineraryData[dayKey];
+    if (!dayData) return;
+    
+    const dayLocations = [];
+    Object.values(dayData).forEach(schedule => {
+        dayLocations.push(schedule.location);
+    });
+    
+    window.markers.forEach(marker => {
+        const markerLocation = marker.options.title || marker.options.alt;
+        if (dayLocations.some(location => location.includes(markerLocation) || markerLocation.includes(location))) {
+            marker.setOpacity(1);
+        }
+    });
 }
 
 // 페이지 로드 시 일정 패널 초기화

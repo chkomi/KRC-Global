@@ -1086,36 +1086,49 @@ html, body {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     #itinerary-panel {
-        width: 90%;
-        right: 5%;
-        left: 5%;
-        max-height: 70vh;
+        width: 50%;
+        right: 10px;
+        left: auto;
+        max-height: 60vh;
+        top: 10px;
     }
     
     .itinerary-header {
-        padding: 15px;
+        padding: 12px;
     }
     
     .itinerary-header h3 {
-        font-size: 16px;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    #day-selector {
+        padding: 8px 10px;
+        font-size: 12px;
     }
     
     #itinerary-content {
-        padding: 15px;
-        max-height: calc(70vh - 100px);
+        padding: 12px;
+        max-height: calc(60vh - 80px);
     }
     
     .itinerary-item {
-        padding: 12px;
-        margin-bottom: 15px;
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+    
+    .itinerary-time {
+        font-size: 10px;
     }
     
     .itinerary-location {
-        font-size: 13px;
+        font-size: 11px;
+        margin-bottom: 6px;
     }
     
     .itinerary-description {
-        font-size: 11px;
+        font-size: 10px;
+        line-height: 1.3;
     }
     
     #map-controls {

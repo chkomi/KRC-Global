@@ -344,30 +344,30 @@
     ],
     "itinerary": {
       "day1": {
-        "breakfast": {
-          "time": "08:00",
-          "location": "阿娘面馆(锡荣别墅店) (아량면관, ANiang Noodle Restaurant)",
-          "description": "상하이 대표 로컬 맛집에서 전통 국수로 하루를 시작"
+        "arrival": {
+          "time": "09:00",
+          "location": "上海浦东国际机场 (상하이 푸동국제공항, Shanghai Pudong International Airport)",
+          "description": "상하이 푸동국제공항 도착"
         },
         "morning": {
-          "time": "09:30-12:00",
+          "time": "11:00-13:00",
           "location": "豫园 (예원, Yu Garden)",
           "description": "중국 전통 정원에서 아름다운 풍경 감상"
         },
         "lunch": {
-          "time": "12:30",
-          "location": "桂满陇(上海世茂广场店) (계이문롱, Guimanlong)",
-          "description": "항저우 요리 전문점에서 거지닭 맛보기"
+          "time": "13:30",
+          "location": "阿娘面馆(锡荣别墅店) (아량면관, ANiang Noodle Restaurant)",
+          "description": "상하이 대표 로컬 맛집에서 전통 국수"
         },
         "afternoon": {
-          "time": "14:00-17:00",
+          "time": "15:00-17:30",
           "location": "南京东路 (난징동루, Nanjing Road East)",
           "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
         },
         "dinner": {
           "time": "18:00",
-          "location": "蟹小友·蟹黄面·手工点心(南京东路店) (시에소우, Xie Xiaoyou)",
-          "description": "게 요리 전문점에서 신선한 게살 요리"
+          "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
+          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔"
         },
         "evening": {
           "time": "19:30-21:00",
@@ -383,8 +383,8 @@
       "day2": {
         "breakfast": {
           "time": "08:00",
-          "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
-          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔"
+          "location": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
+          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오"
         },
         "morning": {
           "time": "09:30-12:00",
@@ -420,8 +420,8 @@
       "day3": {
         "breakfast": {
           "time": "08:00",
-          "location": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
-          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오"
+          "location": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
+          "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점"
         },
         "morning": {
           "time": "09:30-12:00",
@@ -457,36 +457,26 @@
       "day4": {
         "breakfast": {
           "time": "08:00",
-          "location": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
-          "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점"
+          "location": "鼎泰丰(新天地时尚一期店)(딘타이펑, DinTaiFeng)",
+          "description": "대만 본점의 정통 레시피로 만든 세계적인 샤오롱바오 전문점"
         },
         "morning": {
           "time": "09:30-12:00",
           "location": "上海中心大厦 (상하이 타워, Shanghai Tower)",
           "description": "현대 상하이의 랜드마크 건물에서 전망 감상"
         },
-        "lunch": {
-          "time": "12:30",
-          "location": "利苑酒家(IAPM店) (리위안, Li Yuan)",
-          "description": "미슐랭 스타를 받은 광둥 요리 전문점"
-        },
         "afternoon": {
           "time": "14:00-17:00",
           "location": "上海环球金融中心 (상하이 세계금융센터, Shanghai World Financial Center)",
           "description": "비즈니스와 금융 중심의 상징적 랜드마크 관람"
         },
-        "dinner": {
-          "time": "18:00",
-          "location": "夜上海(예상하이, YeShangHai)",
-          "description": "상하이 전통 야경 레스토랑에서 황푸강 뷰와 함께하는 고급 중식"
-        },
         "evening": {
-          "time": "19:30-21:00",
+          "time": "18:00-20:00",
           "location": "朱家角古镇(주가각, ZhuJiaJiao)",
           "description": "운하와 고대 다리가 아름다운 '동양의 베니스' 탐방"
         },
         "hotel": {
-          "time": "21:30",
+          "time": "21:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소 복귀 및 휴식"
         }
