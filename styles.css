@@ -755,3 +755,400 @@ html, body {
 .map-tile-control {
     display: none;
 }
+
+/* 일정 패널 스타일 */
+#itinerary-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: 80vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#itinerary-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.itinerary-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px 15px 0 0;
+}
+
+.itinerary-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#day-selector {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#day-selector:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+}
+
+#itinerary-content {
+    padding: 20px;
+    max-height: calc(80vh - 120px);
+    overflow-y: auto;
+}
+
+.itinerary-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.itinerary-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.itinerary-item.breakfast {
+    border-left-color: #ff6b6b;
+}
+
+.itinerary-item.morning {
+    border-left-color: #4ecdc4;
+}
+
+.itinerary-item.lunch {
+    border-left-color: #45b7d1;
+}
+
+.itinerary-item.afternoon {
+    border-left-color: #96ceb4;
+}
+
+.itinerary-item.dinner {
+    border-left-color: #feca57;
+}
+
+.itinerary-item.evening {
+    border-left-color: #ff9ff3;
+}
+
+.itinerary-item.hotel {
+    border-left-color: #54a0ff;
+}
+
+.itinerary-time {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.itinerary-location {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.itinerary-description {
+    font-size: 12px;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+/* 스크롤바 스타일 */
+#itinerary-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#itinerary-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#itinerary-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+#itinerary-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 지도 컨트롤 스타일 */
+#map-controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+}
+
+.map-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.map-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+/* 팝업 스타일 */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+    margin: 0;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.popup-content {
+    max-width: 300px;
+    background: white;
+}
+
+.popup-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+.popup-info {
+    padding: 15px;
+}
+
+.popup-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.popup-description {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.popup-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+
+.popup-feature {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.popup-menu {
+    margin-bottom: 12px;
+}
+
+.popup-menu h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.popup-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.popup-menu li {
+    font-size: 12px;
+    color: #6c757d;
+    padding: 2px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.popup-menu li:last-child {
+    border-bottom: none;
+}
+
+.popup-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-bottom: 12px;
+}
+
+.popup-links {
+    display: flex;
+    gap: 8px;
+}
+
+.popup-link {
+    flex: 1;
+    padding: 8px 12px;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.popup-link:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.popup-link.gaode {
+    background: #ff6b6b;
+}
+
+.popup-link.gaode:hover {
+    background: #ff5252;
+}
+
+/* 마커 클러스터 스타일 */
+.marker-cluster-small {
+    background-color: rgba(102, 126, 234, 0.6);
+}
+
+.marker-cluster-small div {
+    background-color: rgba(102, 126, 234, 0.8);
+}
+
+.marker-cluster-medium {
+    background-color: rgba(241, 196, 15, 0.6);
+}
+
+.marker-cluster-medium div {
+    background-color: rgba(241, 196, 15, 0.8);
+}
+
+.marker-cluster-large {
+    background-color: rgba(231, 76, 60, 0.6);
+}
+
+.marker-cluster-large div {
+    background-color: rgba(231, 76, 60, 0.8);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    #itinerary-panel {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+        max-height: 70vh;
+    }
+    
+    .itinerary-header {
+        padding: 15px;
+    }
+    
+    .itinerary-header h3 {
+        font-size: 16px;
+    }
+    
+    #itinerary-content {
+        padding: 15px;
+        max-height: calc(70vh - 100px);
+    }
+    
+    .itinerary-item {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .itinerary-location {
+        font-size: 13px;
+    }
+    
+    .itinerary-description {
+        font-size: 11px;
+    }
+    
+    #map-controls {
+        top: 10px;
+        left: 10px;
+    }
+    
+    .map-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .popup-content {
+        max-width: 250px;
+    }
+    
+    .popup-image {
+        height: 120px;
+    }
+    
+    .popup-info {
+        padding: 12px;
+    }
+    
+    .popup-title {
+        font-size: 14px;
+    }
+    
+    .popup-description {
+        font-size: 12px;
+    }
+    
+    .popup-links {
+        flex-direction: column;
+    }
+}

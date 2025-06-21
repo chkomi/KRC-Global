@@ -329,36 +329,6 @@
         "features": ["고급 호텔", "반려동물 불가"],
         "price": "1739190",
         "image": "images/hotels/ssaw-boutique-hotel-shanghai-bund.jpg"
-      },
-      {
-        "name": "上海金茂君悦大酒店(상하이 그랜드 하얏트)",
-        "address": "上海市浦东新区世纪大道88호(54층办理입주)",
-        "latitude": 31.237151,
-        "longitude": 121.501451,
-        "description": "진마오타워 54-87층에 위치한 세계 최고층 호텔, 상하이 스카이라인과 황푸강을 내려다보는 초럭셔리 호텔로 독특한아트리움 디자인이 특징",
-        "features": ["초고층전망", "아트리움디자인", "미슐랭레스토랑", "럭셔리스파"],
-        "price": "2163516",
-        "image": "images/hotels/grand-hyatt-shanghai.jpg"
-      },
-      {
-        "name": "上海浦东丽思卡尔顿酒店(상하이 리츠칼튼 푸동)",
-        "address": "上海市浦东新区陆家嘴世纪大道8호상하이국금중심",
-        "latitude": 31.238536,
-        "longitude": 121.496794,
-        "description": "상하이 국제금융센터 내 위치한 최고급 럭셔리 호텔, 와이탄과 푸동 스카이라인을 동시에 감상할 수 있는 프리미엄 위치의 5성급 호텔",
-        "features": ["5성급럭셔리", "와이탄뷰", "미슐랭다이닝", "리츠칼튼서비스"],
-        "price": "4971609",
-        "image": "images/hotels/ritz-carlton-shanghai-pudong.jpg"
-      },
-      {
-        "name": "上海浦东丽晶酒店大堂(리젠트 상하이 푸동, Regent Shanghai Pudong)",
-        "address": "上海市浦东新区陆家嘴世纪大道210호 우편 번호: 200120",
-        "latitude": 31.236078,
-        "longitude": 121.5059,
-        "description": "푸동 금융지구 중심가에 위치한 프리미엄 럭셔리 호텔. 황푸강과 와이탄의 장관을 감상할 수 있는 최고급 서비스와 시설을 자랑하는 5성급 호텔.",
-        "features": ["5성급럭셔리", "금융지구중심", "강변뷰", "프리미엄서비스"],
-        "price": "2623326",
-        "image": "images/hotels/regent-shanghai-pudong.jpg"
       }
     ],
     "airports": [
@@ -371,6 +341,156 @@
         "features": ["국제항공허브", "면세쇼핑", "다양한식당", "마그레브연결"],
         "image": "images/airports/pudong-international-airport.jpg"
       }
-    ]
+    ],
+    "itinerary": {
+      "day1": {
+        "breakfast": {
+          "time": "08:00",
+          "location": "阿娘面馆(锡荣别墅店) (아량면관, ANiang Noodle Restaurant)",
+          "description": "상하이 대표 로컬 맛집에서 전통 국수로 하루를 시작"
+        },
+        "morning": {
+          "time": "09:30-12:00",
+          "location": "豫园 (예원, Yu Garden)",
+          "description": "중국 전통 정원에서 아름다운 풍경 감상"
+        },
+        "lunch": {
+          "time": "12:30",
+          "location": "桂满陇(上海世茂广场店) (계이문롱, Guimanlong)",
+          "description": "항저우 요리 전문점에서 거지닭 맛보기"
+        },
+        "afternoon": {
+          "time": "14:00-17:00",
+          "location": "南京东路 (난징동루, Nanjing Road East)",
+          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
+        },
+        "dinner": {
+          "time": "18:00",
+          "location": "蟹小友·蟹黄面·手工点心(南京东路店) (시에소우, Xie Xiaoyou)",
+          "description": "게 요리 전문점에서 신선한 게살 요리"
+        },
+        "evening": {
+          "time": "19:30-21:00",
+          "location": "外滩 (와이탄, The Bund)",
+          "description": "황푸강 야경과 상하이의 번화한 밤 풍경 감상"
+        },
+        "hotel": {
+          "time": "21:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 복귀 및 휴식"
+        }
+      },
+      "day2": {
+        "breakfast": {
+          "time": "08:00",
+          "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
+          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔"
+        },
+        "morning": {
+          "time": "09:30-12:00",
+          "location": "上海博物馆 (상하이 박물관, Shanghai Museum)",
+          "description": "풍부한 중국 예술품과 역사 컬렉션 관람"
+        },
+        "lunch": {
+          "time": "12:30",
+          "location": "点都德(环宇荟店)(디엔또우더, DianDouDe)",
+          "description": "광동식 딤섬 전문점에서 전통 딤섬"
+        },
+        "afternoon": {
+          "time": "14:00-17:00",
+          "location": "新天地 (신천지, Xintiandi)",
+          "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역 탐방"
+        },
+        "dinner": {
+          "time": "18:00",
+          "location": "叶马(环贸iapm)(예마, YeMa)",
+          "description": "전통적인 상하이 요리를 현대적으로 재해석한 고급 레스토랑"
+        },
+        "evening": {
+          "time": "19:30-21:00",
+          "location": "田子坊 (텐즈팡, Tianzifang)",
+          "description": "예술, 문화, 쇼핑이 결합된 독특한 공간 탐방"
+        },
+        "hotel": {
+          "time": "21:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 복귀 및 휴식"
+        }
+      },
+      "day3": {
+        "breakfast": {
+          "time": "08:00",
+          "location": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
+          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오"
+        },
+        "morning": {
+          "time": "09:30-12:00",
+          "location": "大韩民国上海临时政府 (대한민국 상하이임시정부)",
+          "description": "독립운동의 성지에서 역사 교육"
+        },
+        "lunch": {
+          "time": "12:30",
+          "location": "南京大牌档(人民广场店)(난징대패당, NanJingDaPaiDang)",
+          "description": "강소요리 전문점에서 천황오리만두와 꿀연근"
+        },
+        "afternoon": {
+          "time": "14:00-17:00",
+          "location": "武康大楼（우캉맨션, WuKangDaLou）",
+          "description": "독특한 삼각형 외관의 역사적인 건축물 관람"
+        },
+        "dinner": {
+          "time": "18:00",
+          "location": "海底捞火锅(外滩店)(하이디라오, HaiDiLao)",
+          "description": "중국 최고의 훠궈 체인점에서 프리미엄 훠궈"
+        },
+        "evening": {
+          "time": "19:30-21:00",
+          "location": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
+          "description": "황푸강 양쪽 전경을 감상할 수 있는 전망대"
+        },
+        "hotel": {
+          "time": "21:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 복귀 및 휴식"
+        }
+      },
+      "day4": {
+        "breakfast": {
+          "time": "08:00",
+          "location": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
+          "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점"
+        },
+        "morning": {
+          "time": "09:30-12:00",
+          "location": "上海中心大厦 (상하이 타워, Shanghai Tower)",
+          "description": "현대 상하이의 랜드마크 건물에서 전망 감상"
+        },
+        "lunch": {
+          "time": "12:30",
+          "location": "利苑酒家(IAPM店) (리위안, Li Yuan)",
+          "description": "미슐랭 스타를 받은 광둥 요리 전문점"
+        },
+        "afternoon": {
+          "time": "14:00-17:00",
+          "location": "上海环球金融中心 (상하이 세계금융센터, Shanghai World Financial Center)",
+          "description": "비즈니스와 금융 중심의 상징적 랜드마크 관람"
+        },
+        "dinner": {
+          "time": "18:00",
+          "location": "夜上海(예상하이, YeShangHai)",
+          "description": "상하이 전통 야경 레스토랑에서 황푸강 뷰와 함께하는 고급 중식"
+        },
+        "evening": {
+          "time": "19:30-21:00",
+          "location": "朱家角古镇(주가각, ZhuJiaJiao)",
+          "description": "운하와 고대 다리가 아름다운 '동양의 베니스' 탐방"
+        },
+        "hotel": {
+          "time": "21:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 복귀 및 휴식"
+        }
+      }
+    }
   }
 }

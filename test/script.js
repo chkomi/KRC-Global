@@ -794,3 +794,70 @@ function setupLegendControls() {
         });
     });
 }
+
+// 일정 패널 기능
+function initializeItineraryPanel() {
+    const daySelector = document.getElementById('day-selector');
+    const itineraryContent = document.getElementById('itinerary-content');
+    
+    // 일정 데이터 로드
+    fetch('data/shanghai-data.json')
+        .then(response => response.json())
+        .then(data => {
+            window.itineraryData = data.shanghai_tourism.itinerary;
+            
+            // 초기 일정 표시 (1일차)
+            displayItinerary('day1');
+            
+            // 일차 선택 이벤트 리스너
+            daySelector.addEventListener('change', (e) => {
+                displayItinerary(e.target.value);
+            });
+        })
+        .catch(error => {
+            console.error('일정 데이터를 불러오는데 실패했습니다:', error);
+        });
+}
+
+function displayItinerary(dayKey) {
+    const itineraryContent = document.getElementById('itinerary-content');
+    const dayData = window.itineraryData[dayKey];
+    
+    if (!dayData) {
+        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">일정 정보를 찾을 수 없습니다.</p>';
+        return;
+    }
+    
+    const scheduleItems = [
+        { key: 'breakfast', label: '🌅 아침식사' },
+        { key: 'morning', label: '☀️ 오전일정' },
+        { key: 'lunch', label: '🍽️ 점심식사' },
+        { key: 'afternoon', label: '🌤️ 오후일정' },
+        { key: 'dinner', label: '🍴 저녁식사' },
+        { key: 'evening', label: '🌙 저녁일정' },
+        { key: 'hotel', label: '🏨 숙소복귀' }
+    ];
+    
+    let html = '';
+    
+    scheduleItems.forEach(item => {
+        const scheduleData = dayData[item.key];
+        if (scheduleData) {
+            html += `
+                <div class="itinerary-item ${item.key}">
+                    <div class="itinerary-time">${item.label} • ${scheduleData.time}</div>
+                    <div class="itinerary-location">${scheduleData.location}</div>
+                    <div class="itinerary-description">${scheduleData.description}</div>
+                </div>
+            `;
+        }
+    });
+    
+    itineraryContent.innerHTML = html;
+}
+
+// 페이지 로드 시 일정 패널 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+    initializeItineraryPanel();
+});
