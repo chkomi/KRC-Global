@@ -128,12 +128,6 @@ let clusterGroups = {
     })
 };
 
-// 문서 로드 완료 시 초기화 - 더 안전한 방법
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('페이지 로드 완료, 지도 초기화 시작');
-    initMap();
-});
-
 // 지도 초기화 함수
 async function initMap() {
     try {
@@ -246,7 +240,9 @@ function displayMarkers() {
         // 마커 생성
         const marker = L.marker([place.latitude, place.longitude], {
             icon: createCustomIcon(place.type),
-            type: place.type
+            type: place.type,
+            title: place.name,
+            name: place.name
         });
 
         // 라벨 텍스트 설정
@@ -820,10 +816,12 @@ function initializeItineraryPanel() {
         itineraryPopup.classList.remove('show');
     });
     
-    // 지도 클릭 시 팝업 닫기
-    map.on('click', () => {
-        itineraryPopup.classList.remove('show');
-    });
+    // 지도 클릭 시 팝업 닫기 (map 객체가 존재할 때만)
+    if (map) {
+        map.on('click', () => {
+            itineraryPopup.classList.remove('show');
+        });
+    }
     
     // 팝업 외부 클릭 시 닫기
     itineraryPopup.addEventListener('click', (e) => {
@@ -929,6 +927,9 @@ function displayItinerary(dayKey) {
 function filterMarkersByDay(dayKey) {
     if (!window.markers) return;
     
+    console.log('필터링 시작:', dayKey);
+    console.log('총 마커 수:', window.markers.length);
+    
     // 모든 마커와 라벨 숨기기
     window.markers.forEach(marker => {
         marker.setOpacity(0.3);
@@ -946,27 +947,45 @@ function filterMarkersByDay(dayKey) {
                 marker._tooltip.setOpacity(1);
             }
         });
+        console.log('전체 마커 표시');
         return;
     }
     
     // 선택된 일차의 장소들만 표시
     const dayData = window.itineraryData[dayKey];
-    if (!dayData) return;
+    if (!dayData) {
+        console.log('일차 데이터 없음:', dayKey);
+        return;
+    }
     
     const dayLocations = [];
     Object.values(dayData).forEach(schedule => {
         dayLocations.push(schedule.location);
     });
     
+    console.log('일차별 장소들:', dayLocations);
+    
+    let matchedCount = 0;
     window.markers.forEach(marker => {
-        const markerLocation = marker.options.title || marker.options.alt || '';
+        // 마커에 저장된 이름 정보 사용
+        const markerName = marker.options.name || marker.options.title || '';
+        
+        console.log('마커 이름:', markerName);
+        
         const isInDay = dayLocations.some(location => {
             // 한글명, 영문명, 중국어명 중 하나라도 일치하면 표시
-            return location.includes(markerLocation) || 
-                   markerLocation.includes(location) ||
-                   location.includes(extractKorean(markerLocation)) ||
-                   location.includes(extractEnglishName(markerLocation)) ||
-                   location.includes(extractChineseName(markerLocation));
+            const koreanName = extractKorean(markerName);
+            const englishName = extractEnglishName(markerName);
+            const chineseName = extractChineseName(markerName);
+            
+            return location.includes(markerName) || 
+                   markerName.includes(location) ||
+                   location.includes(koreanName) ||
+                   location.includes(englishName) ||
+                   location.includes(chineseName) ||
+                   koreanName.includes(location) ||
+                   englishName.includes(location) ||
+                   chineseName.includes(location);
         });
         
         if (isInDay) {
@@ -974,8 +993,12 @@ function filterMarkersByDay(dayKey) {
             if (marker._tooltip) {
                 marker._tooltip.setOpacity(1);
             }
+            matchedCount++;
+            console.log('매칭된 마커:', markerName);
         }
     });
+    
+    console.log('매칭된 마커 수:', matchedCount);
 }
 
 // 페이지 로드 시 일정 패널 초기화
