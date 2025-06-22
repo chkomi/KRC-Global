@@ -1227,7 +1227,7 @@ html, body {
     }
     
     .itinerary-popup {
-        max-height: 85vh;
+        max-height: 60vh;
     }
     
     .itinerary-popup-header {
@@ -1249,7 +1249,7 @@ html, body {
     
     #itinerary-content {
         padding: 10px 15px;
-        max-height: calc(85vh - 120px);
+        max-height: calc(60vh - 120px);
     }
     
     .itinerary-item {
