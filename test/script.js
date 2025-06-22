@@ -830,7 +830,7 @@ function initializeItineraryPanel() {
     });
     
     // 일정 데이터 로드
-    fetch('data/shanghai-data.json')
+    fetch('../data/shanghai-data.json')
         .then(response => response.json())
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
