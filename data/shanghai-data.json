@@ -148,15 +148,6 @@
         "image": "images/restaurants/sihai-minfu.jpg"
       },
       {
-        "name": "桂满陇(上海世茂广场店) (계이문롱, Guimanlong)",
-        "address": "上海市黄浦区南京东路829号上海世茂广场L5层",
-        "latitude": 31.236261,
-        "longitude": 121.471657,
-        "description": "항저우 요리를 전문으로 하는 인기 레스토랑. 대표 메뉴: 叫化鸡 (거지닭)",
-        "menu": ["叫化鸡(거지닭)"],
-        "image": "images/restaurants/guimanlong.jpg"
-      },
-      {
         "name": "蟹小友·蟹黄面·手工点心(南京东路店) (시에소우, Xie Xiaoyou)",
         "address": "上海市黄浦区南京东路588号丝绸商厦负一楼",
         "latitude": 31.237807,
@@ -164,15 +155,6 @@
         "description": "게 요리 전문점으로 신선한 게살을 이용한 다양한 음식을 맛볼 수 있는 곳. 추천 메뉴: 게살떡국 (58위안), 게살비빔면 (128위안)",
         "menu": ["게살떡국", "게살비빔면"],
         "image": "images/restaurants/xie-xiaoyou.jpg"
-      },
-      {
-        "name": "老吉士(环贸iapm)",
-        "address": "上海市徐汇区淮海中路999号环贸iapm商场L3",
-        "latitude": 31.217265,
-        "longitude": 121.4536,
-        "description": "전통적인 상하이 가정식을 맛볼 수 있는 레스토랑.",
-        "menu": ["芦蒿炒干丝", "葱油拌면"],
-        "image": "images/restaurants/lao-jishi.jpg"
       },
       {
         "name": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
@@ -218,15 +200,6 @@
         "description": "상하이 3대 샤오롱바오 맛집 중 하나로 단황시엔 샤오롱바오(계란노른자 포함)가 시그니처 메뉴",
         "menu": ["단황시엔샤오롱바오", "샹요우산쓰샤렌샤오룽", "전통상하이맛"],
         "image": "images/restaurants/fu-chun-xiao-long.jpg"
-      },
-      {
-        "name": "南京大牌档(人民广场店)(난징대패당, NanJingDaPaiDang)",
-        "address": "上海市黄浦区南京西路258号人广世茂52+3층",
-        "latitude": 31.234335,
-        "longitude": 121.466252,
-        "description": "강소요리 전문점으로 천황오리만두와 꿀연근이 대표 메뉴인전통 중식 레스토랑, 난징 현지 음식의 정수",
-        "menu": ["천황오리만두", "꿀연근", "진링카오야", "강소요리"],
-        "image": "images/restaurants/nan-jing-da-pai-dang.jpg"
       },
       {
         "name": "海底捞火锅(外滩店)(하이디라오, HaiDiLao)",
@@ -386,10 +359,10 @@
       },
       "day3": {
         "breakfast": {
-          "time": "09:00",
-          "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
-          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔",
-          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
+          "time": "08:00",
+          "location": "호텔 조식",
+          "description": "SSAW 부티크 호텔상하이 번드에서 아침 식사",
+          "alternative": "来莱小笼(라이라이샤오롱, LaiLaiXiaoLong)"
         },
         "morning": {
           "time": "10:00",

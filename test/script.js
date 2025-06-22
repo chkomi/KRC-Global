@@ -246,12 +246,6 @@ function displayMarkers() {
 
         // 라벨 텍스트 설정
         let labelText = extractKorean(place.name);
-        if (place.type === 'hotels' && place.price) {
-            // 가격이 이미 원화로 되어 있으므로 그대로 사용
-            const wonPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-            const formattedPrice = wonPrice.toLocaleString('ko-KR');
-            labelText += `<br><span class="price-label">${formattedPrice}원</span>`;
-        }
 
         // 툴팁 생성 및 설정
         const tooltip = L.tooltip({
@@ -1021,79 +1015,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 });
 
-function filterMarkersByDay(dayKey) {
-    if (!window.markers) return;
+function filterMarkersByDay(selectedDay) {
+    if (!map) return;
     
-    console.log('필터링 시작:', dayKey);
-    console.log('총 마커 수:', window.markers.length);
+    const dayData = itineraryData[selectedDay];
+    if (!dayData) return;
     
-    // 모든 마커와 라벨 숨기기
-    window.markers.forEach(marker => {
-        marker.setOpacity(0.3);
-        // 라벨도 숨기기
-        if (marker._tooltip) {
-            marker._tooltip.setOpacity(0.3);
+    // 선택된 날짜의 모든 장소들을 수집
+    const selectedPlaces = [];
+    Object.values(dayData).forEach(item => {
+        if (item && item.location) {
+            selectedPlaces.push(item.location);
         }
     });
     
-    if (dayKey === 'all') {
-        // 전체 선택 시 모든 마커와 라벨 표시
-        window.markers.forEach(marker => {
-            marker.setOpacity(1);
-            if (marker._tooltip) {
-                marker._tooltip.setOpacity(1);
-            }
-        });
-        console.log('전체 마커 표시');
-        return;
-    }
-    
-    // 선택된 일차의 장소들만 표시
-    const dayData = window.itineraryData[dayKey];
-    if (!dayData) {
-        console.log('일차 데이터 없음:', dayKey);
-        return;
-    }
-    
-    const dayLocations = [];
-    Object.values(dayData).forEach(schedule => {
-        dayLocations.push(schedule.location);
-    });
-    
-    console.log('일차별 장소들:', dayLocations);
-    
-    let matchedCount = 0;
-    window.markers.forEach(marker => {
-        // 마커에 저장된 이름 정보 사용
-        const markerName = marker.options.name || marker.options.title || '';
-        
-        console.log('마커 이름:', markerName);
-        
-        const isInDay = dayLocations.some(location => {
-            // 한글명, 영문명, 중국어명 중 하나라도 일치하면 표시
-            const koreanName = extractKorean(markerName);
-            const englishName = extractEnglishName(markerName);
-            const chineseName = extractChineseName(markerName);
+    // 모든 마커를 순회하며 필터링
+    Object.values(markers).forEach(markerGroup => {
+        markerGroup.forEach(marker => {
+            const markerName = marker.markerName || '';
+            const isInSelectedDay = selectedPlaces.some(place => 
+                markerName.includes(place) || place.includes(markerName)
+            );
             
-            return location.includes(markerName) || 
-                   markerName.includes(location) ||
-                   location.includes(koreanName) ||
-                   location.includes(englishName) ||
-                   location.includes(chineseName) ||
-                   koreanName.includes(location) ||
-                   englishName.includes(location) ||
-                   chineseName.includes(location);
-        });
-        
-        if (isInDay) {
-            marker.setOpacity(1);
-            if (marker._tooltip) {
-                marker._tooltip.setOpacity(1);
+            if (selectedDay === 'whole') {
+                marker.setMap(map);
+                if (marker.label) {
+                    marker.label.setMap(map);
+                }
+            } else {
+                if (isInSelectedDay) {
+                    marker.setMap(map);
+                    if (marker.label) {
+                        marker.label.setMap(map);
+                    }
+                } else {
+                    marker.setMap(null);
+                    if (marker.label) {
+                        marker.label.setMap(null);
+                    }
+                }
             }
-            matchedCount++;
-            console.log('매칭된 마커:', markerName);
-        }
+        });
     });
-    
-    console.log('매칭된 마커 수:', matchedCount);
 }

@@ -251,12 +251,6 @@ function displayMarkers() {
 
         // 라벨 텍스트 설정
         let labelText = extractKorean(place.name);
-        if (place.type === 'hotels' && place.price) {
-            // 가격이 이미 원화로 되어 있으므로 그대로 사용
-            const wonPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-            const formattedPrice = wonPrice.toLocaleString('ko-KR');
-            labelText += `<br><span class="price-label">${formattedPrice}원</span>`;
-        }
 
         // 툴팁 생성 및 설정
         const tooltip = L.tooltip({
@@ -889,36 +883,48 @@ function displayItinerary(dayKey) {
     itineraryContent.innerHTML = html;
 }
 
-function filterMarkersByDay(dayKey) {
-    if (!window.markers) return;
+// 마커 필터링 함수
+function filterMarkersByDay(selectedDay) {
+    if (!map) return;
     
-    // 모든 마커 숨기기
-    window.markers.forEach(marker => {
-        marker.setOpacity(0.3);
-    });
-    
-    if (dayKey === 'all') {
-        // 전체 선택 시 모든 마커 표시
-        window.markers.forEach(marker => {
-            marker.setOpacity(1);
-        });
-        return;
-    }
-    
-    // 선택된 일차의 장소들만 표시
-    const dayData = window.itineraryData[dayKey];
+    const dayData = itineraryData[selectedDay];
     if (!dayData) return;
     
-    const dayLocations = [];
-    Object.values(dayData).forEach(schedule => {
-        dayLocations.push(schedule.location);
+    // 선택된 날짜의 모든 장소들을 수집
+    const selectedPlaces = [];
+    Object.values(dayData).forEach(item => {
+        if (item && item.location) {
+            selectedPlaces.push(item.location);
+        }
     });
     
-    window.markers.forEach(marker => {
-        const markerLocation = marker.options.title || marker.options.alt;
-        if (dayLocations.some(location => location.includes(markerLocation) || markerLocation.includes(location))) {
-            marker.setOpacity(1);
-        }
+    // 모든 마커를 순회하며 필터링
+    Object.values(markers).forEach(markerGroup => {
+        markerGroup.forEach(marker => {
+            const markerName = marker.markerName || '';
+            const isInSelectedDay = selectedPlaces.some(place => 
+                markerName.includes(place) || place.includes(markerName)
+            );
+            
+            if (selectedDay === 'whole') {
+                marker.setMap(map);
+                if (marker.label) {
+                    marker.label.setMap(map);
+                }
+            } else {
+                if (isInSelectedDay) {
+                    marker.setMap(map);
+                    if (marker.label) {
+                        marker.label.setMap(map);
+                    }
+                } else {
+                    marker.setMap(null);
+                    if (marker.label) {
+                        marker.label.setMap(null);
+                    }
+                }
+            }
+        });
     });
 }
 
