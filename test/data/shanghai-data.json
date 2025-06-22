@@ -65,15 +65,6 @@
         "image": "images/attractions/shanghai-tower.jpg"
       },
       {
-        "name": "上海环球金融中心 (상하이 세계금융센터, Shanghai World Financial Center)",
-        "address": "上海市浦东新区世纪大道100号(No. 100 Century Avenue, Pudong New Area, Shanghai)",
-        "latitude": 31.23631,
-        "longitude": 121.5034,
-        "description": "비즈니스와 금융 중심의 상징적 랜드마크",
-        "features": ["현대", "비즈니스"],
-        "image": "images/attractions/shanghai-world-financial-center.jpg"
-      },
-      {
         "name": "田子坊 (텐즈팡, Tianzifang)",
         "address": "上海市黄浦区泰康路210弄 (Lane 210, Taikang Road, Huangpu District, Shanghai, 200023)",
         "latitude": 31.21047,
@@ -292,7 +283,7 @@
         "image": "images/restaurants/lai-lai-xiao-long.jpg"
       },
       {
-        "name": "鹿港小镇(루강샤오쩐, LuGangXiaoZhen)",
+        "name": "鹿港小镇(벨라지오, LuGangXiaoZhen)",
         "address": "上海市浦东新区陆家嘴环路1318호성점은행대厦B1층6호",
         "latitude": 31.24403,
         "longitude": 121.49905,
@@ -424,7 +415,8 @@
         "breakfast": {
           "time": "09:00",
           "location": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
-          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오"
+          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오",
+          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
         "morning": {
           "time": "10:00",
@@ -461,7 +453,8 @@
         "breakfast": {
           "time": "09:00",
           "location": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
-          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔"
+          "description": "상하이 대표 맛집에서 육즙 가득한 셩지엔",
+          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
         "morning": {
           "time": "10:00",
@@ -490,6 +483,12 @@
         }
       },
       "day4": {
+        "breakfast": {
+          "time": "08:00",
+          "location": "호텔 조식",
+          "description": "SSAW 부티크 호텔상하이 번드에서 아침 식사",
+          "alternative": "미정"
+        },
         "morning": {
           "time": "09:00",
           "location": "南京东路 (난징동루, Nanjing Road East)",

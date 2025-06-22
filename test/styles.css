@@ -811,23 +811,58 @@ html, body {
 }
 
 #itinerary-content {
-    padding: 20px;
-    max-height: calc(80vh - 120px);
+    flex: 1;
     overflow-y: auto;
+    padding: 15px 20px;
+    max-height: calc(80vh - 140px);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.itinerary-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.itinerary-column-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
 
 .itinerary-item {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #f8f9fa;
     border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 0;
     border-left: 4px solid #667eea;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    position: relative;
 }
 
 .itinerary-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #e9ecef;
+}
+
+.itinerary-item.clickable {
+    cursor: pointer;
+}
+
+.itinerary-item.clickable:hover {
+    background: #e3f2fd;
+    border-left-color: #2196f3;
 }
 
 .itinerary-item.breakfast {
@@ -842,7 +877,10 @@ html, body {
     border-left-color: #45b7d1;
 }
 
-.itinerary-item.afternoon {
+.itinerary-item.afternoon,
+.itinerary-item.afternoon1,
+.itinerary-item.afternoon2,
+.itinerary-item.afternoon3 {
     border-left-color: #96ceb4;
 }
 
@@ -850,7 +888,9 @@ html, body {
     border-left-color: #feca57;
 }
 
-.itinerary-item.evening {
+.itinerary-item.evening,
+.itinerary-item.evening1,
+.itinerary-item.evening2 {
     border-left-color: #ff9ff3;
 }
 
@@ -858,31 +898,49 @@ html, body {
     border-left-color: #54a0ff;
 }
 
-.itinerary-item.arrival {
-    border-left-color: #ff6b6b;
+.itinerary-item.arrival,
+.itinerary-item.departure {
+    border-left-color: #5f27cd;
 }
 
 .itinerary-time {
-    font-size: 12px;
-    color: #6c757d;
     font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
     margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .itinerary-location {
-    font-size: 14px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 8px;
-    line-height: 1.4;
+    font-weight: 500;
+    color: #34495e;
+    font-size: 15px;
+    margin-bottom: 5px;
 }
 
 .itinerary-description {
+    color: #7f8c8d;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.itinerary-alternative {
     font-size: 12px;
-    color: #6c757d;
-    line-height: 1.5;
+    color: #e74c3c;
+    font-style: italic;
+    padding: 4px 8px;
+    background: #fdf2f2;
+    border-radius: 4px;
+    border-left: 2px solid #e74c3c;
+}
+
+.itinerary-item.clickable::after {
+    content: "📍";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    opacity: 0.7;
 }
 
 /* 스크롤바 스타일 */
@@ -1227,7 +1285,7 @@ html, body {
     }
     
     .itinerary-popup {
-        max-height: 60vh;
+        max-height: 60vh; /* 85vh에서 60vh로 변경하여 지도가 보이도록 */
     }
     
     .itinerary-popup-header {
@@ -1249,12 +1307,25 @@ html, body {
     
     #itinerary-content {
         padding: 10px 15px;
-        max-height: calc(60vh - 120px);
+        max-height: calc(60vh - 120px); /* 85vh에서 60vh로 변경 */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .itinerary-column {
+        margin-bottom: 15px;
+    }
+    
+    .itinerary-column-title {
+        font-size: 13px;
+        padding: 6px;
+        margin-bottom: 6px;
     }
     
     .itinerary-item {
         padding: 12px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
     
     .itinerary-time {
@@ -1267,5 +1338,9 @@ html, body {
     
     .itinerary-description {
         font-size: 12px;
+    }
+    
+    .itinerary-alternative {
+        font-size: 11px;
     }
 }
