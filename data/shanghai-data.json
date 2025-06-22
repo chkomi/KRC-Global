@@ -130,23 +130,14 @@
       {
         "name": "虹泉路 (홍췐루, Hongquan Road)",
         "address": "上海市闵行区虹泉路",
-        "latitude": 31.1694,
-        "longitude": 121.3758,
+        "latitude": 31.1718,
+        "longitude": 121.370307,
         "description": "상하이의 한국인 거주지역으로 한국 음식과 문화를 체험할 수 있는 곳",
         "features": ["한국문화", "한국음식", "한국마트"],
         "image": "images/attractions/hongquan-road.jpg"
       }
     ],
     "restaurants": [
-      {
-        "name": "阿娘面馆(锡荣别墅店) (아량면관, ANiang Noodle Restaurant)",
-        "address": "上海市黄浦区思南路36号(淮海中路地铁站1号口步행330米)",
-        "latitude": 31.219697,
-        "longitude": 121.461928,
-        "description": "5년 연속 미슐랭 빕구르망 선정 전통 국수 전문점, 조기국수( 황유미엔 )와 곧창국수( 따창미엔 )가 시그니처 메뉴인 상하이 대표 로컬 맛집",
-        "menu": ["황유미엔(조기국수)", "따창미엔(곧창국수)", "시아런미엔(새우국수)", "미슐랭5년"],
-        "image": "images/restaurants/aniang-noodle-restaurant.jpg"
-      },
       {
         "name": "四季民福烤鸭店(香港广场店) (사계민복, Sihai Minfu)",
         "address": "上海市黄浦区淮海中路282号(No. 282 Huaihai Middle Road, Huangpu District, Shanghai)",
@@ -175,21 +166,6 @@
         "image": "images/restaurants/xie-xiaoyou.jpg"
       },
       {
-        "name": "叶马(环贸iapm)(예마, YeMa)",
-        "address": "上海市徐汇区淮海中路环贸iapm999号5层508-510",
-        "latitude": 31.217265,
-        "longitude": 121.4536,
-        "description": "전통적인 상하이 요리를 현대적으로 재해석한 고급 레스토랑.",
-        "menu": [
-          "Classic Braised Yellow Croaker with Rice Cake (198위안)",
-          "Home Style Turnip in Bone Soup (48위안)",
-          "Braised Pork and Abalone with Bamboo Shoots (138위안)",
-          "Sautéed Seasonal Vegetable (36위안)",
-          "Fried Rice with Beef and Salty Vegetable (42위안)"
-        ],
-        "image": "images/restaurants/ye-ma.jpg"
-      },
-      {
         "name": "老吉士(环贸iapm)",
         "address": "上海市徐汇区淮海中路999号环贸iapm商场L3",
         "latitude": 31.217265,
@@ -197,18 +173,6 @@
         "description": "전통적인 상하이 가정식을 맛볼 수 있는 레스토랑.",
         "menu": ["芦蒿炒干丝", "葱油拌면"],
         "image": "images/restaurants/lao-jishi.jpg"
-      },
-      {
-        "name": "利苑酒家(IAPM店) (리위안, Li Yuan)",
-        "address": "上海市徐汇区淮海中路999号环贸广场L4-401(近陕西南路)",
-        "latitude": 31.217265,
-        "longitude": 121.4536,
-        "description": "미슐랭 스타를 받은 광둥 요리 전문점으로, 고급스러운 분위기에서 정통 광둥 음식을 즐길 수 있습니다.",
-        "menu": [
-          "龙虾汤贵妃泡饭 (¥160/¥218)",
-          "山西枣皇糕 (35위안)"
-        ],
-        "image": "images/restaurants/li-yuan.jpg"
       },
       {
         "name": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
@@ -378,7 +342,8 @@
         "evening": {
           "time": "19:00",
           "location": "上海中心大厦 (상하이 타워, Shanghai Tower)",
-          "description": "현대 상하이의 랜드마크 건물에서 전망 감상"
+          "description": "현대 상하이의 랜드마크 건물에서 전망 감상",
+          "alternative": "황푸강 유람선 (Huangpu River Cruise)"
         }
       },
       "day2": {
@@ -395,13 +360,13 @@
         },
         "lunch": {
           "time": "12:00",
-          "location": "点都德(环宇荟店)(디엔또우더, DianDouDe)",
-          "description": "광동식 딤섬 전문점에서 전통 딤섬"
+          "location": "鹿港小镇(벨라지오, LuGangXiaoZhen)",
+          "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑"
         },
         "afternoon": {
-          "time": "13:00",
-          "location": "南京东路 (난징동루, Nanjing Road East)",
-          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
+          "time": "14:00",
+          "location": "田子坊(톈즈팡, Tianzifang)",
+          "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을"
         },
         "evening1": {
           "time": "15:00",
@@ -434,13 +399,14 @@
         },
         "lunch": {
           "time": "12:00",
-          "location": "미정",
-          "description": "점심 식사"
+          "location": "红樽楼(홍췐루, HongZunLou)",
+          "description": "상하이 전통 요리 전문점",
+          "alternative": "外滩老饭店(와이포지아, Waitan Lao Fandian)"
         },
         "afternoon": {
-          "time": "13:00",
-          "location": "上海影视乐园 (상하이영화테마파크, Shanghai Film Park)",
-          "description": "1930년대 상하이 거리를 재현한 영화 촬영지"
+          "time": "14:00",
+          "location": "田子坊(톈즈팡, Tianzifang)",
+          "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을"
         },
         "evening1": {
           "time": "16:00",
@@ -456,9 +422,9 @@
       "day4": {
         "breakfast": {
           "time": "08:00",
-          "location": "호텔 조식",
-          "description": "SSAW 부티크 호텔상하이 번드에서 아침 식사",
-          "alternative": "미정"
+          "location": "小绍兴(시에소우, XiaoShaoXing)",
+          "description": "상하이 전통 조식 전문점",
+          "alternative": "호텔 조식"
         },
         "morning": {
           "time": "09:00",
