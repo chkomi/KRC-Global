@@ -63,20 +63,34 @@
     <!-- 지도 컨테이너 -->
     <div id="map"></div>
     
-    <!-- 일정 패널 -->
-    <div id="itinerary-panel">
-        <div class="itinerary-header">
-            <h3>📅 상하이 여행 일정</h3>
-            <select id="day-selector">
-                <option value="all">전체</option>
-                <option value="day1">1일차</option>
-                <option value="day2">2일차</option>
-                <option value="day3">3일차</option>
-                <option value="day4">4일차</option>
-            </select>
-        </div>
-        <div id="itinerary-content">
-            <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
+    <!-- 햄버거 버튼 -->
+    <button id="itinerary-toggle" class="hamburger-button" title="일정 보기">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- 팝업식 일정 패널 -->
+    <div id="itinerary-popup" class="itinerary-popup">
+        <div class="itinerary-popup-content">
+            <div class="itinerary-popup-header">
+                <h3>📅 상하이 여행 일정</h3>
+                <button id="close-itinerary" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="itinerary-popup-body">
+                <div class="day-selector-container">
+                    <select id="day-selector">
+                        <option value="all">전체</option>
+                        <option value="day1">1일차</option>
+                        <option value="day2">2일차</option>
+                        <option value="day3">3일차</option>
+                        <option value="day4">4일차</option>
+                    </select>
+                </div>
+                <div id="itinerary-content">
+                    <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
+                </div>
+            </div>
         </div>
     </div>
     

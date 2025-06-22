@@ -806,6 +806,31 @@ function setupLegendControls() {
 function initializeItineraryPanel() {
     const daySelector = document.getElementById('day-selector');
     const itineraryContent = document.getElementById('itinerary-content');
+    const hamburgerButton = document.getElementById('itinerary-toggle');
+    const closeButton = document.getElementById('close-itinerary');
+    const itineraryPopup = document.getElementById('itinerary-popup');
+    
+    // 햄버거 버튼 클릭 이벤트
+    hamburgerButton.addEventListener('click', () => {
+        itineraryPopup.classList.add('show');
+    });
+    
+    // 닫기 버튼 클릭 이벤트
+    closeButton.addEventListener('click', () => {
+        itineraryPopup.classList.remove('show');
+    });
+    
+    // 지도 클릭 시 팝업 닫기
+    map.on('click', () => {
+        itineraryPopup.classList.remove('show');
+    });
+    
+    // 팝업 외부 클릭 시 닫기
+    itineraryPopup.addEventListener('click', (e) => {
+        if (e.target === itineraryPopup) {
+            itineraryPopup.classList.remove('show');
+        }
+    });
     
     // 일정 데이터 로드
     fetch('data/shanghai-data.json')
