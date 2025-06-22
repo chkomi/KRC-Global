@@ -276,6 +276,10 @@ function displayMarkers() {
         popup.setContent(createPopupContent(place));
         marker.bindPopup(popup);
 
+        // 라벨을 마커에 바인딩하고 참조 저장
+        marker.bindTooltip(tooltip);
+        marker._tooltip = tooltip; // 필터링 시 라벨 투명도 조정을 위한 참조 저장
+
         // 마커를 클러스터 그룹에 추가
         clusterGroups[place.type].addLayer(marker);
 
@@ -844,30 +848,38 @@ function displayItinerary(dayKey) {
     if (dayKey === 'day1') {
         scheduleItems = [
             { key: 'arrival', label: '✈️ 공항도착' },
+            { key: 'hotel', label: '🏨 숙소체크인' },
+            { key: 'morning', label: '☀️ 오전일정' },
+            { key: 'lunch', label: '🍽️ 점심식사' },
+            { key: 'afternoon1', label: '🌤️ 오후일정1' },
+            { key: 'afternoon2', label: '🌤️ 오후일정2' },
+            { key: 'afternoon3', label: '🌤️ 오후일정3' },
+            { key: 'dinner', label: '🍴 저녁식사' },
+            { key: 'evening', label: '🌙 저녁일정' }
+        ];
+    } else if (dayKey === 'day2') {
+        scheduleItems = [
+            { key: 'breakfast', label: '🌅 아침식사' },
             { key: 'morning', label: '☀️ 오전일정' },
             { key: 'lunch', label: '🍽️ 점심식사' },
             { key: 'afternoon', label: '🌤️ 오후일정' },
+            { key: 'evening1', label: '🌙 저녁일정1' },
             { key: 'dinner', label: '🍴 저녁식사' },
-            { key: 'hotel', label: '🏨 숙소복귀' },
-            { key: 'evening', label: '🌙 저녁일정' }
+            { key: 'evening2', label: '🌙 저녁일정2' }
+        ];
+    } else if (dayKey === 'day3') {
+        scheduleItems = [
+            { key: 'breakfast', label: '🌅 아침식사' },
+            { key: 'morning', label: '☀️ 오전일정' },
+            { key: 'lunch', label: '🍽️ 점심식사' },
+            { key: 'afternoon', label: '🌤️ 오후일정' },
+            { key: 'evening1', label: '🌙 저녁일정' },
+            { key: 'dinner', label: '🍴 저녁식사' }
         ];
     } else if (dayKey === 'day4') {
         scheduleItems = [
-            { key: 'breakfast', label: '🌅 아침식사' },
             { key: 'morning', label: '☀️ 오전일정' },
-            { key: 'afternoon', label: '🌤️ 오후일정' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
-        ];
-    } else {
-        scheduleItems = [
-            { key: 'breakfast', label: '🌅 아침식사' },
-            { key: 'morning', label: '☀️ 오전일정' },
-            { key: 'lunch', label: '🍽️ 점심식사' },
-            { key: 'afternoon', label: '🌤️ 오후일정' },
-            { key: 'dinner', label: '🍴 저녁식사' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
+            { key: 'departure', label: '✈️ 공항출발' }
         ];
     }
     
@@ -892,15 +904,22 @@ function displayItinerary(dayKey) {
 function filterMarkersByDay(dayKey) {
     if (!window.markers) return;
     
-    // 모든 마커 숨기기
+    // 모든 마커와 라벨 숨기기
     window.markers.forEach(marker => {
         marker.setOpacity(0.3);
+        // 라벨도 숨기기
+        if (marker._tooltip) {
+            marker._tooltip.setOpacity(0.3);
+        }
     });
     
     if (dayKey === 'all') {
-        // 전체 선택 시 모든 마커 표시
+        // 전체 선택 시 모든 마커와 라벨 표시
         window.markers.forEach(marker => {
             marker.setOpacity(1);
+            if (marker._tooltip) {
+                marker._tooltip.setOpacity(1);
+            }
         });
         return;
     }
@@ -915,9 +934,21 @@ function filterMarkersByDay(dayKey) {
     });
     
     window.markers.forEach(marker => {
-        const markerLocation = marker.options.title || marker.options.alt;
-        if (dayLocations.some(location => location.includes(markerLocation) || markerLocation.includes(location))) {
+        const markerLocation = marker.options.title || marker.options.alt || '';
+        const isInDay = dayLocations.some(location => {
+            // 한글명, 영문명, 중국어명 중 하나라도 일치하면 표시
+            return location.includes(markerLocation) || 
+                   markerLocation.includes(location) ||
+                   location.includes(extractKorean(markerLocation)) ||
+                   location.includes(extractEnglishName(markerLocation)) ||
+                   location.includes(extractChineseName(markerLocation));
+        });
+        
+        if (isInDay) {
             marker.setOpacity(1);
+            if (marker._tooltip) {
+                marker._tooltip.setOpacity(1);
+            }
         }
     });
 }
