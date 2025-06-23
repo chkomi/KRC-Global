@@ -189,6 +189,11 @@ async function initMap() {
         setupEventListeners();
         // 일정 패널 초기화
         initializeItineraryPanel();
+        
+        // 페이지 로드 시 전체 일정 표시
+        displayItinerary('all');
+        const itineraryPopup = document.getElementById('itinerary-popup');
+        itineraryPopup.classList.add('show');
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
     }
@@ -358,12 +363,15 @@ function setupEventListeners() {
     }
 
     // 지도 타입 선택 이벤트 리스너
-    const tileOptions = document.querySelectorAll('.tile-option input[type="radio"]');
-    tileOptions.forEach(option => {
-        option.addEventListener('change', function() {
-            if (this.checked) {
-                changeTileLayer(this.value);
-            }
+    const tileButtons = document.querySelectorAll('.tile-btn');
+    tileButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tileType = this.getAttribute('data-tile');
+            changeTileLayer(tileType);
+            
+            // 활성 상태 업데이트
+            tileButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
         });
     });
 
@@ -703,8 +711,9 @@ function displayItinerary(dayKey) {
             
             scheduleItems.forEach(([key, schedule]) => {
                 const icon = getScheduleIcon(key);
+                const itemClass = getScheduleItemClass(key);
                 allItineraryHTML += `
-                    <div class="schedule-item all-schedule-item">
+                    <div class="schedule-item all-schedule-item ${itemClass}">
                         <div class="schedule-time">
                             <i class="${icon}"></i>
                             <span>${schedule.time}</span>
@@ -791,8 +800,9 @@ function createItineraryItem(key, schedule) {
     
     const label = labels[key] || '📅 일정';
     const isClickable = key !== 'hotel' && key !== 'arrival' && key !== 'departure';
+    const itemClass = getScheduleItemClass(key);
     
-    let html = `<div class="itinerary-item ${key} ${isClickable ? 'clickable' : ''}" data-location="${schedule.location}">`;
+    let html = `<div class="itinerary-item ${key} ${isClickable ? 'clickable' : ''} ${itemClass}" data-location="${schedule.location}">`;
     html += `<div class="itinerary-time">${label} • ${schedule.time}</div>`;
     html += `<div class="itinerary-location">${schedule.location}</div>`;
     html += `<div class="itinerary-description">${schedule.description}</div>`;
@@ -804,6 +814,26 @@ function createItineraryItem(key, schedule) {
     html += '</div>';
     
     return html;
+}
+
+function getScheduleItemClass(key) {
+    // 식사 관련
+    if (['breakfast', 'lunch', 'dinner'].includes(key)) {
+        return 'meal-item';
+    }
+    // 관광지 관련
+    else if (['morning', 'afternoon', 'afternoon1', 'afternoon2', 'afternoon3', 'evening', 'evening1', 'evening2'].includes(key)) {
+        return 'attraction-item';
+    }
+    // 교통 관련
+    else if (['arrival', 'departure'].includes(key)) {
+        return 'transport-item';
+    }
+    // 숙소 관련
+    else if (['hotel'].includes(key)) {
+        return 'hotel-item';
+    }
+    return '';
 }
 
 function addItineraryClickListeners() {

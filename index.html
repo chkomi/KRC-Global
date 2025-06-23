@@ -27,10 +27,10 @@
     
     <!-- Day buttons -->
     <div class="day-buttons-container">
-        <button class="day-btn" data-day="day1">11.12</button>
-        <button class="day-btn" data-day="day2">11.13</button>
-        <button class="day-btn" data-day="day3">11.14</button>
-        <button class="day-btn" data-day="day4">11.15</button>
+        <button class="day-btn" data-day="day1">11.12<br><span class="day-number">(1일차)</span></button>
+        <button class="day-btn" data-day="day2">11.13<br><span class="day-number">(2일차)</span></button>
+        <button class="day-btn" data-day="day3">11.14<br><span class="day-number">(3일차)</span></button>
+        <button class="day-btn" data-day="day4">11.15<br><span class="day-number">(4일차)</span></button>
         <button class="day-btn all-days-btn" data-day="all">전체 일정</button>
     </div>
     
@@ -63,23 +63,20 @@
 
     <!-- 지도 타입 선택 -->
     <div class="map-tile-control">
-        <h4><i class="fas fa-layer-group"></i> 지도 종류</h4>
-        <label class="tile-option active" id="cartodb-option">
-            <input type="radio" name="tile-layer" value="cartodb" checked>
-            🎨 심플
-        </label>
-        <label class="tile-option" id="street-option">
-            <input type="radio" name="tile-layer" value="street">
-            🛣️ 도로
-        </label>
-        <label class="tile-option" id="satellite-option">
-            <input type="radio" name="tile-layer" value="satellite">
-            🛰️ 위성
-        </label>
-        <label class="tile-option" id="subway-option">
-            <input type="radio" name="tile-layer" value="subway_transport">
-            🚇 교통
-        </label>
+        <div class="tile-grid">
+            <button class="tile-btn active" id="cartodb-option" data-tile="cartodb" title="심플 지도">
+                🎨
+            </button>
+            <button class="tile-btn" id="street-option" data-tile="street" title="도로 지도">
+                🛣️
+            </button>
+            <button class="tile-btn" id="satellite-option" data-tile="satellite" title="위성 지도">
+                🛰️
+            </button>
+            <button class="tile-btn" id="subway-option" data-tile="subway_transport" title="교통 지도">
+                🚇
+            </button>
+        </div>
     </div>
 
     <!-- 범례 삭제 -->
