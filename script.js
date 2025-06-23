@@ -246,7 +246,7 @@ function displayMarkers() {
             marker.off('mouseout');
             // 클러스터 그룹에 추가
             clusterGroups[type].addLayer(marker);
-            allMarkers.push({ marker, place });
+            allMarkers.push({ marker, place: { ...place, type } });
         });
     });
     Object.values(clusterGroups).forEach(group => map.addLayer(group));
@@ -791,6 +791,8 @@ function zoomToLocation(location) {
 function filterMarkersByDay(selectedDay) {
     if (!map || !allMarkers.length) return;
 
+    console.log('필터링 시작:', selectedDay);
+
     // 모든 클러스터 그룹에서 레이어를 지웁니다.
     Object.values(clusterGroups).forEach(group => group.clearLayers());
 
@@ -804,20 +806,68 @@ function filterMarkersByDay(selectedDay) {
         });
     }
 
+    console.log('일정 장소들:', dayLocations);
+
+    let visibleCount = 0;
     allMarkers.forEach(markerInfo => {
         const place = markerInfo.place;
         const marker = markerInfo.marker;
         
         const isVisible = selectedDay === 'all' || dayLocations.some(loc => {
             const placeName = place.name.split('/')[0].trim();
-            return placeName.includes(loc) || loc.includes(placeName);
+            
+            // 다양한 매칭 방법 시도
+            const placeKorean = extractKorean(placeName);
+            const placeEnglish = extractEnglishName(placeName);
+            const placeChinese = extractChineseName(placeName);
+            
+            const locKorean = extractKorean(loc);
+            const locEnglish = extractEnglishName(loc);
+            const locChinese = extractChineseName(loc);
+            
+            // 정확한 매칭
+            if (placeName.includes(loc) || loc.includes(placeName)) {
+                console.log('정확한 매칭:', placeName, '↔', loc);
+                return true;
+            }
+            
+            // 한글명 매칭
+            if (placeKorean && locKorean && 
+                (placeKorean.includes(locKorean) || locKorean.includes(placeKorean))) {
+                console.log('한글명 매칭:', placeKorean, '↔', locKorean);
+                return true;
+            }
+            
+            // 영문명 매칭
+            if (placeEnglish && locEnglish && 
+                (placeEnglish.toLowerCase().includes(locEnglish.toLowerCase()) || 
+                 locEnglish.toLowerCase().includes(placeEnglish.toLowerCase()))) {
+                console.log('영문명 매칭:', placeEnglish, '↔', locEnglish);
+                return true;
+            }
+            
+            // 중국어명 매칭
+            if (placeChinese && locChinese && 
+                (placeChinese.includes(locChinese) || locChinese.includes(placeChinese))) {
+                console.log('중국어명 매칭:', placeChinese, '↔', locChinese);
+                return true;
+            }
+            
+            return false;
         });
 
         if (isVisible) {
-            clusterGroups[place.type].addLayer(marker);
+            if (clusterGroups[place.type]) {
+                clusterGroups[place.type].addLayer(marker);
+                visibleCount++;
+                console.log('마커 표시:', place.name, '(타입:', place.type, ')');
+            } else {
+                console.warn('알 수 없는 타입:', place.type, '장소:', place.name);
+            }
         }
     });
 
+    console.log('표시된 마커 수:', visibleCount);
     updateLabelVisibility();
 }
 
