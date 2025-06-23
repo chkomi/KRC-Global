@@ -618,76 +618,35 @@ html, body {
 }
 
 /* Place Label Styles */
-.place-label {
+.marker-label {
     position: absolute;
-    background: rgba(44, 62, 80, 0.9);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7em;
-    white-space: nowrap;
-    z-index: 1000;
-    pointer-events: none;
-    transform: translateX(-50%);
-    margin-top: -30px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.place-label.type-attractions {
-    background: rgba(234, 67, 53, 0.9);
-}
-
-.place-label.type-restaurants {
-    background: rgba(52, 168, 83, 0.9);
-}
-
-.place-label.type-airports {
-    background: rgba(155, 89, 182, 0.9);
-}
-
-.place-label.type-hotels {
-    background: rgba(26, 115, 232, 0.9);
-}
-
-.place-label .price-info {
-    background: rgba(255, 255, 255, 0.1);
-    border-left: 2px solid rgba(255, 255, 255, 0.3);
-    margin: 4px 0 0 0;
-    padding: 2px 6px;
-}
-
-.place-label:before {
-    content: '';
-    position: absolute;
-    top: 100%;
     left: 50%;
+    top: -22px;
     transform: translateX(-50%);
-    border: 4px solid transparent;
-    border-top-color: inherit;
+    padding: 2px 10px 2px 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #fff;
+    background: #333;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1001;
+    box-shadow: none;
+    opacity: 0.95;
+    border: none;
+    outline: none;
 }
 
-.price-label {
-    background: rgba(40, 167, 69, 0.9);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.6em;
-    margin-left: 4px;
-}
-
-.popup-info .price-info {
-    background: #f8f9fa;
-    border-left: 3px solid #28a745;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin: 10px 0;
-}
-
-.popup-info .price-info i {
-    color: #28a745;
-    margin-right: 6px;
+/* 마커 hover 효과 완전 제거 */
+.leaflet-marker-icon,
+.leaflet-marker-icon:focus,
+.leaflet-marker-icon:active,
+.leaflet-marker-icon:hover {
+    filter: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
 }
 
 /* Day Buttons */

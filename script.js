@@ -200,86 +200,57 @@ function displayMarkers() {
         console.error('지도 또는 데이터가 초기화되지 않았습니다.');
         return;
     }
-
-    console.log('마커 표시 시작');
-
-    // 기존 마커와 라벨 제거
-    markers.forEach(marker => {
-        if (marker && marker.remove) {
-            marker.remove();
-        }
-    });
-    markers = [];
     allMarkers = [];
+    Object.values(clusterGroups).forEach(group => group.clearLayers());
 
-    // 클러스터 그룹 초기화
-    Object.values(clusterGroups).forEach(group => {
-        group.clearLayers();
-    });
+    const typeColors = {
+        attractions: '#ea4335',
+        restaurants: '#34a853',
+        hotels: '#1a73e8',
+        airports: '#9b59b6'
+    };
 
-    // 모든 장소 데이터를 하나의 배열로 합치기
-    const allPlaces = [];
-    const types = ['attractions', 'restaurants', 'hotels', 'airports'];
-
-    types.forEach(type => {
-        const places = shanghaiData[type];
-        if (Array.isArray(places)) {
-            places.forEach(place => {
-                if (place.latitude && place.longitude) {
-                    allPlaces.push({...place, type: type});
-                }
+    ['attractions', 'restaurants', 'hotels', 'airports'].forEach(type => {
+        (shanghaiData[type] || []).forEach(place => {
+            const marker = L.marker([place.latitude, place.longitude], {
+                icon: createCustomIcon(type),
+                name: place.name,
+                type: type,
+                place: place
             });
-        }
-    });
-
-    console.log('처리할 장소 수:', allPlaces.length);
-
-    // 각 장소에 대해 마커 생성
-    allPlaces.forEach(place => {
-        // 마커 생성
-        const marker = L.marker([place.latitude, place.longitude], {
-            icon: createCustomIcon(place.type),
-            name: place.name, // 마커에 이름 저장
-            type: place.type,
-            place: place // 전체 장소 데이터 저장
+            marker.bindPopup(createPopupContent(place));
+            // 마커 라벨 생성 및 동적 표시 (hover 효과 없이)
+            marker.on('add', function() {
+                const markerElem = marker._icon;
+                if (markerElem && !markerElem.querySelector('.marker-label')) {
+                    // 괄호 내 첫 단어 추출
+                    let labelText = '';
+                    const match = place.name.match(/\(([^,\s)]+)/);
+                    if (match && match[1]) {
+                        labelText = match[1];
+                    }
+                    if (!labelText) labelText = place.name.split('/')[0].trim();
+                    const label = document.createElement('div');
+                    label.className = 'marker-label';
+                    label.innerText = labelText;
+                    label.style.background = typeColors[type];
+                    markerElem.appendChild(label);
+                }
+                // hover 효과 제거
+                markerElem.style.filter = 'none';
+                markerElem.style.boxShadow = 'none';
+                markerElem.style.outline = 'none';
+            });
+            // 마우스오버/아웃/클릭 시 불필요한 효과 제거
+            marker.off('mouseover');
+            marker.off('mouseout');
+            // 클러스터 그룹에 추가
+            clusterGroups[type].addLayer(marker);
+            allMarkers.push({ marker, place });
         });
-
-        // 라벨 텍스트 설정
-        let labelText = extractKorean(place.name);
-
-        // 툴팁 생성 및 설정
-        const tooltip = L.tooltip({
-            permanent: true,
-            direction: 'top',
-            offset: [0, -5],
-            opacity: 1,
-            className: `place-label type-${place.type}`
-        }).setContent(labelText);
-
-        // 팝업 생성 및 설정
-        const popup = L.popup({
-            maxWidth: 300,
-            className: `custom-popup type-${place.type}`
-        });
-
-        popup.setContent(createPopupContent(place));
-        marker.bindPopup(popup);
-
-        // 툴팁 설정
-        marker.bindTooltip(place.name.split('/')[0].trim(), { permanent: false, direction: 'top', offset: [0, -12], className: `custom-marker-tooltip` });
-
-        // 마커를 클러스터 그룹에 추가
-        clusterGroups[place.type].addLayer(marker);
-
-        // 모든 마커 정보를 저장 (필터링을 위해)
-        allMarkers.push({ marker: marker, place: place });
-
-        markers.push(marker);
     });
-
-    // 초기에 모든 마커 그룹을 지도에 추가
     Object.values(clusterGroups).forEach(group => map.addLayer(group));
-    updateLabelVisibility(); // 초기 라벨 가시성 업데이트
+    updateLabelVisibility();
 }
 
 // 영문명 추출 함수 (구글지도용)
