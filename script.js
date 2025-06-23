@@ -822,6 +822,16 @@ function filterMarkersByDay(selectedDay) {
 }
 
 function showDayBottomSheet(dayKey) {
+    // 데이터가 없으면 fetch 후 재시도
+    if (!window.itineraryData) {
+        fetch('data/shanghai-data.json')
+            .then(response => response.json())
+            .then(data => {
+                window.itineraryData = data.shanghai_tourism.itinerary;
+                showDayBottomSheet(dayKey);
+            });
+        return;
+    }
     const bottomSheet = document.getElementById('bottom-sheet');
     bottomSheet.classList.add('show');
     const dayData = window.itineraryData[dayKey];
@@ -842,19 +852,40 @@ function showDayBottomSheet(dayKey) {
         arrival: '🛬',
         departure: '🛫'
     };
-    Object.entries(dayData).forEach(([key, schedule]) => {
-        html += `<div class='bottom-sheet-item'>`;
-        html += `<span class='bottom-sheet-time'>${icons[key] || '🕒'} ${schedule.time}</span>`;
-        html += `<span class='bottom-sheet-location'><i class='fas fa-map-marker-alt' style='color:#764ba2;'></i> ${schedule.location}</span>`;
-        if (schedule.description) html += `<div class='bottom-sheet-desc'>${schedule.description}</div>`;
-        html += `</div>`;
-    });
+    if (!dayData) {
+        html += `<div style='text-align:center;color:#888;padding:32px 0;'>일정 데이터가 없습니다.</div>`;
+    } else {
+        Object.entries(dayData).forEach(([key, schedule]) => {
+            html += `<div class='bottom-sheet-item'>`;
+            html += `<span class='bottom-sheet-time'>${icons[key] || '🕒'} ${schedule.time}</span>`;
+            html += `<span class='bottom-sheet-location'><i class='fas fa-map-marker-alt' style='color:#764ba2;'></i> ${schedule.location}</span>`;
+            if (schedule.description) html += `<div class='bottom-sheet-desc'>${schedule.description}</div>`;
+            html += `</div>`;
+        });
+    }
     html += `<button class='bottom-sheet-close' onclick='document.getElementById("bottom-sheet").classList.remove("show");filterMarkersByDay("all");'><i class='fas fa-times'></i> 닫기</button>`;
     bottomSheet.innerHTML = html;
+}
+
+// 지도 클릭 시 하단 팝업 닫기
+function setupMapClickToClosePopup() {
+    if (window.map) {
+        map.on('click', function() {
+            const bottomSheet = document.getElementById('bottom-sheet');
+            if (bottomSheet) bottomSheet.classList.remove('show');
+        });
+    }
 }
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     console.log('메인 페이지 로드 완료');
     initMap();
+    fetch('data/shanghai-data.json')
+        .then(response => response.json())
+        .then(data => {
+            window.itineraryData = data.shanghai_tourism.itinerary;
+            showDayBottomSheet('all');
+            setupMapClickToClosePopup();
+        });
 });
