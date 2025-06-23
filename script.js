@@ -189,11 +189,6 @@ async function initMap() {
         setupEventListeners();
         // 일정 패널 초기화
         initializeItineraryPanel();
-        
-        // 페이지 로드 시 전체 일정 표시
-        displayItinerary('all');
-        const itineraryPopup = document.getElementById('itinerary-popup');
-        itineraryPopup.classList.add('show');
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
     }
@@ -335,15 +330,51 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    let html = `<div class='popup-header'><h3>${place.name.split('/')[0].trim()}</h3></div>`;
+    const koreanName = extractKorean(place.name);
+    const typeLabel = getTypeLabel(place.type || 'attractions');
+    
+    let html = `<div class='popup-header'>
+        <h3><i class="fas fa-map-marker-alt"></i> ${koreanName}</h3>
+        <span class="place-type-badge">${typeLabel}</span>
+    </div>`;
+    
     html += `<div class='popup-body'>`;
-    html += `<div class='popup-info'><p><i class='fas fa-map-marker-alt'></i> ${place.address || ''}</p>`;
-    if (place.description) html += `<p>${place.description}</p>`;
+    html += `<div class='popup-info'>`;
+    
+    if (place.address && place.address !== "N/A") {
+        html += `<p><i class='fas fa-map-marker-alt'></i> ${place.address}</p>`;
+    }
+    
+    if (place.description) {
+        html += `<p><i class='fas fa-info-circle'></i> ${place.description}</p>`;
+    }
+    
+    if (place.features && place.features.length > 0) {
+        html += `<p><i class='fas fa-star'></i> ${place.features.join(', ')}</p>`;
+    }
+    
+    if (place.price) {
+        const priceInWon = Math.round(parseInt(place.price) * 0.18);
+        html += `<div class='price-info'>
+            <i class='fas fa-coins'></i> 
+            <strong>가격:</strong> ${priceInWon.toLocaleString()}원 (약 ${parseInt(place.price).toLocaleString()}엔)
+        </div>`;
+    }
+    
     html += `</div>`;
-    html += `<div class='map-links'><h4><i class='fas fa-map'></i> 지도에서 보기</h4><div class='map-buttons'>`;
-    html += `<a class='map-btn google-btn white-text' style='color:#fff !important' href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}' target='_blank'><i class='fab fa-google'></i>구글지도</a>`;
-    html += `<a class='map-btn amap-btn white-text' style='color:#fff !important' href='https://map.kakao.com/link/search/${encodeURIComponent(place.name)}' target='_blank'><i class='fas fa-map-marked-alt'></i>고덕지도</a>`;
-    html += `</div></div></div>`;
+    html += `<div class='map-links'>
+        <h4><i class='fas fa-map'></i> 지도에서 보기</h4>
+        <div class='map-buttons'>
+            <a class='map-btn google-btn' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+                <i class='fab fa-google'></i>구글지도
+            </a>
+            <a class='map-btn amap-btn' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+                <i class='fas fa-map-marked-alt'></i>가오더지도
+            </a>
+        </div>
+    </div>`;
+    html += `</div>`;
+    
     return html;
 }
 
@@ -712,13 +743,14 @@ function displayItinerary(dayKey) {
             scheduleItems.forEach(([key, schedule]) => {
                 const icon = getScheduleIcon(key);
                 const itemClass = getScheduleItemClass(key);
+                const locationName = extractKorean(schedule.location);
                 allItineraryHTML += `
                     <div class="schedule-item all-schedule-item ${itemClass}">
                         <div class="schedule-time">
                             <i class="${icon}"></i>
                             <span>${schedule.time}</span>
                         </div>
-                        <div class="schedule-location">${schedule.location}</div>
+                        <div class="schedule-location">${locationName}</div>
                         <div class="schedule-desc">${schedule.description}</div>
                     </div>
                 `;
