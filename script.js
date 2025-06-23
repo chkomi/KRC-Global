@@ -330,101 +330,16 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    const content = document.createElement('div');
-    content.className = 'custom-popup';
-    
-    // 팝업 헤더
-    const header = document.createElement('div');
-    header.className = 'popup-header';
-    header.innerHTML = `
-        <h3>${place.name}</h3>
-        <span class="place-type-badge type-${place.type}">${getTypeLabel(place.type)}</span>
-    `;
-    content.appendChild(header);
-
-    // 팝업 본문
-    const body = document.createElement('div');
-    body.className = 'popup-body';
-    
-    // 기본 정보
-    const info = document.createElement('div');
-    info.className = 'popup-info';
-    
-    let infoHTML = '';
-    
-    // 주소 정보
-    if (place.address) {
-        infoHTML += `<p><i class="fas fa-map-marker-alt"></i> ${place.address}</p>`;
-    }
-    
-    // 설명 정보
-    if (place.description) {
-        infoHTML += `<p><i class="fas fa-info-circle"></i> ${place.description}</p>`;
-    }
-    
-    // 가격 정보 (숙소인 경우)
-    if (place.price) {
-        // 가격이 이미 원화로 되어 있으므로 그대로 사용
-        const wonPrice = parseInt(place.price.replace(/[^\d]/g, ''));
-        const formattedPrice = wonPrice.toLocaleString('ko-KR');
-        infoHTML += `<p class="price-info"><i class="fas fa-won-sign"></i> ${formattedPrice}원</p>`;
-    }
-    
-    // 특징 정보
-    if (place.features && place.features.length > 0) {
-        infoHTML += `<p><i class="fas fa-star"></i> ${place.features.join(', ')}</p>`;
-    }
-    
-    // 메뉴 정보 (맛집인 경우)
-    if (place.type === 'restaurants' && place.menu && place.menu.length > 0) {
-        infoHTML += `<p><i class="fas fa-utensils"></i> 대표 메뉴: ${place.menu.slice(0, 3).join(', ')}${place.menu.length > 3 ? '...' : ''}</p>`;
-    }
-    
-    info.innerHTML = infoHTML;
-    body.appendChild(info);
-
-    // 지도 링크 버튼
-    const mapLinks = document.createElement('div');
-    mapLinks.className = 'map-links';
-    
-    // 이름에서 한국어명과 중국어명 추출
-    const nameParts = place.name.split('(');
-    const koreanName = nameParts[0].trim();
-    const chineseName = nameParts[1]?.split(')')[0]?.trim() || '';
-    
-    // 모바일 감지
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    let googleUrl, amapUrl;
-    
-    if (isMobile) {
-        // 모바일: 앱으로 연결
-        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}&z=15`;
-        // 고덕지도 앱 연결 - 여러 스키마 시도
-        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}&src=web`;
-    } else {
-        // 데스크톱: 웹으로 연결
-        googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koreanName)}`;
-        amapUrl = `https://uri.amap.com/marker?position=${place.lng},${place.lat}&name=${encodeURIComponent(chineseName)}`;
-    }
-    
-    mapLinks.innerHTML = `
-        <h4><i class="fas fa-map"></i> 지도에서 보기</h4>
-        <div class="map-buttons">
-            <a href="${googleUrl}" 
-               target="_blank" class="map-btn google-btn">
-                <i class="fab fa-google"></i> Google Maps
-            </a>
-            <a href="${amapUrl}" 
-               target="_blank" class="map-btn amap-btn">
-                <i class="fas fa-map-marked-alt"></i> 高德地图
-            </a>
-        </div>
-    `;
-    body.appendChild(mapLinks);
-
-    content.appendChild(body);
-    return content;
+    let html = `<div class='popup-header'><h3>${place.name.split('/')[0].trim()}</h3></div>`;
+    html += `<div class='popup-body'>`;
+    html += `<div class='popup-info'><p><i class='fas fa-map-marker-alt'></i> ${place.address || ''}</p>`;
+    if (place.description) html += `<p>${place.description}</p>`;
+    html += `</div>`;
+    html += `<div class='map-links'><h4><i class='fas fa-map'></i> 지도에서 보기</h4><div class='map-buttons'>`;
+    html += `<a class='map-btn google-btn white-text' style='color:#fff !important' href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}' target='_blank'><i class='fab fa-google'></i>구글지도</a>`;
+    html += `<a class='map-btn amap-btn white-text' style='color:#fff !important' href='https://map.kakao.com/link/search/${encodeURIComponent(place.name)}' target='_blank'><i class='fas fa-map-marked-alt'></i>고덕지도</a>`;
+    html += `</div></div></div>`;
+    return html;
 }
 
 // 이벤트 리스너 설정 함수
