@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상하이 여행지도</title>
+    <title>상하이 여행지도 - 테스트 버전</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -30,33 +30,69 @@
             height: 100vh;
             width: 100%;
         }
+        
+        .test-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-banner::before {
+            content: "🧪 테스트 버전 - 개발 중";
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
+    <!-- 테스트 배너 -->
+    <div class="test-banner"></div>
+    
     <!-- 지도 컨테이너 -->
     <div id="map"></div>
-    
-    <!-- 일정 패널 -->
-    <div id="itinerary-panel">
-        <div class="itinerary-header">
-            <h3>📅 상하이 여행 일정</h3>
-            <select id="day-selector">
-                <option value="all">전체</option>
-                <option value="day1">1일차</option>
-                <option value="day2">2일차</option>
-                <option value="day3">3일차</option>
-                <option value="day4">4일차</option>
-            </select>
-        </div>
-        <div id="itinerary-content">
-            <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
-        </div>
-    </div>
     
     <!-- 일정 패널 토글 버튼 -->
     <button id="itinerary-toggle" class="itinerary-toggle-btn">
         <i class="fas fa-calendar-alt"></i>
     </button>
+    
+    <!-- 팝업식 일정 패널 -->
+    <div id="itinerary-popup" class="itinerary-popup">
+        <div class="itinerary-popup-content">
+            <div class="itinerary-popup-header">
+                <h3>📅 상하이 여행 일정</h3>
+                <button id="close-itinerary" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="itinerary-popup-body">
+                <div class="day-selector-container">
+                    <select id="day-selector">
+                        <option value="all">전체</option>
+                        <option value="day1">1일차</option>
+                        <option value="day2">2일차</option>
+                        <option value="day3">3일차</option>
+                        <option value="day4">4일차</option>
+                    </select>
+                </div>
+                <div id="itinerary-content">
+                    <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- 제어 패널 -->
     <div class="control-panel">
@@ -123,5 +159,24 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
+    
+    <script>
+        // 테스트용 추가 기능들
+        console.log('🧪 테스트 버전 로드됨');
+        
+        // 테스트용 함수들
+        function testImageLoading() {
+            console.log('이미지 로딩 테스트 시작');
+            // 이미지 로딩 테스트 로직
+        }
+        
+        function testPopupDesign() {
+            console.log('팝업 디자인 테스트 시작');
+            // 팝업 디자인 테스트 로직
+        }
+        
+        // 테스트용 전역 변수
+        window.isTestMode = true;
+    </script>
 </body>
 </html> 

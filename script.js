@@ -128,19 +128,13 @@ let clusterGroups = {
     })
 };
 
-// 문서 로드 완료 시 초기화 - 더 안전한 방법
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('페이지 로드 완료, 지도 초기화 시작');
-    initMap();
-});
-
 // 지도 초기화 함수
 async function initMap() {
     try {
         console.log('지도 초기화 시작');
         
         // 데이터 로드
-        const response = await fetch('/KRC-Global/data/shanghai-data.json');
+        const response = await fetch('../data/shanghai-data.json');
         if (!response.ok) {
             throw new Error('데이터 로드 실패');
         }
@@ -154,7 +148,7 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
-        // 기본 타일 레이어 설정
+        // 기본 타일 레이어 설정 (테스트 버전은 심플 지도)
         tileLayers.osm.addTo(map);
         currentTileLayerType = 'osm';
 
@@ -197,7 +191,6 @@ async function initMap() {
         setupEventListeners();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
-        alert('데이터를 불러오는 중 오류가 발생했습니다.');
     }
 }
 
@@ -246,7 +239,9 @@ function displayMarkers() {
         // 마커 생성
         const marker = L.marker([place.latitude, place.longitude], {
             icon: createCustomIcon(place.type),
-            type: place.type
+            type: place.type,
+            title: place.name,
+            name: place.name
         });
 
         // 라벨 텍스트 설정
@@ -269,6 +264,10 @@ function displayMarkers() {
 
         popup.setContent(createPopupContent(place));
         marker.bindPopup(popup);
+
+        // 라벨을 마커에 바인딩하고 참조 저장
+        marker.bindTooltip(tooltip);
+        marker._tooltip = tooltip; // 필터링 시 라벨 투명도 조정을 위한 참조 저장
 
         // 마커를 클러스터 그룹에 추가
         clusterGroups[place.type].addLayer(marker);
@@ -796,9 +795,36 @@ function setupLegendControls() {
 function initializeItineraryPanel() {
     const daySelector = document.getElementById('day-selector');
     const itineraryContent = document.getElementById('itinerary-content');
+    const hamburgerButton = document.getElementById('itinerary-toggle');
+    const closeButton = document.getElementById('close-itinerary');
+    const itineraryPopup = document.getElementById('itinerary-popup');
+    
+    // 햄버거 버튼 클릭 이벤트
+    hamburgerButton.addEventListener('click', () => {
+        itineraryPopup.classList.add('show');
+    });
+    
+    // 닫기 버튼 클릭 이벤트
+    closeButton.addEventListener('click', () => {
+        itineraryPopup.classList.remove('show');
+    });
+    
+    // 지도 클릭 시 팝업 닫기 (map 객체가 존재할 때만)
+    if (map) {
+        map.on('click', () => {
+            itineraryPopup.classList.remove('show');
+        });
+    }
+    
+    // 팝업 외부 클릭 시 닫기
+    itineraryPopup.addEventListener('click', (e) => {
+        if (e.target === itineraryPopup) {
+            itineraryPopup.classList.remove('show');
+        }
+    });
     
     // 일정 데이터 로드
-    fetch('data/shanghai-data.json')
+    fetch('../data/shanghai-data.json')
         .then(response => response.json())
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
@@ -822,68 +848,173 @@ function displayItinerary(dayKey) {
     const itineraryContent = document.getElementById('itinerary-content');
     
     if (dayKey === 'all') {
-        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">전체 일정을 선택하셨습니다.<br>지도에서 모든 장소를 확인하세요.</p>';
+        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px; grid-column: 1 / -1;">전체 일정을 선택하셨습니다.<br>지도에서 모든 장소를 확인하세요.</p>';
         return;
     }
     
     const dayData = window.itineraryData[dayKey];
     
     if (!dayData) {
-        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">일정 정보를 찾을 수 없습니다.</p>';
+        itineraryContent.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px; grid-column: 1 / -1;">일정 정보를 찾을 수 없습니다.</p>';
         return;
     }
     
-    let scheduleItems = [];
+    // 3열 레이아웃 구조
+    const morningItems = [];
+    const afternoonItems = [];
+    const eveningItems = [];
     
-    if (dayKey === 'day1') {
-        scheduleItems = [
-            { key: 'arrival', label: '✈️ 공항도착' },
-            { key: 'morning', label: '☀️ 오전일정' },
-            { key: 'lunch', label: '🍽️ 점심식사' },
-            { key: 'afternoon', label: '🌤️ 오후일정' },
-            { key: 'dinner', label: '🍴 저녁식사' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
-        ];
-    } else if (dayKey === 'day4') {
-        scheduleItems = [
-            { key: 'breakfast', label: '🌅 아침식사' },
-            { key: 'morning', label: '☀️ 오전일정' },
-            { key: 'afternoon', label: '🌤️ 오후일정' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
-        ];
-    } else {
-        scheduleItems = [
-            { key: 'breakfast', label: '🌅 아침식사' },
-            { key: 'morning', label: '☀️ 오전일정' },
-            { key: 'lunch', label: '🍽️ 점심식사' },
-            { key: 'afternoon', label: '🌤️ 오후일정' },
-            { key: 'dinner', label: '🍴 저녁식사' },
-            { key: 'evening', label: '🌙 저녁일정' },
-            { key: 'hotel', label: '🏨 숙소복귀' }
-        ];
-    }
-    
-    let html = '';
-    
-    scheduleItems.forEach(item => {
-        const scheduleData = dayData[item.key];
-        if (scheduleData) {
-            html += `
-                <div class="itinerary-item ${item.key}">
-                    <div class="itinerary-time">${item.label} • ${scheduleData.time}</div>
-                    <div class="itinerary-location">${scheduleData.location}</div>
-                    <div class="itinerary-description">${scheduleData.description}</div>
-                </div>
-            `;
+    // 일정을 시간대별로 분류
+    Object.entries(dayData).forEach(([key, schedule]) => {
+        const time = schedule.time;
+        const hour = parseInt(time.split(':')[0]);
+        
+        if (key === 'arrival' || key === 'departure' || key === 'hotel') {
+            // 특별한 일정들은 첫 번째 열에
+            morningItems.push({ key, schedule });
+        } else if (hour < 12 || key === 'breakfast') {
+            // 오전 일정 (12시 이전)
+            morningItems.push({ key, schedule });
+        } else if (hour < 18 || key === 'lunch') {
+            // 오후 일정 (12-18시)
+            afternoonItems.push({ key, schedule });
+        } else {
+            // 저녁 일정 (18시 이후)
+            eveningItems.push({ key, schedule });
         }
     });
     
+    let html = '';
+    
+    // 오전 일정 열
+    html += '<div class="itinerary-column">';
+    html += '<div class="itinerary-column-title">🌅 아침 & 오전</div>';
+    morningItems.forEach(({ key, schedule }) => {
+        html += createItineraryItem(key, schedule);
+    });
+    html += '</div>';
+    
+    // 오후 일정 열
+    html += '<div class="itinerary-column">';
+    html += '<div class="itinerary-column-title">🌤️ 점심 & 오후</div>';
+    afternoonItems.forEach(({ key, schedule }) => {
+        html += createItineraryItem(key, schedule);
+    });
+    html += '</div>';
+    
+    // 저녁 일정 열
+    html += '<div class="itinerary-column">';
+    html += '<div class="itinerary-column-title">🌙 저녁 & 밤</div>';
+    eveningItems.forEach(({ key, schedule }) => {
+        html += createItineraryItem(key, schedule);
+    });
+    html += '</div>';
+    
     itineraryContent.innerHTML = html;
+    
+    // 클릭 이벤트 리스너 추가
+    addItineraryClickListeners();
 }
 
-// 마커 필터링 함수
+function createItineraryItem(key, schedule) {
+    const labels = {
+        'arrival': '✈️ 공항도착',
+        'departure': '✈️ 공항출발',
+        'hotel': '🏨 숙소체크인',
+        'breakfast': '🌅 아침식사',
+        'morning': '☀️ 오전일정',
+        'lunch': '🍽️ 점심식사',
+        'afternoon': '🌤️ 오후일정',
+        'afternoon1': '🌤️ 오후일정1',
+        'afternoon2': '🌤️ 오후일정2',
+        'afternoon3': '🌤️ 오후일정3',
+        'dinner': '🍴 저녁식사',
+        'evening': '🌙 저녁일정',
+        'evening1': '🌙 저녁일정1',
+        'evening2': '🌙 저녁일정2'
+    };
+    
+    const label = labels[key] || '📅 일정';
+    const isClickable = key !== 'hotel' && key !== 'arrival' && key !== 'departure';
+    
+    let html = `<div class="itinerary-item ${key} ${isClickable ? 'clickable' : ''}" data-location="${schedule.location}">`;
+    html += `<div class="itinerary-time">${label} • ${schedule.time}</div>`;
+    html += `<div class="itinerary-location">${schedule.location}</div>`;
+    html += `<div class="itinerary-description">${schedule.description}</div>`;
+    
+    if (schedule.alternative) {
+        html += `<div class="itinerary-alternative">💡 ${schedule.alternative}</div>`;
+    }
+    
+    html += '</div>';
+    
+    return html;
+}
+
+function addItineraryClickListeners() {
+    const clickableItems = document.querySelectorAll('.itinerary-item.clickable');
+    
+    clickableItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const location = item.getAttribute('data-location');
+            zoomToLocation(location);
+        });
+    });
+}
+
+function zoomToLocation(location) {
+    if (!window.markers || !map) return;
+    
+    // 해당 위치의 마커 찾기
+    let targetMarker = null;
+    
+    window.markers.forEach(marker => {
+        const markerName = marker.options.name || marker.options.title || '';
+        const koreanName = extractKorean(markerName);
+        const englishName = extractEnglishName(markerName);
+        const chineseName = extractChineseName(markerName);
+        
+        if (location.includes(markerName) || 
+            markerName.includes(location) ||
+            location.includes(koreanName) ||
+            location.includes(englishName) ||
+            location.includes(chineseName) ||
+            koreanName.includes(location) ||
+            englishName.includes(location) ||
+            chineseName.includes(location)) {
+            targetMarker = marker;
+        }
+    });
+    
+    if (targetMarker) {
+        const latlng = targetMarker.getLatLng();
+        map.setView(latlng, 16, {
+            animate: true,
+            duration: 1
+        });
+        
+        // 마커에 임시 하이라이트 효과
+        targetMarker.setZIndexOffset(1000);
+        setTimeout(() => {
+            targetMarker.setZIndexOffset(0);
+        }, 2000);
+        
+        console.log('줌 이동:', location);
+    } else {
+        console.log('마커를 찾을 수 없음:', location);
+    }
+}
+
+// 페이지 로드 시 일정 패널 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('테스트 페이지 로드 완료');
+    initMap();
+    // 지도 초기화 완료 후 일정 패널 초기화
+    setTimeout(() => {
+        initializeItineraryPanel();
+    }, 1000);
+});
+
 function filterMarkersByDay(selectedDay) {
     if (!map) return;
     
@@ -927,9 +1058,3 @@ function filterMarkersByDay(selectedDay) {
         });
     });
 }
-
-// 페이지 로드 시 일정 패널 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    initializeMap();
-    initializeItineraryPanel();
-});
