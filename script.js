@@ -371,9 +371,8 @@ function setupEventListeners() {
     document.querySelectorAll('.day-btn').forEach(button => {
         button.addEventListener('click', function() {
             const dayKey = this.getAttribute('data-day');
-            displayItinerary(dayKey);
+            showDayBottomSheet(dayKey);
             filterMarkersByDay(dayKey);
-            document.getElementById('itinerary-popup').classList.add('show');
         });
     });
 }
