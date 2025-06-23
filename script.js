@@ -750,8 +750,10 @@ function displayItinerary(dayKey) {
                             <i class="${icon}"></i>
                             <span>${schedule.time}</span>
                         </div>
-                        <div class="schedule-location">${locationName}</div>
-                        <div class="schedule-desc">${schedule.description}</div>
+                        <div class="schedule-content">
+                            <div class="schedule-location">${locationName}</div>
+                            <div class="schedule-desc">${schedule.description}</div>
+                        </div>
                     </div>
                 `;
             });
@@ -1060,8 +1062,10 @@ function showDayBottomSheet(dayKey) {
                     <i class="${icon}"></i>
                     <span>${schedule.time}</span>
                 </div>
-                <div class="bottom-sheet-location">${locationName}</div>
-                <div class="bottom-sheet-desc">${schedule.description}</div>
+                <div class="bottom-sheet-content">
+                    <div class="bottom-sheet-location">${locationName}</div>
+                    <div class="bottom-sheet-desc">${schedule.description}</div>
+                </div>
             </div>
         `;
     });
