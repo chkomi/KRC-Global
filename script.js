@@ -873,6 +873,7 @@ function setupMapClickToClosePopup() {
         map.on('click', function() {
             const bottomSheet = document.getElementById('bottom-sheet');
             if (bottomSheet) bottomSheet.classList.remove('show');
+            filterMarkersByDay('all'); // 지도 클릭 시 마커 전체 복원
         });
     }
 }
