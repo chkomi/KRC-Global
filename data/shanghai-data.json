@@ -4,8 +4,8 @@
       {
         "name": "外滩 (와이탄, The Bund)",
         "address": "黄浦江外白渡桥至金陵东路一带(Area from Waibaidu Bridge to Jinling East Road along the Huangpu River)",
-        "latitude": 31.2366,
-        "longitude": 121.4856,
+        "latitude": 31.243994,
+        "longitude": 121.486323,
         "description": "번영과 역사의 흔적이 공존하는 야경 명소",
         "features": ["풍경", "음식", "문화역사"],
         "image": "images/attractions/the-bund.jpg"
@@ -83,7 +83,7 @@
         "image": "images/attractions/korean-provisional-government.jpg"
       },
       {
-        "name": "武康大楼（우캉맨션, WuKangDaLou）",
+        "name": "武康大楼 (우캉맨션, WuKangDaLou）",
         "address": "上海市徐汇区上海市湖南路街道淮海中路1850号",
         "latitude": 31.206224,
         "longitude": 121.433711,
@@ -92,7 +92,7 @@
         "image": "images/attractions/wukang-building.jpg"
       },
       {
-        "name": "朱家角古镇(주가각, ZhuJiaJiao)",
+        "name": "朱家角古镇 (주가각, ZhuJiaJiao)",
         "address": "上海市青浦区朱家角镇课植园路555号",
         "latitude": 31.11734,
         "longitude": 121.04837,
@@ -220,7 +220,7 @@
         "image": "images/restaurants/wai-po-jia.jpg"
       },
       {
-        "name": "很久以前羊肉串-光音广场店 （옛날옛적에, HenJiuYiQian）",
+        "name": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian）",
         "address": "上海市浦东新区银城路167号兴业银行大厦北侧B1层内广场",
         "latitude": 31.2447,
         "longitude": 121.509234,
