@@ -30,10 +30,13 @@
     <!-- 지도 컨테이너 -->
     <div id="map"></div>
     
-    <!-- 일정 패널 토글 버튼 -->
-    <button id="itinerary-toggle" class="itinerary-toggle-btn">
-        <i class="fas fa-calendar-alt"></i>
-    </button>
+    <!-- Day buttons -->
+    <div class="day-buttons-container">
+        <button class="day-btn" data-day="day1">11.12</button>
+        <button class="day-btn" data-day="day2">11.13</button>
+        <button class="day-btn" data-day="day3">11.14</button>
+        <button class="day-btn" data-day="day4">11.15</button>
+    </div>
     
     <!-- 팝업식 일정 패널 -->
     <div id="itinerary-popup" class="itinerary-popup">
@@ -45,15 +48,6 @@
                 </button>
             </div>
             <div class="itinerary-popup-body">
-                <div class="day-selector-container">
-                    <select id="day-selector">
-                        <option value="all">전체 일정</option>
-                        <option value="day1">1일차</option>
-                        <option value="day2">2일차</option>
-                        <option value="day3">3일차</option>
-                        <option value="day4">4일차</option>
-                    </select>
-                </div>
                 <div id="itinerary-content">
                     <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
                 </div>
@@ -89,48 +83,7 @@
         </label>
     </div>
 
-    <!-- 범례 -->
-    <div class="legend-box">
-        <h3><i class="fas fa-list"></i> 범례</h3>
-        <ul>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="attractions-toggle" data-type="attractions" checked>
-                    <div class="marker-icon tourism-marker">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    관광지
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="restaurants-toggle" data-type="restaurants" checked>
-                    <div class="marker-icon restaurant-marker">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    음식점
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="hotels-toggle" data-type="hotels" checked>
-                    <div class="marker-icon accommodation-marker">
-                        <i class="fas fa-bed"></i>
-                    </div>
-                    호텔
-                </label>
-            </li>
-            <li>
-                <label class="legend-item">
-                    <input type="checkbox" id="airports-toggle" data-type="airports" checked>
-                    <div class="marker-icon airport-marker">
-                        <i class="fas fa-plane"></i>
-                    </div>
-                    공항
-                </label>
-            </li>
-        </ul>
-    </div>
+    <!-- 범례 삭제 -->
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

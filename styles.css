@@ -690,6 +690,39 @@ html, body {
     margin-right: 6px;
 }
 
+/* Day Buttons */
+.day-buttons-container {
+    position: absolute;
+    top: 80px;
+    right: 15px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.day-btn {
+    padding: 8px 12px;
+    background: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #5f6368;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    width: 60px;
+}
+
+.day-btn:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+    background: #667eea;
+    color: white;
+}
+
 /* Itinerary Panel Styles */
 .itinerary-toggle-btn {
     position: absolute;
