@@ -822,6 +822,38 @@ function filterMarkersByDay(selectedDay) {
     updateLabelVisibility();
 }
 
+function showDayBottomSheet(dayKey) {
+    const bottomSheet = document.getElementById('bottom-sheet');
+    bottomSheet.classList.add('show');
+    const dayData = window.itineraryData[dayKey];
+    let html = `<div class='bottom-sheet-title'>${dayKey.replace('day','')}일차 일정</div>`;
+    const icons = {
+        breakfast: '🍳',
+        morning: '🌅',
+        lunch: '🍽️',
+        afternoon: '🌤️',
+        afternoon1: '🌤️',
+        afternoon2: '🌤️',
+        afternoon3: '🌤️',
+        dinner: '🍴',
+        evening: '🌙',
+        evening1: '🌙',
+        evening2: '🌙',
+        hotel: '🏨',
+        arrival: '🛬',
+        departure: '🛫'
+    };
+    Object.entries(dayData).forEach(([key, schedule]) => {
+        html += `<div class='bottom-sheet-item'>`;
+        html += `<span class='bottom-sheet-time'>${icons[key] || '🕒'} ${schedule.time}</span>`;
+        html += `<span class='bottom-sheet-location'><i class='fas fa-map-marker-alt' style='color:#764ba2;'></i> ${schedule.location}</span>`;
+        if (schedule.description) html += `<div class='bottom-sheet-desc'>${schedule.description}</div>`;
+        html += `</div>`;
+    });
+    html += `<button class='bottom-sheet-close' onclick='document.getElementById("bottom-sheet").classList.remove("show");filterMarkersByDay("all");'><i class='fas fa-times'></i> 닫기</button>`;
+    bottomSheet.innerHTML = html;
+}
+
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     console.log('메인 페이지 로드 완료');
