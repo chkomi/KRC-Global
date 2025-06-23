@@ -35,7 +35,18 @@
     </div>
     
     <!-- 하단 일정 팝업 -->
-    <div id="bottom-sheet"></div>
+    <div id="bottom-sheet" class="bottom-sheet">
+        <div class="bottom-sheet-header">
+            <div class="drag-handle"></div>
+            <h3 class="bottom-sheet-title">일정</h3>
+            <button class="bottom-sheet-close" id="close-bottom-sheet">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="bottom-sheet-content">
+            <div id="bottom-sheet-items"></div>
+        </div>
+    </div>
     
     <!-- 팝업식 일정 패널 -->
     <div id="itinerary-popup" class="itinerary-popup">
