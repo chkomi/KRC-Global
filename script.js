@@ -17,7 +17,7 @@ let markerGroups = {
 const markerColors = {
     attractions: '#ea4335',  // 관광지 (Google Red)
     restaurants: '#34a853',  // 식당 (Google Green)
-    airports: '#fbbc05',     // 공항 (Google Yellow)
+    airports: '#9b59b6',     // 공항 (Purple)
     hotels: '#1a73e8'        // 호텔 (Google Blue)
 };
 
@@ -31,22 +31,21 @@ const typePriorities = {
 
 // 지도 타일 레이어 정의
 const tileLayers = {
-    osm: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    cartodb: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors & © CARTO'
+    }),
+    street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
     }),
     satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: '© Esri'
     }),
-    terrain: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }),
-    // 지하철 노선이 잘 보이는 교통 지도
     subway_transport: L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors & © Thunderforest'
     })
 };
 
-let currentTileLayerType = 'osm';
+let currentTileLayerType = 'cartodb';
 
 // 클러스터 그룹들
 let clusterGroups = {
@@ -134,7 +133,7 @@ async function initMap() {
         console.log('지도 초기화 시작');
         
         // 데이터 로드
-        const response = await fetch('../data/shanghai-data.json');
+        const response = await fetch('data/shanghai-data.json');
         if (!response.ok) {
             throw new Error('데이터 로드 실패');
         }
@@ -148,9 +147,9 @@ async function initMap() {
         // 지도 생성 (초기 줌 레벨 9로 설정)
         map = L.map('map').setView([31.2304, 121.4737], 9);
         
-        // 기본 타일 레이어 설정 (테스트 버전은 심플 지도)
-        tileLayers.osm.addTo(map);
-        currentTileLayerType = 'osm';
+        // 기본 타일 레이어 설정 (메인 버전은 심플 지도)
+        tileLayers.cartodb.addTo(map);
+        currentTileLayerType = 'cartodb';
 
         // 줌 변경 이벤트 리스너
         map.on('zoomend', () => {
@@ -189,6 +188,8 @@ async function initMap() {
         setupLegendControls();
         // 지도 타입 버튼 이벤트 리스너 연결
         setupEventListeners();
+        // 일정 패널 초기화
+        initializeItineraryPanel();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
     }
@@ -475,34 +476,20 @@ function setupEventListeners() {
         }
     });
 
-    // 범례 체크박스 이벤트 리스너
-    document.getElementById('attractions-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('attractions', this.checked);
-    });
-    document.getElementById('restaurants-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('restaurants', this.checked);
-    });
-    document.getElementById('hotels-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('hotels', this.checked);
-    });
-    document.getElementById('airports-toggle').addEventListener('change', function() {
-        toggleMarkerGroup('airports', this.checked);
-    });
+    // 위치 찾기 버튼
+    const locateBtn = document.getElementById('locate-btn');
+    if (locateBtn) {
+        locateBtn.addEventListener('click', findMyLocation);
+    }
 
-    // 위치 찾기 버튼 이벤트 리스너
-    document.getElementById('locate-btn').addEventListener('click', function() {
-        findMyLocation();
-    });
-
-    // 지도 타입 버튼 이벤트 리스너
-    document.querySelectorAll('.map-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const type = this.getAttribute('data-type');
-            changeTileLayer(type);
-            
-            // 활성 버튼 상태 업데이트
-            document.querySelectorAll('.map-btn').forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
+    // 지도 타입 선택 이벤트 리스너
+    const tileOptions = document.querySelectorAll('.tile-option input[type="radio"]');
+    tileOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            if (this.checked) {
+                changeTileLayer(this.value);
+                updateTileOptionStyles(this.value);
+            }
         });
     });
 }
@@ -728,20 +715,18 @@ function openAmapSearch(name, lat, lng) {
 
 // 지도 타일 변경 함수
 function changeTileLayer(type) {
-    if (tileLayers[type] && currentTileLayerType !== type) {
+    if (map && tileLayers[type]) {
         // 현재 타일 레이어 제거
-        if (tileLayers[currentTileLayerType]) {
-            map.removeLayer(tileLayers[currentTileLayerType]);
+        if (currentTileLayer) {
+            map.removeLayer(currentTileLayer);
         }
         
         // 새로운 타일 레이어 추가
-        tileLayers[type].addTo(map);
+        currentTileLayer = tileLayers[type];
+        currentTileLayer.addTo(map);
         currentTileLayerType = type;
         
-        // 모든 지도 타입에서 마커들 보이기
-        showAllTourismMarkers();
-        
-        console.log('지도 타입 변경:', type);
+        console.log(`지도 타일 레이어 변경: ${type}`);
     }
 }
 
@@ -763,31 +748,33 @@ function showAllTourismMarkers() {
     });
 }
 
-// 타일 옵션 스타일 업데이트
+// 타일 옵션 스타일 업데이트 함수
 function updateTileOptionStyles(activeType) {
     const tileOptions = document.querySelectorAll('.tile-option');
     tileOptions.forEach(option => {
-        option.classList.remove('active');
-        if (option.getAttribute('onclick').includes(activeType)) {
+        const input = option.querySelector('input[type="radio"]');
+        if (input.value === activeType) {
             option.classList.add('active');
+        } else {
+            option.classList.remove('active');
         }
     });
 }
 
 // 범례 체크박스 기능
 function setupLegendControls() {
-    const legendItems = document.querySelectorAll('.legend-item');
-    legendItems.forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        const type = checkbox.getAttribute('data-type');
-        
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                showMarkerGroup(type);
-            } else {
-                hideMarkerGroup(type);
-            }
-        });
+    // 범례 체크박스 이벤트 리스너
+    document.getElementById('attractions-toggle').addEventListener('change', function() {
+        toggleMarkerGroup('attractions', this.checked);
+    });
+    document.getElementById('restaurants-toggle').addEventListener('change', function() {
+        toggleMarkerGroup('restaurants', this.checked);
+    });
+    document.getElementById('hotels-toggle').addEventListener('change', function() {
+        toggleMarkerGroup('hotels', this.checked);
+    });
+    document.getElementById('airports-toggle').addEventListener('change', function() {
+        toggleMarkerGroup('airports', this.checked);
     });
 }
 
@@ -824,7 +811,7 @@ function initializeItineraryPanel() {
     });
     
     // 일정 데이터 로드
-    fetch('../data/shanghai-data.json')
+    fetch('data/shanghai-data.json')
         .then(response => response.json())
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
@@ -1005,16 +992,6 @@ function zoomToLocation(location) {
     }
 }
 
-// 페이지 로드 시 일정 패널 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('테스트 페이지 로드 완료');
-    initMap();
-    // 지도 초기화 완료 후 일정 패널 초기화
-    setTimeout(() => {
-        initializeItineraryPanel();
-    }, 1000);
-});
-
 function filterMarkersByDay(selectedDay) {
     if (!map) return;
     
@@ -1058,3 +1035,9 @@ function filterMarkersByDay(selectedDay) {
         });
     });
 }
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('메인 페이지 로드 완료');
+    initMap();
+});

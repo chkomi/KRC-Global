@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상하이 여행지도 - 테스트 버전</title>
+    <title>상하이 11월 여행 계획</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -15,51 +15,18 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
-    
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-        }
-        
-        #map {
-            height: 100vh;
-            width: 100%;
-        }
-        
-        .test-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            text-align: center;
-            padding: 8px;
-            font-weight: 600;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .test-banner::before {
-            content: "🧪 테스트 버전 - 개발 중";
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-    </style>
 </head>
 <body>
-    <!-- 테스트 배너 -->
-    <div class="test-banner"></div>
-    
+    <!-- 상단 타이틀 박스 -->
+    <div class="title-box">
+        <h1><i class="fas fa-map-marked-alt"></i> 상하이 11월 여행 계획</h1>
+    </div>
+
     <!-- 지도 컨테이너 -->
     <div id="map"></div>
     
@@ -72,7 +39,7 @@
     <div id="itinerary-popup" class="itinerary-popup">
         <div class="itinerary-popup-content">
             <div class="itinerary-popup-header">
-                <h3>📅 상하이 여행 일정</h3>
+                <h3><i class="fas fa-calendar-alt"></i> 상하이 여행 일정</h3>
                 <button id="close-itinerary" class="close-button">
                     <i class="fas fa-times"></i>
                 </button>
@@ -80,7 +47,7 @@
             <div class="itinerary-popup-body">
                 <div class="day-selector-container">
                     <select id="day-selector">
-                        <option value="all">전체</option>
+                        <option value="all">전체 일정</option>
                         <option value="day1">1일차</option>
                         <option value="day2">2일차</option>
                         <option value="day3">3일차</option>
@@ -93,64 +60,78 @@
             </div>
         </div>
     </div>
-    
-    <!-- 제어 패널 -->
-    <div class="control-panel">
-        <!-- 위치 찾기 버튼 -->
+
+    <!-- 위치 찾기 버튼 -->
+    <div class="location-control">
         <button id="locate-btn" class="locate-button" title="내 위치 찾기">
             <i class="fas fa-location-crosshairs"></i>
         </button>
-        
-        <!-- 범례 -->
-        <div class="legend-box">
-            <h3>범례</h3>
-            <ul>
-                <li class="legend-item">
-                    <input type="checkbox" id="attractions-toggle" data-type="attractions" checked>
-                    <label for="attractions-toggle">
-                        <div class="legend-marker attractions-marker">
-                            <i class="fas fa-landmark"></i>
-                        </div> 관광지
-                    </label>
-                </li>
-                <li class="legend-item">
-                    <input type="checkbox" id="restaurants-toggle" data-type="restaurants" checked>
-                    <label for="restaurants-toggle">
-                        <div class="legend-marker restaurants-marker">
-                            <i class="fas fa-utensils"></i>
-                        </div> 맛집
-                    </label>
-                </li>
-                <li class="legend-item">
-                    <input type="checkbox" id="hotels-toggle" data-type="hotels" checked>
-                    <label for="hotels-toggle">
-                        <div class="legend-marker hotels-marker">
-                            <i class="fas fa-hotel"></i>
-                        </div> 숙소
-                    </label>
-                </li>
-                <li class="legend-item">
-                    <input type="checkbox" id="airports-toggle" data-type="airports" checked>
-                    <label for="airports-toggle">
-                        <div class="legend-marker airports-marker">
-                            <i class="fas fa-plane"></i>
-                        </div> 공항
-                    </label>
-                </li>
-            </ul>
-        </div>
-        
-        <!-- 지도 타입 선택 -->
-        <div class="map-controls">
-            <h3>지도 타입</h3>
-            <button class="map-btn active" data-type="osm">심플 지도</button>
-            <button class="map-btn" data-type="terrain">도로 지도</button>
-            <button class="map-btn" data-type="satellite">위성 지도</button>
-            <hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;">
-            <button class="map-btn" data-type="subway_transport">교통 지도</button>
-        </div>
     </div>
-    
+
+    <!-- 지도 타입 선택 -->
+    <div class="map-tile-control">
+        <h4><i class="fas fa-layer-group"></i> 지도 종류</h4>
+        <label class="tile-option active" id="cartodb-option">
+            <input type="radio" name="tile-layer" value="cartodb" checked>
+            🎨 심플
+        </label>
+        <label class="tile-option" id="street-option">
+            <input type="radio" name="tile-layer" value="street">
+            🛣️ 도로
+        </label>
+        <label class="tile-option" id="satellite-option">
+            <input type="radio" name="tile-layer" value="satellite">
+            🛰️ 위성
+        </label>
+        <label class="tile-option" id="subway-option">
+            <input type="radio" name="tile-layer" value="subway_transport">
+            🚇 교통
+        </label>
+    </div>
+
+    <!-- 범례 -->
+    <div class="legend-box">
+        <h3><i class="fas fa-list"></i> 범례</h3>
+        <ul>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="attractions-toggle" data-type="attractions" checked>
+                    <div class="marker-icon tourism-marker">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    관광지
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="restaurants-toggle" data-type="restaurants" checked>
+                    <div class="marker-icon restaurant-marker">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    음식점
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="hotels-toggle" data-type="hotels" checked>
+                    <div class="marker-icon accommodation-marker">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    호텔
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="airports-toggle" data-type="airports" checked>
+                    <div class="marker-icon airport-marker">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    공항
+                </label>
+            </li>
+        </ul>
+    </div>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -159,24 +140,5 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
-    
-    <script>
-        // 테스트용 추가 기능들
-        console.log('🧪 테스트 버전 로드됨');
-        
-        // 테스트용 함수들
-        function testImageLoading() {
-            console.log('이미지 로딩 테스트 시작');
-            // 이미지 로딩 테스트 로직
-        }
-        
-        function testPopupDesign() {
-            console.log('팝업 디자인 테스트 시작');
-            // 팝업 디자인 테스트 로직
-        }
-        
-        // 테스트용 전역 변수
-        window.isTestMode = true;
-    </script>
 </body>
 </html> 
