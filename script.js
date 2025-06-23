@@ -371,8 +371,17 @@ function setupEventListeners() {
     document.querySelectorAll('.day-btn').forEach(button => {
         button.addEventListener('click', function() {
             const dayKey = this.getAttribute('data-day');
-            showDayBottomSheet(dayKey);
-            filterMarkersByDay(dayKey);
+            
+            if (dayKey === 'all') {
+                // 전체 일정 팝업 표시
+                const itineraryPopup = document.getElementById('itinerary-popup');
+                itineraryPopup.classList.add('show');
+                displayItinerary('all');
+                filterMarkersByDay('all'); // 모든 마커 표시
+            } else {
+                showDayBottomSheet(dayKey);
+                filterMarkersByDay(dayKey);
+            }
         });
     });
 }
@@ -664,24 +673,102 @@ function initializeItineraryPanel() {
 }
 
 function displayItinerary(dayKey) {
-    const itineraryContent = document.getElementById('itinerary-content');
-    const dayData = window.itineraryData[dayKey];
+    const content = document.getElementById('itinerary-content');
     
-    if (!dayData) {
-        itineraryContent.innerHTML = '<p>일정 정보를 찾을 수 없습니다.</p>';
-        return;
+    if (dayKey === 'all') {
+        // 전체 일정 표시
+        let allItineraryHTML = '<div class="all-itinerary">';
+        
+        for (let i = 1; i <= 4; i++) {
+            const dayKey = `day${i}`;
+            const daySchedule = shanghaiData.itinerary[dayKey];
+            if (!daySchedule) continue;
+            
+            const dayTitle = i === 1 ? '11.12 (1일차)' : 
+                           i === 2 ? '11.13 (2일차)' : 
+                           i === 3 ? '11.14 (3일차)' : '11.15 (4일차)';
+            
+            allItineraryHTML += `
+                <div class="day-schedule all-day-schedule">
+                    <h4><i class="fas fa-calendar-day"></i> ${dayTitle}</h4>
+                    <div class="schedule-grid">
+            `;
+            
+            // 일정 항목들을 시간순으로 정렬
+            const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
+                const timeA = a[1].time || '00:00';
+                const timeB = b[1].time || '00:00';
+                return timeA.localeCompare(timeB);
+            });
+            
+            scheduleItems.forEach(([key, schedule]) => {
+                const icon = getScheduleIcon(key);
+                allItineraryHTML += `
+                    <div class="schedule-item all-schedule-item">
+                        <div class="schedule-time">
+                            <i class="${icon}"></i>
+                            <span>${schedule.time}</span>
+                        </div>
+                        <div class="schedule-location">${schedule.location}</div>
+                        <div class="schedule-desc">${schedule.description}</div>
+                    </div>
+                `;
+            });
+            
+            allItineraryHTML += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        allItineraryHTML += '</div>';
+        content.innerHTML = allItineraryHTML;
+    } else {
+        // 개별 일정 표시 (기존 로직)
+        const daySchedule = shanghaiData.itinerary[dayKey];
+        if (!daySchedule) {
+            content.innerHTML = '<p>일정 정보를 찾을 수 없습니다.</p>';
+            return;
+        }
+        
+        let itineraryHTML = '<div class="day-schedule">';
+        
+        // 일정 항목들을 시간순으로 정렬
+        const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
+            const timeA = a[1].time || '00:00';
+            const timeB = b[1].time || '00:00';
+            return timeA.localeCompare(timeB);
+        });
+        
+        scheduleItems.forEach(([key, schedule]) => {
+            itineraryHTML += createItineraryItem(key, schedule);
+        });
+        
+        itineraryHTML += '</div>';
+        content.innerHTML = itineraryHTML;
     }
     
-    let html = `<div class="day-schedule"><h4>${dayKey} 일정</h4>`;
-    
-    Object.entries(dayData).forEach(([key, schedule]) => {
-        html += createItineraryItem(key, schedule);
-    });
-
-    html += `</div>`;
-    itineraryContent.innerHTML = html;
-    
     addItineraryClickListeners();
+}
+
+function getScheduleIcon(key) {
+    const iconMap = {
+        'arrival': 'fas fa-plane-arrival',
+        'departure': 'fas fa-plane-departure',
+        'hotel': 'fas fa-bed',
+        'breakfast': 'fas fa-coffee',
+        'lunch': 'fas fa-utensils',
+        'dinner': 'fas fa-utensils',
+        'morning': 'fas fa-sun',
+        'afternoon': 'fas fa-sun',
+        'afternoon1': 'fas fa-sun',
+        'afternoon2': 'fas fa-sun',
+        'afternoon3': 'fas fa-sun',
+        'evening': 'fas fa-moon',
+        'evening1': 'fas fa-moon',
+        'evening2': 'fas fa-moon'
+    };
+    return iconMap[key] || 'fas fa-map-marker-alt';
 }
 
 function createItineraryItem(key, schedule) {

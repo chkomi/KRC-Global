@@ -20,7 +20,7 @@
         "image": "images/attractions/oriental-pearl-tower.jpg"
       },
       {
-        "name": "上海博物馆 (상하이 박물관, Shanghai Museum)",
+        "name": "上海博物馆 (상하이박물관, Shanghai Museum)",
         "address": "上海市人民大道201号 (No. 201 Renmin Avenue, Shanghai)",
         "latitude": 31.2248,
         "longitude": 121.469,
@@ -56,7 +56,7 @@
         "image": "images/attractions/xintiandi.jpg"
       },
       {
-        "name": "上海中心大厦 (상하이 타워, Shanghai Tower)",
+        "name": "上海中心大厦 (상하이타워, Shanghai Tower)",
         "address": "上海市浦东新区银城中路501号(No. 501 Yincheng Middle Road, Pudong New Area, Shanghai)",
         "latitude": 31.235614,
         "longitude": 121.501161,
@@ -74,7 +74,7 @@
         "image": "images/attractions/tianzifang.jpg"
       },
       {
-        "name": "大韩民国上海临时政府 (대한민국 상하이임시정부, Provisional Government of the Republic of Korea in Shanghai)",
+        "name": "大韩民国上海临时政府 (상하이임시정부, Provisional Government of the Republic of Korea in Shanghai)",
         "address": "上海市黄浦区马当路306弄4号(No. 4, Lane 306, Madang Road, Huangpu District, Shanghai, 200020)",
         "latitude": 31.219137,
         "longitude": 121.470138,
@@ -139,7 +139,7 @@
     ],
     "restaurants": [
       {
-        "name": "四季民福烤鸭店(香港广场店) (사계민복, Sihai Minfu)",
+        "name": "四季民福烤鸭店-香港广场店 (사계민복, Sihai Minfu)",
         "address": "上海市黄浦区淮海中路282号(No. 282 Huaihai Middle Road, Huangpu District, Shanghai)",
         "latitude": 31.225798,
         "longitude": 121.470208,
@@ -148,7 +148,7 @@
         "image": "images/restaurants/sihai-minfu.jpg"
       },
       {
-        "name": "蟹小友·蟹黄面·手工点心(南京东路店) (시에소우, Xie Xiaoyou)",
+        "name": "蟹小友·蟹黄面·手工点心-南京东路店 (시에소우, Xie Xiaoyou)",
         "address": "上海市黄浦区南京东路588号丝绸商厦负一楼",
         "latitude": 31.237807,
         "longitude": 121.474958,
@@ -157,7 +157,7 @@
         "image": "images/restaurants/xie-xiaoyou.jpg"
       },
       {
-        "name": "小杨生煎(福州路文化街店) (샤오양셩지엔, XiaoYangShengJian)",
+        "name": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
         "address": "上海市黄浦区福州路567号1楼东北侧-b(八仙商务楼西侧30米)",
         "latitude": 31.234697,
         "longitude": 121.475275,
@@ -166,31 +166,13 @@
         "image": "images/restaurants/xiaoyang-shengjian.jpg"
       },
       {
-        "name": "点都德(环宇荟店)(디엔또우더, DianDouDe)",
+        "name": "点都德-环宇荟店 (디엔또우더, DianDouDe)",
         "address": "上海市黄浦区黄陂南路838弄环宇荟B1层(地铁9/13号线马当路站5号口)",
         "latitude": 31.213669,
         "longitude": 121.471944,
         "description": "광동식 딤섬 전문점으로 시진핑이 인정한 미식명소, 5성급서비스와 전통 딤섬의 완벽한 조화",
         "menu": ["홍미창펀", "하가우", "시우마이", "차슈번"],
         "image": "images/restaurants/dian-dou-de.jpg"
-      },
-      {
-        "name": "夜上海(예상하이, YeShangHai)",
-        "address": "上海市黄浦区湖滨路168号无限极荟307",
-        "latitude": 31.222628,
-        "longitude": 121.473282,
-        "description": "상하이 전통 야경 레스토랑으로 황푸강 뷰를 감상하며 즐기는 고급 중식당",
-        "menu": ["야경뷰", "고급중식", "황푸강전망", "프리미엄다이닝"],
-        "image": "images/restaurants/ye-shang-hai.jpg"
-      },
-      {
-        "name": "鼎泰丰(新天地时尚一期店)(딘타이펑, DinTaiFeng)",
-        "address": "上海市黄浦区兴业路123弄新天地南里广场2楼",
-        "latitude": 31.220972,
-        "longitude": 121.470798,
-        "description": "대만 본점의 정통 레시피로 만든 세계적인 샤오롱바오 전문점, 얇은 피와 풍부한 육즙이 특징",
-        "menu": ["샤오롱바오", "홍유샤", "볶음밥", "훈툰"],
-        "image": "images/restaurants/din-tai-feng.jpg"
       },
       {
         "name": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
@@ -202,7 +184,7 @@
         "image": "images/restaurants/fu-chun-xiao-long.jpg"
       },
       {
-        "name": "海底捞火锅(外滩店)(하이디라오, HaiDiLao)",
+        "name": "海底捞火锅-外滩店 (하이디라오, HaiDiLao)",
         "address": "上海市黄浦区南京东路123号中央商场5楼",
         "latitude": 31.240233,
         "longitude": 121.483142,
@@ -229,7 +211,7 @@
         "image": "images/restaurants/lu-gang-xiao-zhen.jpg"
       },
       {
-        "name": "外婆家(上海静安大悦城店)(와이포지아, WaiPoJia)",
+        "name": "外婆家-上海静安大悦城店 (와이포지아, WaiPoJia)",
         "address": "上海市静安区曲阜路180号上海大悦城7楼(曲阜路地铁站출입구옆)",
         "latitude": 31.2144771,
         "longitude": 121.467395,
@@ -238,7 +220,7 @@
         "image": "images/restaurants/wai-po-jia.jpg"
       },
       {
-        "name": "很久以前羊肉串(光音广场店)（옛날옛적에, HenJiuYiQian）",
+        "name": "很久以前羊肉串-光音广场店 （옛날옛적에, HenJiuYiQian）",
         "address": "上海市浦东新区银城路167号兴业银行大厦北侧B1层内广场",
         "latitude": 31.2447,
         "longitude": 121.509234,
@@ -249,7 +231,7 @@
     ],
     "hotels": [
       {
-        "name": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드, SSAW Boutique Hotel Shanghai Bund)",
+        "name": "上海中星铂尔曼酒店 (SSAW부티크 호텔상하이 번드, SSAW Boutique Hotel Shanghai Bund)",
         "address": "上海市黄浦区人民路839호 (No. 839 Renmin Road, Huangpu District, Shanghai)",
         "latitude": 31.229514,
         "longitude": 121.480127,
@@ -261,7 +243,7 @@
     ],
     "airports": [
       {
-        "name": "上海浦东国际机场 (상하이 푸동국제공항, Shanghai Pudong International Airport)",
+        "name": "上海浦东国际机场 (푸동국제공항, Shanghai Pudong International Airport)",
         "address": "上海市浦东新区迎宾大道18호(No. 18 Yingbin Avenue, Pudong New Area, Shanghai)",
         "latitude": 31.1443,
         "longitude": 121.8058,
@@ -338,8 +320,8 @@
         },
         "afternoon": {
           "time": "14:00",
-          "location": "田子坊(톈즈팡, Tianzifang)",
-          "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을"
+          "location": "南京东路 (난징동루, Nanjing Road East)",
+          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
         },
         "evening1": {
           "time": "15:00",
@@ -380,11 +362,6 @@
           "time": "14:00",
           "location": "田子坊(톈즈팡, Tianzifang)",
           "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을"
-        },
-        "evening1": {
-          "time": "16:00",
-          "location": "田子坊 (텐즈팡, Tianzifang)",
-          "description": "예술, 문화, 쇼핑이 결합된 독특한 공간 탐방"
         },
         "dinner": {
           "time": "18:00",

@@ -731,24 +731,26 @@ html, body {
 
 .itinerary-popup-content {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+    border-radius: 15px;
     width: 90%;
-    max-height: 80vh;
+    max-width: 800px;
+    max-height: 90vh;
     overflow: hidden;
-    animation: slideUp 0.3s ease-out;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: popupFadeIn 0.3s ease-out;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.all-days-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.all-days-btn:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
 }
 
 .itinerary-popup-header {
@@ -835,59 +837,127 @@ html, body {
 }
 
 .schedule-item {
-    margin: 8px 0;
-    padding: 8px 12px;
-    background: white;
-    border-radius: 6px;
-    border-left: 3px solid #28a745;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.schedule-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
 }
 
 .schedule-item i {
-    color: #667eea;
+    color: #6c757d;
     width: 16px;
     text-align: center;
 }
 
 .schedule-time {
     font-weight: 600;
-    color: #2c3e50;
+    color: #495057;
     min-width: 60px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .schedule-location {
+    font-weight: 500;
+    color: #212529;
     flex: 1;
-    color: #555;
 }
 
-/* Mobile Responsive for Itinerary */
+/* 전체 일정 보기 스타일 */
+.all-itinerary {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.all-day-schedule {
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.all-day-schedule h4 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin: 0;
+    padding: 15px 20px;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.schedule-grid {
+    padding: 15px;
+}
+
+.all-schedule-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 2fr;
+    gap: 15px;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-left: 4px solid #667eea;
+}
+
+.all-schedule-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.all-schedule-item .schedule-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.all-schedule-item .schedule-location {
+    font-weight: 500;
+    color: #212529;
+    font-size: 0.95em;
+}
+
+.all-schedule-item .schedule-desc {
+    color: #6c757d;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
 @media (max-width: 768px) {
-    .itinerary-popup-content {
-        width: 95%;
-        max-height: 90vh;
+    .all-schedule-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
     
-    .itinerary-popup-header {
-        padding: 15px;
+    .all-schedule-item .schedule-time {
+        justify-content: flex-start;
     }
     
-    .itinerary-popup-header h3 {
-        font-size: 1.1em;
+    .all-schedule-item .schedule-location {
+        font-weight: 600;
     }
     
-    .itinerary-popup-body {
-        padding: 15px;
-        max-height: 70vh;
-    }
-    
-    .day-schedule {
-        padding: 12px;
-    }
-    
-    .schedule-item {
-        padding: 6px 10px;
+    .all-schedule-item .schedule-desc {
         font-size: 0.9em;
     }
 }
