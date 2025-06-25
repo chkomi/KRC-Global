@@ -717,6 +717,30 @@ function initializeItineraryPanel() {
     });
 }
 
+function calculateDayCosts(daySchedule) {
+    let totalTransportCost = 0;
+    let totalActivityCost = 0;
+    
+    Object.values(daySchedule).forEach(schedule => {
+        if (schedule.cost) {
+            if (schedule.cost.transport) {
+                const transportCost = parseInt(schedule.cost.transport.replace(/[^\d]/g, '')) || 0;
+                totalTransportCost += transportCost;
+            }
+            if (schedule.cost.activity) {
+                const activityCost = parseInt(schedule.cost.activity.replace(/[^\d]/g, '')) || 0;
+                totalActivityCost += activityCost;
+            }
+        }
+    });
+    
+    return {
+        transport: totalTransportCost > 0 ? `교통: ¥${totalTransportCost}` : '',
+        activity: totalActivityCost > 0 ? `활동: ¥${totalActivityCost}` : '',
+        total: totalTransportCost + totalActivityCost
+    };
+}
+
 function displayItinerary(dayKey) {
     const content = document.getElementById('itinerary-content');
     
@@ -1075,9 +1099,9 @@ function showDayBottomSheet(dayKey) {
         return timeA.localeCompare(timeB);
     });
     
-    const dayCosts = calculateDayCosts(scheduleItems);
-    updateItineraryTitle(dayKey, dayCosts.total);
-    
+    // 총 비용 계산
+    const dayCosts = calculateDayCosts(daySchedule);
+
     scheduleItems.forEach(([key, schedule]) => {
         const icon = getScheduleIcon(key);
         const itemClass = getScheduleItemClass(key);
@@ -1107,6 +1131,13 @@ function showDayBottomSheet(dayKey) {
             </div>
         `;
     });
+    
+    // 총 비용 표시
+    dayItineraryHTML += `
+        <div class="day-cost-summary">
+            <strong>총 비용:</strong> ${dayCosts.transport} ${dayCosts.activity} <span style="margin-left:8px;">합계: ¥${dayCosts.total}</span>
+        </div>
+    `;
     
     bottomSheetItems.innerHTML = dayItineraryHTML;
     bottomSheet.classList.add('show');
