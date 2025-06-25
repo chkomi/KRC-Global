@@ -744,6 +744,10 @@ function displayItinerary(dayKey) {
                 const icon = getScheduleIcon(key);
                 const itemClass = getScheduleItemClass(key);
                 const locationName = extractKorean(schedule.location);
+                const distance = schedule.distance || '-';
+                const transportCost = schedule.cost?.transport || '';
+                const activityCost = schedule.cost?.activity || '';
+                
                 allItineraryHTML += `
                     <div class="schedule-item all-schedule-item ${itemClass}">
                         <div class="schedule-time">
@@ -753,6 +757,13 @@ function displayItinerary(dayKey) {
                         <div class="schedule-content">
                             <div class="schedule-location">${locationName}</div>
                             <div class="schedule-desc">${schedule.description}</div>
+                        </div>
+                        <div class="schedule-distance">
+                            <div class="distance-value">${distance}</div>
+                        </div>
+                        <div class="schedule-cost">
+                            ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
+                            ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -1042,7 +1053,7 @@ function showDayBottomSheet(dayKey) {
         titleElement.textContent = dayTitle;
     }
     
-    let html = '';
+    let dayItineraryHTML = '';
     
     // 일정 항목들을 시간순으로 정렬
     const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
@@ -1055,9 +1066,12 @@ function showDayBottomSheet(dayKey) {
         const icon = getScheduleIcon(key);
         const itemClass = getScheduleItemClass(key);
         const locationName = extractKorean(schedule.location);
+        const distance = schedule.distance || '-';
+        const transportCost = schedule.cost?.transport || '';
+        const activityCost = schedule.cost?.activity || '';
         
-        html += `
-            <div class="bottom-sheet-item ${itemClass}" data-location="${schedule.location}">
+        dayItineraryHTML += `
+            <div class="schedule-item bottom-sheet-item ${itemClass}">
                 <div class="bottom-sheet-time">
                     <i class="${icon}"></i>
                     <span>${schedule.time}</span>
@@ -1066,11 +1080,18 @@ function showDayBottomSheet(dayKey) {
                     <div class="bottom-sheet-location">${locationName}</div>
                     <div class="bottom-sheet-desc">${schedule.description}</div>
                 </div>
+                <div class="bottom-sheet-distance">
+                    <div class="distance-value">${distance}</div>
+                </div>
+                <div class="bottom-sheet-cost">
+                    ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
+                    ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
+                </div>
             </div>
         `;
     });
     
-    bottomSheetItems.innerHTML = html;
+    bottomSheetItems.innerHTML = dayItineraryHTML;
     bottomSheet.classList.add('show');
     
     // 닫기 버튼 이벤트

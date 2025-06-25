@@ -957,7 +957,7 @@ html, body {
 
 .all-schedule-item {
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 50px 1fr 80px 100px;
     gap: 12px;
     padding: 10px 12px;
     border-radius: 8px;
@@ -1024,10 +1024,44 @@ html, body {
     text-overflow: ellipsis;
 }
 
+.all-schedule-item .schedule-distance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.75em;
+    color: #6c757d;
+    text-align: center;
+}
+
+.all-schedule-item .schedule-distance .distance-value {
+    font-weight: 600;
+    color: #495057;
+}
+
+.all-schedule-item .schedule-cost {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.7em;
+    color: #6c757d;
+}
+
+.all-schedule-item .schedule-cost .transport-cost {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.all-schedule-item .schedule-cost .activity-cost {
+    color: #28a745;
+    font-weight: 500;
+}
+
 /* 각 일차별 일정 스타일 */
 .bottom-sheet-item {
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 50px 1fr 80px 100px;
     gap: 12px;
     padding: 12px 15px;
     border-radius: 8px;
@@ -1091,6 +1125,40 @@ html, body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.bottom-sheet-item .bottom-sheet-distance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.75em;
+    color: #6c757d;
+    text-align: center;
+}
+
+.bottom-sheet-item .bottom-sheet-distance .distance-value {
+    font-weight: 600;
+    color: #495057;
+}
+
+.bottom-sheet-item .bottom-sheet-cost {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.7em;
+    color: #6c757d;
+}
+
+.bottom-sheet-item .bottom-sheet-cost .transport-cost {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.bottom-sheet-item .bottom-sheet-cost .activity-cost {
+    color: #28a745;
+    font-weight: 500;
 }
 
 /* 일정 항목 색상 구분 - 전체 일정 */

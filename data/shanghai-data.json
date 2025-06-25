@@ -266,47 +266,92 @@
         "arrival": {
           "time": "09:00",
           "location": "上海浦东国际机场 (상하이 푸동국제공항, Shanghai Pudong International Airport)",
-          "description": "상하이 푸동국제공항 도착"
+          "description": "상하이 푸동국제공항 도착",
+          "distance": "44km",
+          "cost": {
+            "transport": "620위안 (디디)",
+            "activity": null
+          }
         },
         "hotel": {
           "time": "10:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
-          "description": "숙소 체크인 및 짐 두기"
+          "description": "숙소 체크인 및 짐 두기",
+          "distance": null,
+          "cost": {
+            "transport": null,
+            "activity": null
+          }
         },
         "morning": {
           "time": "10:30",
           "location": "豫园 (예원, Yu Garden)",
-          "description": "중국 전통 정원에서 아름다운 풍경 감상"
+          "description": "중국 전통 정원에서 아름다운 풍경 감상",
+          "distance": "2km",
+          "cost": {
+            "transport": null,
+            "activity": "210위안 (관광)"
+          }
         },
         "lunch": {
           "time": "12:00",
           "location": "四季民福烤鸭店(香港广场店) (사계민복, Sihai Minfu)",
-          "description": "베이징 오리 요리 전문점"
+          "description": "베이징 오리 요리 전문점",
+          "distance": "3km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": "1000위안 (식사)"
+          }
         },
         "afternoon1": {
           "time": "13:30",
           "location": "上海博物馆 (상하이 박물관, Shanghai Museum)",
-          "description": "풍부한 중국 예술품과 역사 컬렉션 관람"
+          "description": "풍부한 중국 예술품과 역사 컬렉션 관람",
+          "distance": null,
+          "cost": {
+            "transport": null,
+            "activity": null
+          }
         },
         "afternoon2": {
           "time": "15:00",
           "location": "大韩民国上海临时政府 (대한민국 상하이임시정부)",
-          "description": "독립운동의 성지에서 역사 교육"
+          "description": "독립운동의 성지에서 역사 교육",
+          "distance": "2km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": null
+          }
         },
         "afternoon3": {
           "time": "16:00",
           "location": "新天地 (신천지, Xintiandi)",
-          "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역 탐방"
+          "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역 탐방",
+          "distance": "1km",
+          "cost": {
+            "transport": null,
+            "activity": "140위안 (관광)"
+          }
         },
         "dinner": {
           "time": "18:00",
           "location": "海底捞火锅(外滩店)(하이디라오, HaiDiLao)",
-          "description": "중국 최고의 훠궈 체인점에서 프리미엄 훠궈"
+          "description": "중국 최고의 훠궈 체인점에서 프리미엄 훠궈",
+          "distance": "3km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": "2000위안 (식사)"
+          }
         },
         "evening": {
           "time": "19:00",
           "location": "上海中心大厦 (상하이 타워, Shanghai Tower)",
           "description": "현대 상하이의 랜드마크 건물에서 전망 감상",
+          "distance": "5km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": "1400위안 (관광)"
+          },
           "alternative": "황푸강 유람선 (Huangpu River Cruise)"
         }
       },
