@@ -1367,3 +1367,13 @@ document.addEventListener('DOMContentLoaded', function() {
             setupMapClickToClosePopup();
         });
 });
+
+// 팝업 닫힐 때 라벨 다시 표시
+map.on('popupclose', function(e) {
+    allMarkers.forEach(markerData => {
+        if (!markerData.visible) {
+            markerData.marker.bindTooltip(markerData.tooltip);
+            markerData.visible = true;
+        }
+    });
+});
