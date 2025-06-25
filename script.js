@@ -746,6 +746,9 @@ function displayItinerary(dayKey) {
                 return timeA.localeCompare(timeB);
             });
             
+            const dayCosts = calculateDayCosts(scheduleItems);
+            updateItineraryTitle(dayKey, dayCosts.total);
+            
             scheduleItems.forEach(([key, schedule]) => {
                 const icon = getScheduleIcon(key);
                 const itemClass = getScheduleItemClass(key);
@@ -800,6 +803,9 @@ function displayItinerary(dayKey) {
             const timeB = b[1].time || '00:00';
             return timeA.localeCompare(timeB);
         });
+        
+        const dayCosts2 = calculateDayCosts(scheduleItems);
+        updateItineraryTitle(dayKey, dayCosts2.total);
         
         scheduleItems.forEach(([key, schedule]) => {
             itineraryHTML += createItineraryItem(key, schedule);
@@ -1069,6 +1075,9 @@ function showDayBottomSheet(dayKey) {
         return timeA.localeCompare(timeB);
     });
     
+    const dayCosts = calculateDayCosts(scheduleItems);
+    updateItineraryTitle(dayKey, dayCosts.total);
+    
     scheduleItems.forEach(([key, schedule]) => {
         const icon = getScheduleIcon(key);
         const itemClass = getScheduleItemClass(key);
@@ -1198,6 +1207,17 @@ function setupMapClickToClosePopup() {
             if (bottomSheet) bottomSheet.classList.remove('show');
             filterMarkersByDay('all'); // 지도 클릭 시 마커 전체 복원
         });
+    }
+}
+
+// 일정 제목 업데이트 함수
+function updateItineraryTitle(selectedDay, totalCost) {
+    const titleElem = document.querySelector('.itinerary-title');
+    if (!titleElem) return;
+    if (selectedDay === 'all') {
+        titleElem.textContent = `전체 일정 (총 비용: ${totalCost}위안)`;
+    } else {
+        titleElem.textContent = `${selectedDay}일차 일정 (총 비용: ${totalCost}위안)`;
     }
 }
 
