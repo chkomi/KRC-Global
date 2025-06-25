@@ -175,7 +175,7 @@
         "image": "images/restaurants/xiaoyang-shengjian.jpg"
       },
       {
-        "name": "点都德-环宇荟店 (디엔또우더, DianDouDe)",
+        "name": "点都德-环宇荟店 (점도덕, DianDouDe)",
         "address": "上海市黄浦区黄陂南路838弄环宇荟B1层(地铁9/13号线马当路站5号口)",
         "latitude": 31.213669,
         "longitude": 121.471944,
@@ -184,7 +184,7 @@
         "image": "images/restaurants/dian-dou-de.jpg"
       },
       {
-        "name": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
+        "name": "富春小笼-虹桥南丰城店 (푸춘샤오롱, FuChunXiaoLong)",
         "address": "上海市长宁区遵义路100号虹桥南丰城南区B1층",
         "latitude": 31.208943,
         "longitude": 121.402836,
@@ -358,7 +358,7 @@
       "day2": {
         "breakfast": {
           "time": "09:00",
-          "location": "富春小笼(푸춘샤오롱, FuChunXiaoLong)",
+          "location": "富春小笼-虹桥南丰城店(푸춘샤오롱, FuChunXiaoLong)",
           "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오",
           "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
@@ -409,7 +409,7 @@
         "lunch": {
           "time": "12:00",
           "location": "红樽楼(홍췐루, HongZunLou)",
-          "description": "상하이 전통 요리 전문점",
+          "description": "한인타운",
           "alternative": "外滩老饭店(와이포지아, Waitan Lao Fandian)"
         },
         "afternoon": {
@@ -419,7 +419,7 @@
         },
         "dinner": {
           "time": "18:00",
-          "location": "点都德-环宇荟店(디엔또우더, DianDouDe)",
+          "location": "点都德-环宇荟店(점도덕, DianDouDe)",
           "description": "광동식 딤섬 전문점에서 전통 딤섬"
         },
         "evening": {
@@ -431,7 +431,7 @@
       "day4": {
         "breakfast": {
           "time": "08:00",
-          "location": "小绍兴(시에소우, XiaoShaoXing)",
+          "location": "小绍兴(시에샤오싱, XiaoShaoXing)",
           "description": "상하이 전통 조식 전문점",
           "alternative": "호텔 조식"
         },
