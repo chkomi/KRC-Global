@@ -4,101 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상하이 11월 여행 계획</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- Leaflet MarkerCluster CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 지도 컨테이너 -->
-    <div id="map"></div>
-    
-    <!-- Day buttons -->
-    <div class="day-buttons-container">
-        <button class="day-btn" data-day="day1">11.12<br><span class="day-number">(1일차)</span></button>
-        <button class="day-btn" data-day="day2">11.13<br><span class="day-number">(2일차)</span></button>
-        <button class="day-btn" data-day="day3">11.14<br><span class="day-number">(3일차)</span></button>
-        <button class="day-btn" data-day="day4">11.15<br><span class="day-number">(4일차)</span></button>
-        <button class="day-btn all-days-btn" data-day="all">전체 일정</button>
-    </div>
-    
-    <!-- 하단 일정 팝업 -->
-    <div id="bottom-sheet" class="bottom-sheet">
-        <div class="bottom-sheet-header">
-            <div class="drag-handle"></div>
-            <h3 class="bottom-sheet-title">일정</h3>
-            <button class="bottom-sheet-close" id="close-bottom-sheet">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="bottom-sheet-content">
-            <div id="bottom-sheet-items"></div>
-        </div>
-    </div>
-    
-    <!-- 팝업식 일정 패널 -->
-    <div id="itinerary-popup" class="itinerary-popup">
-        <div class="itinerary-popup-content">
-            <div class="itinerary-popup-header">
-                <h3><i class="fas fa-calendar-alt"></i> 상하이 여행 일정</h3>
-                <button id="close-itinerary" class="close-button">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="itinerary-popup-body">
-                <div id="itinerary-content">
-                    <!-- 일정 내용이 여기에 동적으로 로드됩니다 -->
-                </div>
-            </div>
-        </div>
+    <div class="map-tile-control">
+        <h4>🗺️ 지도 종류</h4>
+        <label class="tile-option active" id="cartodb-option">
+            <input type="radio" name="tile-layer" value="cartodb" checked>
+            🎨 심플
+        </label>
+        <label class="tile-option" id="street-option">
+            <input type="radio" name="tile-layer" value="street">
+            🛣️ 도로
+        </label>
+        <label class="tile-option" id="satellite-option">
+            <input type="radio" name="tile-layer" value="satellite">
+            🛰️ 위성
+        </label>
     </div>
 
-    <!-- 위치 찾기 버튼 -->
     <div class="location-control">
         <button id="locate-btn" class="locate-button" title="내 위치 찾기">
             <i class="fas fa-location-crosshairs"></i>
         </button>
     </div>
 
-    <!-- 지도 타입 선택 -->
-    <div class="map-tile-control">
-        <div class="tile-grid">
-            <button class="tile-btn active" id="cartodb-option" data-tile="cartodb" title="심플 지도">
-                🎨
-            </button>
-            <button class="tile-btn" id="street-option" data-tile="street" title="도로 지도">
-                🛣️
-            </button>
-            <button class="tile-btn" id="satellite-option" data-tile="satellite" title="위성 지도">
-                🛰️
-            </button>
-            <button class="tile-btn" id="subway-option" data-tile="subway_transport" title="교통 지도">
-                🚇
-            </button>
-        </div>
+    <div class="legend-box">
+        <h3><i class="fas fa-list"></i> 범례</h3>
+        <ul>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="attractions-toggle" checked>
+                    <div class="marker-icon tourism-marker">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    관광지
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="restaurants-toggle" checked>
+                    <div class="marker-icon restaurant-marker">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    음식점
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="airports-toggle" checked>
+                    <div class="marker-icon airport-marker">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    공항
+                </label>
+            </li>
+            <li>
+                <label class="legend-item">
+                    <input type="checkbox" id="hotels-toggle" checked>
+                    <div class="marker-icon accommodation-marker">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    호텔
+                </label>
+            </li>
+        </ul>
     </div>
 
-    <!-- 범례 삭제 -->
+    <div id="map"></div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <!-- Leaflet MarkerCluster JS -->
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    
-    <!-- Custom JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
