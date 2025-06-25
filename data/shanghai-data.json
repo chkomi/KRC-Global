@@ -236,6 +236,15 @@
         "description": "정통 신장 스타일의 양꼬치 전문점",
         "menu": ["양꼬치"],
         "image": "images/restaurants/hen-jiu-yi-qian.jpg"
+      },
+      {
+        "name": "莉莲蛋挞-人民广场站店 (릴리안에그타르트, Lillian Bakery)",
+        "address": "上海市黄浦区南京西路2-68号人民广场地铁站B1层(近南京西路)",
+        "latitude": 31.234968,
+        "longitude": 121.470117,
+        "description": "상하이에서 가장 유명한 에그타르트 전문점. 바삭한 페이스트리와 부드러운 커스터드가 일품.",
+        "menu": ["에그타르트", "커스터드타르트"],
+        "image": "images/restaurants/lillian-bakery.jpg"
       }
     ],
     "hotels": [
@@ -362,6 +371,16 @@
           "cost": {
             "transport": "30위안 (디디)",
             "activity": null
+          }
+        },
+        "lillian_bakery": {
+          "time": "14:30",
+          "location": "莉莲蛋挞-人民广场站店 (릴리안에그타르트, Lillian Bakery)",
+          "description": "상하이 대표 에그타르트 맛집 방문 및 간식",
+          "distance": null,
+          "cost": {
+            "transport": null,
+            "activity": "200위안 (식사)"
           }
         }
       },
