@@ -330,15 +330,51 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    let html = `<div class='popup-header'><h3>${place.name.split('/')[0].trim()}</h3></div>`;
+    const koreanName = extractKorean(place.name);
+    const typeLabel = getTypeLabel(place.type || 'attractions');
+    
+    let html = `<div class='popup-header'>
+        <h3><i class="fas fa-map-marker-alt"></i> ${koreanName}</h3>
+        <span class="place-type-badge">${typeLabel}</span>
+    </div>`;
+    
     html += `<div class='popup-body'>`;
-    html += `<div class='popup-info'><p><i class='fas fa-map-marker-alt'></i> ${place.address || ''}</p>`;
-    if (place.description) html += `<p>${place.description}</p>`;
+    html += `<div class='popup-info'>`;
+    
+    if (place.address && place.address !== "N/A") {
+        html += `<p><i class='fas fa-map-marker-alt'></i> ${place.address}</p>`;
+    }
+    
+    if (place.description) {
+        html += `<p><i class='fas fa-info-circle'></i> ${place.description}</p>`;
+    }
+    
+    if (place.features && place.features.length > 0) {
+        html += `<p><i class='fas fa-star'></i> ${place.features.join(', ')}</p>`;
+    }
+    
+    if (place.price) {
+        const priceInWon = Math.round(parseInt(place.price) * 0.18);
+        html += `<div class='price-info'>
+            <i class='fas fa-coins'></i> 
+            <strong>가격:</strong> ${priceInWon.toLocaleString()}원 (약 ${parseInt(place.price).toLocaleString()}엔)
+        </div>`;
+    }
+    
     html += `</div>`;
-    html += `<div class='map-links'><h4><i class='fas fa-map'></i> 지도에서 보기</h4><div class='map-buttons'>`;
-    html += `<a class='map-btn google-btn white-text' style='color:#fff !important' href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}' target='_blank'><i class='fab fa-google'></i>구글지도</a>`;
-    html += `<a class='map-btn amap-btn white-text' style='color:#fff !important' href='https://map.kakao.com/link/search/${encodeURIComponent(place.name)}' target='_blank'><i class='fas fa-map-marked-alt'></i>고덕지도</a>`;
-    html += `</div></div></div>`;
+    html += `<div class='map-links'>
+        <h4><i class='fas fa-map'></i> 지도에서 보기</h4>
+        <div class='map-buttons'>
+            <a class='map-btn google-btn' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+                <i class='fab fa-google'></i>구글지도
+            </a>
+            <a class='map-btn amap-btn' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+                <i class='fas fa-map-marked-alt'></i>가오더지도
+            </a>
+        </div>
+    </div>`;
+    html += `</div>`;
+    
     return html;
 }
 
@@ -358,12 +394,15 @@ function setupEventListeners() {
     }
 
     // 지도 타입 선택 이벤트 리스너
-    const tileOptions = document.querySelectorAll('.tile-option input[type="radio"]');
-    tileOptions.forEach(option => {
-        option.addEventListener('change', function() {
-            if (this.checked) {
-                changeTileLayer(this.value);
-            }
+    const tileButtons = document.querySelectorAll('.tile-btn');
+    tileButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tileType = this.getAttribute('data-tile');
+            changeTileLayer(tileType);
+            
+            // 활성 상태 업데이트
+            tileButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
         });
     });
 
@@ -703,14 +742,18 @@ function displayItinerary(dayKey) {
             
             scheduleItems.forEach(([key, schedule]) => {
                 const icon = getScheduleIcon(key);
+                const itemClass = getScheduleItemClass(key);
+                const locationName = extractKorean(schedule.location);
                 allItineraryHTML += `
-                    <div class="schedule-item all-schedule-item">
+                    <div class="schedule-item all-schedule-item ${itemClass}">
                         <div class="schedule-time">
                             <i class="${icon}"></i>
                             <span>${schedule.time}</span>
                         </div>
-                        <div class="schedule-location">${schedule.location}</div>
-                        <div class="schedule-desc">${schedule.description}</div>
+                        <div class="schedule-content">
+                            <div class="schedule-location">${locationName}</div>
+                            <div class="schedule-desc">${schedule.description}</div>
+                        </div>
                     </div>
                 `;
             });
@@ -791,8 +834,9 @@ function createItineraryItem(key, schedule) {
     
     const label = labels[key] || '📅 일정';
     const isClickable = key !== 'hotel' && key !== 'arrival' && key !== 'departure';
+    const itemClass = getScheduleItemClass(key);
     
-    let html = `<div class="itinerary-item ${key} ${isClickable ? 'clickable' : ''}" data-location="${schedule.location}">`;
+    let html = `<div class="itinerary-item ${key} ${isClickable ? 'clickable' : ''} ${itemClass}" data-location="${schedule.location}">`;
     html += `<div class="itinerary-time">${label} • ${schedule.time}</div>`;
     html += `<div class="itinerary-location">${schedule.location}</div>`;
     html += `<div class="itinerary-description">${schedule.description}</div>`;
@@ -804,6 +848,26 @@ function createItineraryItem(key, schedule) {
     html += '</div>';
     
     return html;
+}
+
+function getScheduleItemClass(key) {
+    // 식사 관련
+    if (['breakfast', 'lunch', 'dinner'].includes(key)) {
+        return 'meal-item';
+    }
+    // 관광지 관련
+    else if (['morning', 'afternoon', 'afternoon1', 'afternoon2', 'afternoon3', 'evening', 'evening1', 'evening2'].includes(key)) {
+        return 'attraction-item';
+    }
+    // 교통 관련
+    else if (['arrival', 'departure'].includes(key)) {
+        return 'transport-item';
+    }
+    // 숙소 관련
+    else if (['hotel'].includes(key)) {
+        return 'hotel-item';
+    }
+    return '';
 }
 
 function addItineraryClickListeners() {
@@ -959,49 +1023,142 @@ function filterMarkersByDay(selectedDay) {
 }
 
 function showDayBottomSheet(dayKey) {
-    // 데이터가 없으면 fetch 후 재시도
-    if (!window.itineraryData) {
-        fetch('data/shanghai-data.json')
-            .then(response => response.json())
-            .then(data => {
-                window.itineraryData = data.shanghai_tourism.itinerary;
-                showDayBottomSheet(dayKey);
-            });
-        return;
-    }
     const bottomSheet = document.getElementById('bottom-sheet');
+    const bottomSheetItems = document.getElementById('bottom-sheet-items');
+    const closeButton = document.getElementById('close-bottom-sheet');
+    
+    if (!bottomSheet || !bottomSheetItems) return;
+    
+    const daySchedule = shanghaiData.itinerary[dayKey];
+    if (!daySchedule) return;
+    
+    const dayTitle = dayKey === 'day1' ? '11.12 (1일차)' : 
+                    dayKey === 'day2' ? '11.13 (2일차)' : 
+                    dayKey === 'day3' ? '11.14 (3일차)' : '11.15 (4일차)';
+    
+    // 제목 업데이트
+    const titleElement = bottomSheet.querySelector('.bottom-sheet-title');
+    if (titleElement) {
+        titleElement.textContent = dayTitle;
+    }
+    
+    let html = '';
+    
+    // 일정 항목들을 시간순으로 정렬
+    const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
+        const timeA = a[1].time || '00:00';
+        const timeB = b[1].time || '00:00';
+        return timeA.localeCompare(timeB);
+    });
+    
+    scheduleItems.forEach(([key, schedule]) => {
+        const icon = getScheduleIcon(key);
+        const itemClass = getScheduleItemClass(key);
+        const locationName = extractKorean(schedule.location);
+        
+        html += `
+            <div class="bottom-sheet-item ${itemClass}" data-location="${schedule.location}">
+                <div class="bottom-sheet-time">
+                    <i class="${icon}"></i>
+                    <span>${schedule.time}</span>
+                </div>
+                <div class="bottom-sheet-content">
+                    <div class="bottom-sheet-location">${locationName}</div>
+                    <div class="bottom-sheet-desc">${schedule.description}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    bottomSheetItems.innerHTML = html;
     bottomSheet.classList.add('show');
-    const dayData = window.itineraryData[dayKey];
-    let html = `<div class='bottom-sheet-title'>${dayKey.replace('day','')}일차 일정</div>`;
-    const icons = {
-        breakfast: '🍳',
-        morning: '🌅',
-        lunch: '🍽️',
-        afternoon: '🌤️',
-        afternoon1: '🌤️',
-        afternoon2: '🌤️',
-        afternoon3: '🌤️',
-        dinner: '🍴',
-        evening: '🌙',
-        evening1: '🌙',
-        evening2: '🌙',
-        hotel: '🏨',
-        arrival: '🛬',
-        departure: '🛫'
-    };
-    if (!dayData) {
-        html += `<div style='text-align:center;color:#888;padding:32px 0;'>일정 데이터가 없습니다.</div>`;
-    } else {
-        Object.entries(dayData).forEach(([key, schedule]) => {
-            html += `<div class='bottom-sheet-item'>`;
-            html += `<span class='bottom-sheet-time'>${icons[key] || '🕒'} ${schedule.time}</span>`;
-            html += `<span class='bottom-sheet-location'><i class='fas fa-map-marker-alt' style='color:#764ba2;'></i> ${schedule.location}</span>`;
-            if (schedule.description) html += `<div class='bottom-sheet-desc'>${schedule.description}</div>`;
-            html += `</div>`;
+    
+    // 닫기 버튼 이벤트
+    if (closeButton) {
+        closeButton.onclick = () => {
+            bottomSheet.classList.remove('show', 'expanded');
+        };
+    }
+    
+    // 지도 클릭 시 닫기
+    if (map) {
+        map.once('click', () => {
+            bottomSheet.classList.remove('show', 'expanded');
         });
     }
-    html += `<button class='bottom-sheet-close' onclick='document.getElementById("bottom-sheet").classList.remove("show");filterMarkersByDay("all");'><i class='fas fa-times'></i> 닫기</button>`;
-    bottomSheet.innerHTML = html;
+    
+    // 드래그 기능 추가
+    setupDragToExpand(bottomSheet);
+    
+    // 일정 항목 클릭 이벤트
+    const items = bottomSheetItems.querySelectorAll('.bottom-sheet-item');
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            const location = item.getAttribute('data-location');
+            zoomToLocation(location);
+        });
+    });
+}
+
+function setupDragToExpand(bottomSheet) {
+    const dragHandle = bottomSheet.querySelector('.drag-handle');
+    let startY = 0;
+    let startHeight = 0;
+    let isDragging = false;
+    
+    dragHandle.addEventListener('mousedown', (e) => {
+        startY = e.clientY;
+        startHeight = bottomSheet.offsetHeight;
+        isDragging = true;
+        document.body.style.cursor = 'grabbing';
+        e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaY = startY - e.clientY;
+        const newHeight = Math.max(40, Math.min(100, startHeight + deltaY));
+        
+        if (newHeight >= 80) {
+            bottomSheet.classList.add('expanded');
+        } else {
+            bottomSheet.classList.remove('expanded');
+        }
+    });
+    
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            document.body.style.cursor = '';
+        }
+    });
+    
+    // 터치 이벤트 지원
+    dragHandle.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        startHeight = bottomSheet.offsetHeight;
+        isDragging = true;
+        e.preventDefault();
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaY = startY - e.touches[0].clientY;
+        const newHeight = Math.max(40, Math.min(100, startHeight + deltaY));
+        
+        if (newHeight >= 80) {
+            bottomSheet.classList.add('expanded');
+        } else {
+            bottomSheet.classList.remove('expanded');
+        }
+        e.preventDefault();
+    });
+    
+    document.addEventListener('touchend', () => {
+        isDragging = false;
+    });
 }
 
 // 지도 클릭 시 하단 팝업 닫기
