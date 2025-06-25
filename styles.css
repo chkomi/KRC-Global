@@ -344,10 +344,9 @@ html, body {
     z-index: 1000;
 }
 
-.leaflet-tooltip-bottom:before,
-.leaflet-tooltip-top:before {
-    border-top-color: rgba(44, 62, 80, 0.9);
-    border-bottom-color: rgba(44, 62, 80, 0.9);
+.leaflet-tooltip:before, .leaflet-tooltip:after,
+.leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before {
+    display: none !important;
 }
 
 .custom-marker-tooltip {
