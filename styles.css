@@ -957,7 +957,7 @@ html, body {
 
 .all-schedule-item {
     display: grid;
-    grid-template-columns: 60px 1fr 70px 90px;
+    grid-template-columns: 45px 1fr 55px 70px;
     gap: 8px;
     padding: 8px 10px;
     border-radius: 8px;
@@ -987,7 +987,7 @@ html, body {
     font-size: 0.8em;
     text-align: center;
     height: 100%;
-    min-width: 60px;
+    min-width: 45px;
 }
 
 .all-schedule-item .schedule-time i {
@@ -1035,7 +1035,7 @@ html, body {
     font-size: 0.7em;
     color: #6c757d;
     text-align: center;
-    min-width: 70px;
+    min-width: 55px;
 }
 
 .all-schedule-item .schedule-distance .distance-value {
@@ -1050,7 +1050,7 @@ html, body {
     gap: 2px;
     font-size: 0.65em;
     color: #6c757d;
-    min-width: 90px;
+    min-width: 70px;
 }
 
 .all-schedule-item .schedule-cost .transport-cost {
@@ -1072,7 +1072,7 @@ html, body {
 /* 각 일차별 일정 스타일 */
 .bottom-sheet-item {
     display: grid;
-    grid-template-columns: 60px 1fr 70px 90px;
+    grid-template-columns: 45px 1fr 55px 70px;
     gap: 8px;
     padding: 10px 12px;
     border-radius: 8px;
@@ -1099,7 +1099,7 @@ html, body {
     gap: 3px;
     font-weight: 600;
     color: #495057;
-    min-width: 60px;
+    min-width: 45px;
     text-align: center;
     height: 100%;
     font-size: 0.8em;
@@ -1150,7 +1150,7 @@ html, body {
     font-size: 0.7em;
     color: #6c757d;
     text-align: center;
-    min-width: 70px;
+    min-width: 55px;
 }
 
 .bottom-sheet-item .bottom-sheet-distance .distance-value {
@@ -1165,7 +1165,7 @@ html, body {
     gap: 2px;
     font-size: 0.65em;
     color: #6c757d;
-    min-width: 90px;
+    min-width: 70px;
 }
 
 .bottom-sheet-item .bottom-sheet-cost .transport-cost {
