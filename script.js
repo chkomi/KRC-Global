@@ -730,7 +730,12 @@ function calculateDayCosts(daySchedule) {
             }
             if (schedule.cost.activity) {
                 const cost = parseInt(schedule.cost.activity.replace(/[^\d]/g, '')) || 0;
-                activityCost += cost;
+                // 식사 관련 키워드가 있으면 식사비용으로 분류
+                if (schedule.cost.activity.includes('식사') || schedule.cost.activity.includes('meal')) {
+                    mealCost += cost;
+                } else {
+                    activityCost += cost;
+                }
             }
         }
         
@@ -756,6 +761,48 @@ function displayItinerary(dayKey) {
     if (dayKey === 'all') {
         // 전체 일정 표시
         let allItineraryHTML = '<div class="all-itinerary">';
+        
+        // 전체 합산 비용 계산
+        let totalTransportCost = 0;
+        let totalMealCost = 0;
+        let totalActivityCost = 0;
+        
+        for (let i = 1; i <= 4; i++) {
+            const dayKey = `day${i}`;
+            const daySchedule = shanghaiData.itinerary[dayKey];
+            if (daySchedule) {
+                const dayCosts = calculateDayCosts(daySchedule);
+                totalTransportCost += dayCosts.transport;
+                totalMealCost += dayCosts.meal;
+                totalActivityCost += dayCosts.activity;
+            }
+        }
+        
+        const totalCost = totalTransportCost + totalMealCost + totalActivityCost;
+        
+        // 전체 합산 비용을 맨 위에 표시
+        allItineraryHTML += `
+            <div class="day-cost-summary total-cost-summary">
+                <h4><i class="fas fa-calculator"></i> 전체 여행 비용 합계</h4>
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <div class="cost-item-label">🚇 교통</div>
+                        <div class="cost-item-value">¥${totalTransportCost}</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-item-label">🍽️ 식사</div>
+                        <div class="cost-item-value">¥${totalMealCost}</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-item-label">🎯 관광</div>
+                        <div class="cost-item-value">¥${totalActivityCost}</div>
+                    </div>
+                </div>
+                <div class="cost-total">
+                    총합: ¥${totalCost}
+                </div>
+            </div>
+        `;
         
         for (let i = 1; i <= 4; i++) {
             const dayKey = `day${i}`;

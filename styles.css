@@ -145,8 +145,8 @@ html, body {
 }
 
 .tile-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     gap: 4px;
 }
 
@@ -162,6 +162,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
 }
 
 .tile-btn:hover {
@@ -1712,4 +1713,21 @@ html, body {
 
 #bottom-sheet.expanded .bottom-sheet-content {
     height: calc(100vh - 60px);
+}
+
+/* 전체 합산 비용 스타일 */
+.total-cost-summary {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    margin-bottom: 20px;
+    border: 2px solid #3498db;
+}
+
+.total-cost-summary h4 {
+    font-size: 1.1em;
+    color: #fff;
+}
+
+.total-cost-summary .cost-total {
+    font-size: 1.3em;
+    color: #f39c12;
 }
