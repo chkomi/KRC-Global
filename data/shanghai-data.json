@@ -135,6 +135,15 @@
         "description": "상하이의 한국인 거주지역으로 한국 음식과 문화를 체험할 수 있는 곳",
         "features": ["한국문화", "한국음식", "한국마트"],
         "image": "images/attractions/hongquan-road.jpg"
+      },
+      {
+        "name": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
+        "address": "上海市黄浦区中山东一路外滩游船码头 (The Bund Cruise Terminal, Zhongshan East 1st Road, Huangpu District, Shanghai)",
+        "latitude": 31.2366,
+        "longitude": 121.4856,
+        "description": "황푸강을 따라 상하이의 아름다운 야경을 감상할 수 있는 유람선 투어",
+        "features": ["야경", "유람선", "강변풍경"],
+        "image": "images/attractions/huangpu-river-cruise.jpg"
       }
     ],
     "restaurants": [
@@ -342,9 +351,9 @@
       "day3": {
         "breakfast": {
           "time": "08:00",
-          "location": "호텔 조식",
-          "description": "SSAW 부티크 호텔상하이 번드에서 아침 식사",
-          "alternative": "来莱小笼(라이라이샤오롱, LaiLaiXiaoLong)"
+          "location": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
+          "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점에서 게살 샤오롱바오",
+          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
         "morning": {
           "time": "10:00",
@@ -367,6 +376,11 @@
           "time": "18:00",
           "location": "点都德(环宇荟店)(디엔또우더, DianDouDe)",
           "description": "광동식 딤섬 전문점에서 전통 딤섬"
+        },
+        "evening": {
+          "time": "19:00",
+          "location": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
+          "description": "황푸강을 따라 상하이의 아름다운 야경을 감상하는 유람선 투어"
         }
       },
       "day4": {
