@@ -139,8 +139,8 @@
       {
         "name": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
         "address": "上海市黄浦区中山东一路外滩游船码头 (The Bund Cruise Terminal, Zhongshan East 1st Road, Huangpu District, Shanghai)",
-        "latitude": 31.2366,
-        "longitude": 121.4856,
+        "latitude": 31.230243,
+        "longitude": 121.493490,
         "description": "황푸강을 따라 상하이의 아름다운 야경을 감상할 수 있는 유람선 투어",
         "features": ["야경", "유람선", "강변풍경"],
         "image": "images/attractions/huangpu-river-cruise.jpg"
