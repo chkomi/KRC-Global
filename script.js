@@ -292,11 +292,17 @@ function extractChineseName(text) {
     return text;
 }
 
-// 텍스트에서 한글 부분만 추출하는 함수 (라벨 표시용)
+// 한국어 이름 추출 함수
 function extractKorean(text) {
-    const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]+/g;
-    const matches = text.match(koreanRegex);
-    return matches ? matches.join(' ') : text;
+    const match = text.match(/\(([^)]+)\)/);
+    return match ? match[1] : text;
+}
+
+// 설명을 3단어로 압축하는 함수
+function compressDescription(description) {
+    const words = description.split(' ');
+    if (words.length <= 3) return description;
+    return words.slice(0, 3).join(' ') + '...';
 }
 
 // 커스텀 아이콘 생성 함수
@@ -346,7 +352,7 @@ function createPopupContent(place) {
     }
     
     if (place.description) {
-        html += `<p><i class='fas fa-info-circle'></i> ${place.description}</p>`;
+        html += `<p><i class='fas fa-info-circle'></i> ${compressDescription(place.description)}</p>`;
     }
     
     if (place.features && place.features.length > 0) {
@@ -747,6 +753,7 @@ function displayItinerary(dayKey) {
                 const distance = schedule.distance || '-';
                 const transportCost = schedule.cost?.transport || '';
                 const activityCost = schedule.cost?.activity || '';
+                const compressedDesc = compressDescription(schedule.description);
                 
                 allItineraryHTML += `
                     <div class="schedule-item all-schedule-item ${itemClass}">
@@ -756,7 +763,7 @@ function displayItinerary(dayKey) {
                         </div>
                         <div class="schedule-content">
                             <div class="schedule-location">${locationName}</div>
-                            <div class="schedule-desc">${schedule.description}</div>
+                            <div class="schedule-desc">${compressedDesc}</div>
                         </div>
                         <div class="schedule-distance">
                             <div class="distance-value">${distance}</div>
@@ -1069,6 +1076,7 @@ function showDayBottomSheet(dayKey) {
         const distance = schedule.distance || '-';
         const transportCost = schedule.cost?.transport || '';
         const activityCost = schedule.cost?.activity || '';
+        const compressedDesc = compressDescription(schedule.description);
         
         dayItineraryHTML += `
             <div class="schedule-item bottom-sheet-item ${itemClass}">
@@ -1078,7 +1086,7 @@ function showDayBottomSheet(dayKey) {
                 </div>
                 <div class="bottom-sheet-content">
                     <div class="bottom-sheet-location">${locationName}</div>
-                    <div class="bottom-sheet-desc">${schedule.description}</div>
+                    <div class="bottom-sheet-desc">${compressedDesc}</div>
                 </div>
                 <div class="bottom-sheet-distance">
                     <div class="distance-value">${distance}</div>

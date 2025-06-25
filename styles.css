@@ -957,16 +957,16 @@ html, body {
 
 .all-schedule-item {
     display: grid;
-    grid-template-columns: 50px 1fr 80px 100px;
-    gap: 12px;
-    padding: 10px 12px;
+    grid-template-columns: 60px 1fr 70px 90px;
+    gap: 8px;
+    padding: 8px 10px;
     border-radius: 8px;
     background: #f8f9fa;
     margin-bottom: 6px;
     transition: all 0.2s ease;
     cursor: pointer;
     border-left: 4px solid #667eea;
-    font-size: 0.9em;
+    font-size: 0.85em;
     align-items: center;
 }
 
@@ -981,34 +981,36 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     font-weight: 600;
     color: #495057;
     font-size: 0.8em;
     text-align: center;
     height: 100%;
+    min-width: 60px;
 }
 
 .all-schedule-item .schedule-time i {
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: #667eea;
 }
 
 .all-schedule-item .schedule-time span {
-    font-size: 0.75em;
+    font-size: 0.7em;
     font-weight: 500;
 }
 
 .all-schedule-item .schedule-content {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
+    min-width: 0;
 }
 
 .all-schedule-item .schedule-location {
     font-weight: 600;
     color: #212529;
-    font-size: 0.9em;
+    font-size: 0.85em;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -1017,7 +1019,7 @@ html, body {
 
 .all-schedule-item .schedule-desc {
     color: #6c757d;
-    font-size: 0.8em;
+    font-size: 0.75em;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -1030,40 +1032,49 @@ html, body {
     align-items: center;
     justify-content: center;
     gap: 2px;
-    font-size: 0.75em;
+    font-size: 0.7em;
     color: #6c757d;
     text-align: center;
+    min-width: 70px;
 }
 
 .all-schedule-item .schedule-distance .distance-value {
     font-weight: 600;
     color: #495057;
+    font-size: 0.8em;
 }
 
 .all-schedule-item .schedule-cost {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-size: 0.7em;
+    font-size: 0.65em;
     color: #6c757d;
+    min-width: 90px;
 }
 
 .all-schedule-item .schedule-cost .transport-cost {
     color: #007bff;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .all-schedule-item .schedule-cost .activity-cost {
     color: #28a745;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 각 일차별 일정 스타일 */
 .bottom-sheet-item {
     display: grid;
-    grid-template-columns: 50px 1fr 80px 100px;
-    gap: 12px;
-    padding: 12px 15px;
+    grid-template-columns: 60px 1fr 70px 90px;
+    gap: 8px;
+    padding: 10px 12px;
     border-radius: 8px;
     background: #f8f9fa;
     margin-bottom: 8px;
@@ -1071,6 +1082,7 @@ html, body {
     cursor: pointer;
     border-left: 4px solid #667eea;
     align-items: center;
+    font-size: 0.85em;
 }
 
 .bottom-sheet-item:hover {
@@ -1084,34 +1096,36 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     font-weight: 600;
     color: #495057;
-    min-width: 50px;
+    min-width: 60px;
     text-align: center;
     height: 100%;
+    font-size: 0.8em;
 }
 
 .bottom-sheet-item .bottom-sheet-time i {
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: #667eea;
 }
 
 .bottom-sheet-item .bottom-sheet-time span {
-    font-size: 0.75em;
+    font-size: 0.7em;
     font-weight: 500;
 }
 
 .bottom-sheet-item .bottom-sheet-content {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
+    min-width: 0;
 }
 
 .bottom-sheet-item .bottom-sheet-location {
     font-weight: 600;
     color: #212529;
-    font-size: 0.9em;
+    font-size: 0.85em;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -1120,7 +1134,7 @@ html, body {
 
 .bottom-sheet-item .bottom-sheet-desc {
     color: #6c757d;
-    font-size: 0.8em;
+    font-size: 0.75em;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -1133,32 +1147,41 @@ html, body {
     align-items: center;
     justify-content: center;
     gap: 2px;
-    font-size: 0.75em;
+    font-size: 0.7em;
     color: #6c757d;
     text-align: center;
+    min-width: 70px;
 }
 
 .bottom-sheet-item .bottom-sheet-distance .distance-value {
     font-weight: 600;
     color: #495057;
+    font-size: 0.8em;
 }
 
 .bottom-sheet-item .bottom-sheet-cost {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-size: 0.7em;
+    font-size: 0.65em;
     color: #6c757d;
+    min-width: 90px;
 }
 
 .bottom-sheet-item .bottom-sheet-cost .transport-cost {
     color: #007bff;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .bottom-sheet-item .bottom-sheet-cost .activity-cost {
     color: #28a745;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 일정 항목 색상 구분 - 전체 일정 */
