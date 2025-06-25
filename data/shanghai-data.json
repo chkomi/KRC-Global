@@ -353,6 +353,16 @@
             "activity": "1400위안 (관광)"
           },
           "alternative": "황푸강 유람선 (Huangpu River Cruise)"
+        },
+        "hotel_return": {
+          "time": "21:00",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소로 복귀",
+          "distance": "4km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": null
+          }
         }
       },
       "day2": {
@@ -360,37 +370,82 @@
           "time": "09:00",
           "location": "富春小笼-虹桥南丰城店(푸춘샤오롱, FuChunXiaoLong)",
           "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오",
+          "distance": "10km",
+          "cost": {
+            "transport": "50위안 (디디)",
+            "activity": "700위안 (식사)"
+          },
           "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
         "morning": {
           "time": "10:00",
           "location": "武康大楼(우캉맨션, WuKangDaLou）",
-          "description": "독특한 삼각형 외관의 역사적인 건축물 관람"
+          "description": "독특한 삼각형 외관의 역사적인 건축물 관람",
+          "distance": "5km",
+          "cost": {
+            "transport": "40위안 (디디)",
+            "activity": null
+          }
         },
         "lunch": {
           "time": "12:00",
           "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
-          "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑"
+          "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑",
+          "distance": "10km",
+          "cost": {
+            "transport": "60위안 (디디)",
+            "activity": "700위안 (식사)"
+          }
         },
         "afternoon": {
           "time": "14:00",
           "location": "南京东路 (난징동루, Nanjing Road East)",
-          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
+          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방",
+          "distance": "5km",
+          "cost": {
+            "transport": "40위안 (디디)",
+            "activity": null
+          }
         },
         "evening1": {
           "time": "15:00",
           "location": "外滩 (와이탄, The Bund)",
-          "description": "황푸강 야경과 상하이의 번화한 밤 풍경 감상"
+          "description": "황푸강 야경과 상하이의 번화한 밤 풍경 감상",
+          "distance": "2km",
+          "cost": {
+            "transport": null,
+            "activity": null
+          }
         },
         "dinner": {
           "time": "18:00",
           "location": "很久以前羊肉串-光音广场店(옛날옛적에, HenJiuYiQian）",
-          "description": "정통 신장 스타일의 양꼬치 전문점"
+          "description": "정통 신장 스타일의 양꼬치 전문점",
+          "distance": "5km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": "700위안 (식사)"
+          }
         },
         "evening2": {
           "time": "19:00",
           "location": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
-          "description": "황푸강 양쪽 전경을 감상할 수 있는 전망대"
+          "description": "황푸강 양쪽 전경을 감상할 수 있는 전망대",
+          "distance": "1km",
+          "cost": {
+            "transport": null,
+            "activity": null
+          }
+        },
+        "hotel_return": {
+          "time": "21:00",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소로 복귀",
+          "distance": "4km",
+          "cost": {
+            "transport": "30위안 (디디)",
+            "activity": null
+          }
         }
       },
       "day3": {
@@ -398,34 +453,74 @@
           "time": "08:00",
           "location": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
           "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점에서 게살 샤오롱바오",
+          "distance": "2km",
+          "cost": {
+            "transport": "35위안 (디디)",
+            "activity": "350위안 (식사)"
+          },
           "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
         },
         "morning": {
           "time": "10:00",
           "location": "朱家角古镇(주가각, ZhuJiaJiao)",
           "description": "운하와 고대 다리가 아름다운 '동양의 베니스' 탐방",
+          "distance": "50km",
+          "cost": {
+            "transport": "250위안 (디디)",
+            "activity": null
+          },
           "alternative": "泰晤士小镇 (템즈타운, Thames Town) 또는 上海影视乐园 (상하이영화테마파크, Shanghai Film Park)"
         },
         "lunch": {
           "time": "12:00",
           "location": "红樽楼(홍췐루, HongZunLou)",
           "description": "한인타운",
+          "distance": "35km",
+          "cost": {
+            "transport": "150위안 (디디)",
+            "activity": "700위안 (식사)"
+          },
           "alternative": "外滩老饭店(와이포지아, Waitan Lao Fandian)"
         },
         "afternoon": {
           "time": "14:00",
           "location": "田子坊(톈즈팡, Tianzifang)",
-          "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을"
+          "description": "상하이의 예술가들이 모여있는 창고지구, 갤러리와 카페가 많은 예술가 마을",
+          "distance": "10km",
+          "cost": {
+            "transport": "60위안 (디디)",
+            "activity": null
+          }
         },
         "dinner": {
           "time": "18:00",
           "location": "点都德-环宇荟店(점도덕, DianDouDe)",
-          "description": "광동식 딤섬 전문점에서 전통 딤섬"
+          "description": "광동식 딤섬 전문점에서 전통 딤섬",
+          "distance": "1km",
+          "cost": {
+            "transport": null,
+            "activity": "700위안 (식사)"
+          }
         },
         "evening": {
           "time": "19:00",
           "location": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
-          "description": "황푸강을 따라 상하이의 아름다운 야경을 감상하는 유람선 투어"
+          "description": "황푸강을 따라 상하이의 아름다운 야경을 감상하는 유람선 투어",
+          "distance": "4km",
+          "cost": {
+            "transport": "40위안 (디디)",
+            "activity": "700위안 (관광)"
+          }
+        },
+        "hotel_return": {
+          "time": "21:00",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소로 복귀",
+          "distance": "2km",
+          "cost": {
+            "transport": "40위안 (디디)",
+            "activity": null
+          }
         }
       },
       "day4": {
@@ -433,6 +528,11 @@
           "time": "08:00",
           "location": "小绍兴(시에샤오싱, XiaoShaoXing)",
           "description": "상하이 전통 조식 전문점",
+          "distance": "2km",
+          "cost": {
+            "transport": "40위안 (디디)",
+            "activity": "400위안 (식사)"
+          },
           "alternative": "호텔 조식"
         },
         "morning": {
@@ -443,7 +543,12 @@
         "departure": {
           "time": "11:00",
           "location": "上海浦东国际机场 (푸동국제공항, Shanghai Pudong International Airport)",
-          "description": "상하이 푸동국제공항 출발"
+          "description": "상하이 푸동국제공항 출발",
+          "distance": "44km",
+          "cost": {
+            "transport": "620위안 (디디)",
+            "activity": null
+          }
         }
       }
     }

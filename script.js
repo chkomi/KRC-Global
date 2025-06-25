@@ -875,6 +875,7 @@ function getScheduleIcon(key) {
         'arrival': 'fas fa-plane-arrival',
         'departure': 'fas fa-plane-departure',
         'hotel': 'fas fa-bed',
+        'hotel_return': 'fas fa-bed',
         'breakfast': 'fas fa-coffee',
         'lunch': 'fas fa-utensils',
         'dinner': 'fas fa-utensils',
@@ -940,7 +941,7 @@ function getScheduleItemClass(key) {
         return 'transport-item';
     }
     // 숙소 관련
-    else if (['hotel'].includes(key)) {
+    else if (['hotel', 'hotel_return'].includes(key)) {
         return 'hotel-item';
     }
     return '';
