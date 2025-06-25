@@ -83,7 +83,7 @@
         "image": "images/attractions/korean-provisional-government.jpg"
       },
       {
-        "name": "武康大楼 (우캉맨션, WuKangDaLou）",
+        "name": "武康大楼 (우캉맨션, WuKang Mansion, WuKangDaLou)",
         "address": "上海市徐汇区上海市湖南路街道淮海中路1850号",
         "latitude": 31.206224,
         "longitude": 121.433711,
@@ -229,7 +229,7 @@
         "image": "images/restaurants/wai-po-jia.jpg"
       },
       {
-        "name": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian）",
+        "name": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian)",
         "address": "上海市浦东新区银城路167号兴业银行大厦北侧B1层内广场",
         "latitude": 31.2447,
         "longitude": 121.509234,
@@ -398,7 +398,7 @@
         },
         "morning": {
           "time": "10:00",
-          "location": "武康大楼(우캉맨션, WuKangDaLou）",
+          "location": "武康大楼(우캉맨션, WuKang Mansion, WuKangDaLou)",
           "description": "독특한 삼각형 외관의 역사적인 건축물 관람",
           "distance": "5km",
           "cost": {
@@ -438,7 +438,7 @@
         },
         "dinner": {
           "time": "18:00",
-          "location": "很久以前羊肉串-光音广场店(옛날옛적에, HenJiuYiQian）",
+          "location": "很久以前羊肉串-光音广场店(옛날옛적에, HenJiuYiQian)",
           "description": "정통 신장 스타일의 양꼬치 전문점",
           "distance": "5km",
           "cost": {
