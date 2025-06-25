@@ -771,53 +771,59 @@ html, body {
 .day-cost-summary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 15px 0;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.25);
     text-align: center;
 }
 
 .day-cost-summary h4 {
-    margin: 0 0 10px 0;
-    font-size: 1.1em;
+    margin: 0 0 8px 0;
+    font-size: 0.95em;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .cost-breakdown {
     display: flex;
-    justify-content: space-around;
-    gap: 10px;
-    margin-top: 10px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 0 5px;
 }
 
 .cost-item {
     text-align: center;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
 }
 
 .cost-item-label {
-    font-size: 0.8em;
+    font-size: 0.7em;
     opacity: 0.9;
-    margin-bottom: 4px;
+    font-weight: 500;
 }
 
 .cost-item-value {
-    font-size: 1.1em;
+    font-size: 0.9em;
     font-weight: 600;
     color: #fff;
 }
 
 .cost-total {
-    margin-top: 12px;
-    padding-top: 10px;
+    padding-top: 6px;
     border-top: 1px solid rgba(255,255,255,0.3);
-    font-size: 1.2em;
+    font-size: 0.95em;
     font-weight: 700;
+    color: #fff;
 }
 
 /* 모바일 반응형 */
@@ -847,28 +853,31 @@ html, body {
     }
     
     .day-cost-summary {
-        padding: 12px;
-        margin: 10px 0;
+        padding: 10px 12px;
+        margin: 8px 0;
     }
     
     .day-cost-summary h4 {
-        font-size: 1em;
+        font-size: 0.9em;
+        margin-bottom: 6px;
     }
     
     .cost-breakdown {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .cost-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 0;
+        gap: 6px;
+        margin-bottom: 6px;
     }
     
     .cost-item-label {
-        margin-bottom: 0;
+        font-size: 0.65em;
+    }
+    
+    .cost-item-value {
+        font-size: 0.85em;
+    }
+    
+    .cost-total {
+        font-size: 0.9em;
+        padding-top: 5px;
     }
 }
 
@@ -888,6 +897,30 @@ html, body {
     .all-days-btn {
         font-size: 0.65em;
         padding: 4px 6px;
+    }
+    
+    .day-cost-summary {
+        padding: 8px 10px;
+    }
+    
+    .day-cost-summary h4 {
+        font-size: 0.85em;
+    }
+    
+    .cost-breakdown {
+        gap: 4px;
+    }
+    
+    .cost-item-label {
+        font-size: 0.6em;
+    }
+    
+    .cost-item-value {
+        font-size: 0.8em;
+    }
+    
+    .cost-total {
+        font-size: 0.85em;
     }
 }
 

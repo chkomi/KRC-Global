@@ -790,7 +790,7 @@ function displayItinerary(dayKey) {
                             </div>
                         </div>
                         <div class="cost-total">
-                            일일 총합: ¥${dayCosts.total}
+                            총합: ¥${dayCosts.total}
                         </div>
                     </div>
                     
@@ -1124,7 +1124,7 @@ function showDayBottomSheet(dayKey) {
     // 비용 요약을 상단에 표시
     let dayItineraryHTML = `
         <div class="day-cost-summary">
-            <h4><i class="fas fa-calculator"></i> ${dayTitle} 비용 요약</h4>
+            <h4><i class="fas fa-calculator"></i> ${dayTitle} 비용</h4>
             <div class="cost-breakdown">
                 <div class="cost-item">
                     <div class="cost-item-label">🚇 교통</div>
