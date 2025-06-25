@@ -211,7 +211,7 @@
         "image": "images/restaurants/lai-lai-xiao-long.jpg"
       },
       {
-        "name": "鹿港小镇(벨라지오, LuGangXiaoZhen)",
+        "name": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
         "address": "上海市浦东新区陆家嘴环路1318호성점은행대厦B1층6호",
         "latitude": 31.24403,
         "longitude": 121.49905,
@@ -369,7 +369,7 @@
         },
         "lunch": {
           "time": "12:00",
-          "location": "鹿港小镇(벨라지오, LuGangXiaoZhen)",
+          "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
           "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑"
         },
         "afternoon": {
