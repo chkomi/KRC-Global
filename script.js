@@ -718,26 +718,35 @@ function initializeItineraryPanel() {
 }
 
 function calculateDayCosts(daySchedule) {
-    let totalTransportCost = 0;
-    let totalActivityCost = 0;
+    let transportCost = 0;
+    let mealCost = 0;
+    let activityCost = 0;
     
     Object.values(daySchedule).forEach(schedule => {
         if (schedule.cost) {
             if (schedule.cost.transport) {
-                const transportCost = parseInt(schedule.cost.transport.replace(/[^\d]/g, '')) || 0;
-                totalTransportCost += transportCost;
+                const cost = parseInt(schedule.cost.transport.replace(/[^\d]/g, '')) || 0;
+                transportCost += cost;
             }
             if (schedule.cost.activity) {
-                const activityCost = parseInt(schedule.cost.activity.replace(/[^\d]/g, '')) || 0;
-                totalActivityCost += activityCost;
+                const cost = parseInt(schedule.cost.activity.replace(/[^\d]/g, '')) || 0;
+                activityCost += cost;
             }
+        }
+        
+        // 식사 관련 일정에서 식사 비용 추출
+        if (['breakfast', 'lunch', 'dinner'].includes(schedule.type || schedule.key)) {
+            // 식사 비용이 별도로 있으면 사용, 없으면 기본값
+            const mealPrice = schedule.mealCost || schedule.cost?.meal || 50; // 기본 50위안
+            mealCost += parseInt(mealPrice) || 0;
         }
     });
     
     return {
-        transport: totalTransportCost > 0 ? `교통: ¥${totalTransportCost}` : '',
-        activity: totalActivityCost > 0 ? `활동: ¥${totalActivityCost}` : '',
-        total: totalTransportCost + totalActivityCost
+        transport: transportCost,
+        meal: mealCost,
+        activity: activityCost,
+        total: transportCost + mealCost + activityCost
     };
 }
 
@@ -757,9 +766,34 @@ function displayItinerary(dayKey) {
                            i === 2 ? '11.13 (2일차)' : 
                            i === 3 ? '11.14 (3일차)' : '11.15 (4일차)';
             
+            // 각 일자별 비용 계산
+            const dayCosts = calculateDayCosts(daySchedule);
+            
             allItineraryHTML += `
                 <div class="day-schedule all-day-schedule">
                     <h4><i class="fas fa-calendar-day"></i> ${dayTitle}</h4>
+                    
+                    <!-- 일자별 비용 요약 -->
+                    <div class="day-cost-summary">
+                        <div class="cost-breakdown">
+                            <div class="cost-item">
+                                <div class="cost-item-label">🚇 교통</div>
+                                <div class="cost-item-value">¥${dayCosts.transport}</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="cost-item-label">🍽️ 식사</div>
+                                <div class="cost-item-value">¥${dayCosts.meal}</div>
+                            </div>
+                            <div class="cost-item">
+                                <div class="cost-item-label">🎯 관광</div>
+                                <div class="cost-item-value">¥${dayCosts.activity}</div>
+                            </div>
+                        </div>
+                        <div class="cost-total">
+                            일일 총합: ¥${dayCosts.total}
+                        </div>
+                    </div>
+                    
                     <div class="schedule-grid">
             `;
             
@@ -769,9 +803,6 @@ function displayItinerary(dayKey) {
                 const timeB = b[1].time || '00:00';
                 return timeA.localeCompare(timeB);
             });
-            
-            const dayCosts = calculateDayCosts(scheduleItems);
-            updateItineraryTitle(dayKey, dayCosts.total);
             
             scheduleItems.forEach(([key, schedule]) => {
                 const icon = getScheduleIcon(key);
@@ -827,9 +858,6 @@ function displayItinerary(dayKey) {
             const timeB = b[1].time || '00:00';
             return timeA.localeCompare(timeB);
         });
-        
-        const dayCosts2 = calculateDayCosts(scheduleItems);
-        updateItineraryTitle(dayKey, dayCosts2.total);
         
         scheduleItems.forEach(([key, schedule]) => {
             itineraryHTML += createItineraryItem(key, schedule);
@@ -1090,7 +1118,32 @@ function showDayBottomSheet(dayKey) {
         titleElement.textContent = dayTitle;
     }
     
-    let dayItineraryHTML = '';
+    // 총 비용 계산
+    const dayCosts = calculateDayCosts(daySchedule);
+    
+    // 비용 요약을 상단에 표시
+    let dayItineraryHTML = `
+        <div class="day-cost-summary">
+            <h4><i class="fas fa-calculator"></i> ${dayTitle} 비용 요약</h4>
+            <div class="cost-breakdown">
+                <div class="cost-item">
+                    <div class="cost-item-label">🚇 교통</div>
+                    <div class="cost-item-value">¥${dayCosts.transport}</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-item-label">🍽️ 식사</div>
+                    <div class="cost-item-value">¥${dayCosts.meal}</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-item-label">🎯 관광</div>
+                    <div class="cost-item-value">¥${dayCosts.activity}</div>
+                </div>
+            </div>
+            <div class="cost-total">
+                총합: ¥${dayCosts.total}
+            </div>
+        </div>
+    `;
     
     // 일정 항목들을 시간순으로 정렬
     const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
@@ -1098,9 +1151,6 @@ function showDayBottomSheet(dayKey) {
         const timeB = b[1].time || '00:00';
         return timeA.localeCompare(timeB);
     });
-    
-    // 총 비용 계산
-    const dayCosts = calculateDayCosts(daySchedule);
 
     scheduleItems.forEach(([key, schedule]) => {
         const icon = getScheduleIcon(key);
@@ -1131,13 +1181,6 @@ function showDayBottomSheet(dayKey) {
             </div>
         `;
     });
-    
-    // 총 비용 표시
-    dayItineraryHTML += `
-        <div class="day-cost-summary">
-            <strong>총 비용:</strong> ${dayCosts.transport} ${dayCosts.activity} <span style="margin-left:8px;">합계: ¥${dayCosts.total}</span>
-        </div>
-    `;
     
     bottomSheetItems.innerHTML = dayItineraryHTML;
     bottomSheet.classList.add('show');
