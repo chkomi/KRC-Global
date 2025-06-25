@@ -338,36 +338,48 @@ function getTypeLabel(type) {
 function createPopupContent(place) {
     const koreanName = extractKorean(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
-    
-    let html = `<div class='popup-header'>
-        <h3><i class="fas fa-map-marker-alt"></i> ${koreanName}</h3>
-        <span class="place-type-badge">${typeLabel}</span>
+    // 타입별 컬러 지정
+    const typeColors = {
+        attractions: '#EA4335',
+        restaurants: '#34A853',
+        hotels: '#1A73E8',
+        airports: '#9B59B6',
+        default: '#667eea'
+    };
+    const color = typeColors[place.type] || typeColors.default;
+
+    let html = `<div class='popup-card'>`;
+    // 상단 컬러바
+    html += `<div class='popup-color-bar' style='background:${color}'></div>`;
+    // 헤더(제목+타입 pill)
+    html += `<div class='popup-header'>
+        <h3>${koreanName}</h3>
+        <span class="place-type-pill type-${place.type}">${typeLabel}</span>
     </div>`;
-    
     html += `<div class='popup-body'>`;
     html += `<div class='popup-info'>`;
-    
+    // 주소
     if (place.address && place.address !== "N/A") {
-        html += `<p><i class='fas fa-map-marker-alt'></i> ${place.address}</p>`;
+        html += `<p><i class='fas fa-map-marker-alt'></i> <span>${place.address}</span></p>`;
     }
-    
+    // 설명
     if (place.description) {
-        html += `<p><i class='fas fa-info-circle'></i> ${compressDescription(place.description)}</p>`;
+        html += `<p><i class='fas fa-info-circle'></i> <span>${compressDescription(place.description)}</span></p>`;
     }
-    
+    // 특징
     if (place.features && place.features.length > 0) {
-        html += `<p><i class='fas fa-star'></i> ${place.features.join(', ')}</p>`;
+        html += `<p><i class='fas fa-star'></i> <span>${place.features.join(', ')}</span></p>`;
     }
-    
+    // 가격/입장료/비용 등
     if (place.price) {
         const priceInWon = Math.round(parseInt(place.price) * 0.18);
         html += `<div class='price-info'>
             <i class='fas fa-coins'></i> 
-            <strong>가격:</strong> ${priceInWon.toLocaleString()}원 (약 ${parseInt(place.price).toLocaleString()}엔)
+            <strong>가격:</strong> <span class='price-highlight'>${priceInWon.toLocaleString()}원</span> <span class='price-sub'>(약 ${parseInt(place.price).toLocaleString()}엔)</span>
         </div>`;
     }
-    
     html += `</div>`;
+    // 지도 버튼
     html += `<div class='map-links'>
         <h4><i class='fas fa-map'></i> 지도에서 보기</h4>
         <div class='map-buttons'>
@@ -380,7 +392,7 @@ function createPopupContent(place) {
         </div>
     </div>`;
     html += `</div>`;
-    
+    html += `</div>`;
     return html;
 }
 

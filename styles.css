@@ -1762,3 +1762,103 @@ html, body {
     font-size: 1.3em;
     color: #f39c12;
 }
+
+/* 카드형 팝업 최상위 래퍼 */
+.popup-card {
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    background: #fff;
+    overflow: hidden;
+    min-width: 260px;
+    max-width: 350px;
+    font-family: 'Noto Sans KR', sans-serif;
+    position: relative;
+    border: none;
+    animation: popupFadeIn 0.3s ease-out;
+}
+
+/* 상단 컬러바 */
+.popup-color-bar {
+    height: 7px;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    margin-bottom: 0;
+}
+
+/* 타입 pill (상태) */
+.place-type-pill {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    padding: 4px 14px;
+    border-radius: 16px;
+    font-size: 0.85em;
+    font-weight: 700;
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    letter-spacing: 0.01em;
+    z-index: 2;
+    backdrop-filter: blur(8px);
+}
+
+/* 가격 강조 */
+.price-highlight {
+    color: #e53935;
+    font-weight: 700;
+    font-size: 1.08em;
+    margin-right: 6px;
+}
+.price-sub {
+    color: #888;
+    font-size: 0.92em;
+    margin-left: 2px;
+}
+
+/* popup-header, popup-body 등 기존 스타일과 조화롭게 */
+.popup-header {
+    padding: 22px 22px 12px 22px;
+    background: none;
+    color: #222;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    min-height: 36px;
+}
+.popup-header h3 {
+    margin: 0;
+    font-size: 1.18em;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #222;
+    display: inline-block;
+    padding-right: 90px;
+}
+.popup-body {
+    padding: 20px 22px 18px 22px;
+    background: #fff;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .popup-card {
+        max-width: 95vw;
+        min-width: 0;
+        border-radius: 12px;
+    }
+    .popup-header, .popup-body {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .popup-header h3 {
+        font-size: 1em;
+        padding-right: 60px;
+    }
+    .place-type-pill {
+        top: 12px;
+        right: 12px;
+        font-size: 0.78em;
+        padding: 3px 10px;
+    }
+}
