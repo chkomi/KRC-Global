@@ -1661,12 +1661,15 @@ html, body {
     vertical-align: middle;
     color: #8B1E3F !important;
 }
-.popup-info-row span {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    display: inline;
-    color: #6B2B3A;
+.popup-info-row span, .popup-info-row strong {
+    color: #8B1E3F;
+    font-size: 0.93em;
+    font-weight: 500;
+}
+.popup-info-row.price {
+    color: #B2455E;
+    font-size: 0.93em;
+    font-weight: 700;
 }
 
 .map-buttons.row {

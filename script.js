@@ -343,17 +343,18 @@ function createPopupContent(place) {
     html += `<div class='popup-body'>`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span>${place.address}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span class='wine'>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span>${place.description}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span class='wine'>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span class='wine'>${place.features.join(', ')}</span></div>`;
     }
     if (place.price) {
-        const priceInWon = Math.round(parseInt(place.price) * 0.18);
-        html += `<div class='popup-info-row'><i class='fas fa-coins'></i><span>${priceInWon.toLocaleString()}원 (약 ${parseInt(place.price).toLocaleString()}엔)</span></div>`;
+        const priceYuan = parseInt(place.price);
+        const priceWon = Math.round(priceYuan * 180);
+        html += `<div class='popup-info-row price'><i class='fas fa-coins'></i><span>¥${priceYuan.toLocaleString()} (₩${priceWon.toLocaleString()})</span></div>`;
     }
     html += `</div>`;
     html += `<div class='map-buttons row'>
