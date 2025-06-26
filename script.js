@@ -768,12 +768,12 @@ function displayItinerary(dayKey) {
             allItineraryHTML += `<div class="day-schedule all-day-schedule wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 0;">
                 <h4 class="wine" style="margin:0 0 8px 0;padding:0 18px;font-size:1.1em;"><i class="fas fa-calendar-day wine"></i> ${dayTitle}</h4>
                 <div class="day-cost-summary wine-theme" style="padding:0 18px;">
-                    <div class="cost-breakdown">
-                        <div class="cost-item"><span>🚇 교통</span> <span>¥${dayCosts.transport}</span></div>
-                        <div class="cost-item"><span>🍽️ 식사</span> <span>¥${dayCosts.meal}</span></div>
-                        <div class="cost-item"><span>🎯 관광</span> <span>¥${dayCosts.activity}</span></div>
+                    <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport}</span></div>
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal}</span></div>
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity}</span></div>
                     </div>
-                    <div class="cost-total">총합: ¥${dayCosts.total}</div>
+                    <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total}</div>
                 </div>
                 <div class="schedule-grid" style="padding:0 18px;">`;
             const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
@@ -804,13 +804,12 @@ function displayItinerary(dayKey) {
         }
         const totalCost = totalTransportCost + totalMealCost + totalActivityCost;
         allItineraryHTML = `<div class="day-cost-summary total-cost-summary wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 18px;">
-            <h4 class="wine"><i class="fas fa-calculator wine"></i> 전체 여행 비용 합계</h4>
-            <div class="cost-breakdown">
-                <div class="cost-item"><span>🚇 교통</span> <span>¥${totalTransportCost}</span></div>
-                <div class="cost-item"><span>🍽️ 식사</span> <span>¥${totalMealCost}</span></div>
-                <div class="cost-item"><span>🎯 관광</span> <span>¥${totalActivityCost}</span></div>
+            <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${totalTransportCost}</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${totalMealCost}</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${totalActivityCost}</span></div>
             </div>
-            <div class="cost-total">총합: ¥${totalCost}</div>
+            <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${totalCost}</div>
         </div>` + allItineraryHTML;
         itineraryContent.innerHTML = allItineraryHTML;
         itineraryPopup.classList.add('show');
@@ -825,13 +824,12 @@ function displayItinerary(dayKey) {
     // 비용 요약
     const dayCosts = calculateDayCosts(daySchedule);
     let html = `<div class="day-cost-summary wine-theme">
-        <h4><i class="fas fa-calculator wine"></i> ${dayTitle} 비용</h4>
-        <div class="cost-breakdown">
-            <div class="cost-item"><span>🚇 교통</span> <span>¥${dayCosts.transport}</span></div>
-            <div class="cost-item"><span>🍽️ 식사</span> <span>¥${dayCosts.meal}</span></div>
-            <div class="cost-item"><span>🎯 관광</span> <span>¥${dayCosts.activity}</span></div>
+        <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport}</span></div>
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal}</span></div>
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity}</span></div>
         </div>
-        <div class="cost-total">총합: ¥${dayCosts.total}</div>
+        <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total}</div>
     </div>`;
     // 일정 항목들
     const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
