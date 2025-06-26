@@ -762,6 +762,76 @@ function displayItinerary(dayKey) {
     const itineraryPopup = document.getElementById('itinerary-popup');
     const itineraryContent = document.getElementById('itinerary-content');
     if (!itineraryPopup || !itineraryContent) return;
+    if (dayKey === 'all') {
+        // 전체 일정 출력
+        let allItineraryHTML = '<div class="all-itinerary">';
+        let totalTransportCost = 0;
+        let totalMealCost = 0;
+        let totalActivityCost = 0;
+        for (let i = 1; i <= 4; i++) {
+            const dayKey = `day${i}`;
+            const daySchedule = shanghaiData.itinerary[dayKey];
+            if (!daySchedule) continue;
+            const dayTitle = i === 1 ? '11.12 (1일차)' :
+                            i === 2 ? '11.13 (2일차)' :
+                            i === 3 ? '11.14 (3일차)' : '11.15 (4일차)';
+            const dayCosts = calculateDayCosts(daySchedule);
+            totalTransportCost += dayCosts.transport;
+            totalMealCost += dayCosts.meal;
+            totalActivityCost += dayCosts.activity;
+            allItineraryHTML += `<div class="day-schedule all-day-schedule wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 0;">
+                <h4 class="wine" style="margin:0 0 8px 0;padding:0 18px;font-size:1.1em;"><i class="fas fa-calendar-day wine"></i> ${dayTitle}</h4>
+                <div class="day-cost-summary wine-theme" style="padding:0 18px;">
+                    <div class="cost-breakdown">
+                        <div class="cost-item"><span>🚇 교통</span> <span>¥${dayCosts.transport}</span></div>
+                        <div class="cost-item"><span>🍽️ 식사</span> <span>¥${dayCosts.meal}</span></div>
+                        <div class="cost-item"><span>🎯 관광</span> <span>¥${dayCosts.activity}</span></div>
+                    </div>
+                    <div class="cost-total">총합: ¥${dayCosts.total}</div>
+                </div>
+                <div class="schedule-grid" style="padding:0 18px;">`;
+            const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
+                const timeA = a[1].time || '00:00';
+                const timeB = b[1].time || '00:00';
+                return timeA.localeCompare(timeB);
+            });
+            scheduleItems.forEach(([key, schedule]) => {
+                const icon = getScheduleIcon(key);
+                const itemClass = getScheduleItemClass(key);
+                const locationName = extractKorean(schedule.location);
+                const distance = schedule.distance || '-';
+                const transportCost = schedule.cost?.transport || '';
+                const activityCost = schedule.cost?.activity || '';
+                allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:4px;padding:4px 5px;font-size:0.8em;display:grid;grid-template-columns:45px 1fr 55px 70px;gap:4px;align-items:center;">
+                    <div class="bottom-sheet-time wine"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
+                    <div class="bottom-sheet-content">
+                        <div class="bottom-sheet-location wine">${locationName}</div>
+                        <div class="bottom-sheet-desc wine">${schedule.description}</div>
+                    </div>
+                    <div class="bottom-sheet-distance wine">${distance}</div>
+                    <div class="bottom-sheet-cost wine">
+                        ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
+                        ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
+                    </div>
+                </div>`;
+            });
+            allItineraryHTML += `</div></div>`;
+        }
+        const totalCost = totalTransportCost + totalMealCost + totalActivityCost;
+        allItineraryHTML = `<div class="day-cost-summary total-cost-summary wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 18px;">
+            <h4 class="wine"><i class="fas fa-calculator wine"></i> 전체 여행 비용 합계</h4>
+            <div class="cost-breakdown">
+                <div class="cost-item"><span>🚇 교통</span> <span>¥${totalTransportCost}</span></div>
+                <div class="cost-item"><span>🍽️ 식사</span> <span>¥${totalMealCost}</span></div>
+                <div class="cost-item"><span>🎯 관광</span> <span>¥${totalActivityCost}</span></div>
+            </div>
+            <div class="cost-total">총합: ¥${totalCost}</div>
+        </div>` + allItineraryHTML;
+        itineraryContent.innerHTML = allItineraryHTML;
+        itineraryPopup.classList.add('show');
+        return;
+    }
+    // 이하 기존 일자별 일정 출력 로직(마커 팝업과 동일한 스타일)
     const daySchedule = shanghaiData.itinerary[dayKey];
     if (!daySchedule) return;
     const dayTitle = dayKey === 'day1' ? '11.12 (1일차)' : 

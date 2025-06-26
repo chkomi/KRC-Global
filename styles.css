@@ -389,24 +389,17 @@ html, body {
 }
 
 /* Popup Styles - 새롭게 개선된 디자인 */
-.custom-popup {
+.custom-popup, .popup-card, .popup-inner-box {
+    min-width: 700px !important;
+    max-width: 700px !important;
     border-radius: 16px !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
-    border: none !important;
-    padding: 0 !important;
-    max-width: 350px !important;
-    font-family: 'Noto Sans KR', sans-serif !important;
-    animation: popupSlideIn 0.3s ease-out !important;
 }
 
-@keyframes popupSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+@media (max-width: 768px) {
+    .custom-popup, .popup-card, .popup-inner-box {
+        min-width: 80vw !important;
+        max-width: 80vw !important;
+        font-size: 0.9em !important;
     }
 }
 
@@ -599,11 +592,6 @@ html, body {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .custom-popup {
-        max-width: 300px;
-        min-width: 250px;
-    }
-    
     .popup-header {
         padding: 12px 15px;
     }
@@ -1018,13 +1006,15 @@ html, body {
 }
 
 .itinerary-popup-content {
-    width: 50vw !important;
+    border: 2px solid #8B1E3F !important;
+    border-radius: 16px !important;
+    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
+    color: #8B1E3F !important;
+    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif !important;
+    min-width: 700px !important;
     max-width: 700px !important;
-    max-height: 50vh !important;
-    min-width: 340px !important;
-    min-height: 320px !important;
-    font-size: 0.8em !important;
-    padding: 10px 0 !important;
+    font-size: 1em !important;
+    box-shadow: 0 12px 40px rgba(139,30,63,0.12);
 }
 
 .itinerary-popup-header, .itinerary-popup-body {
