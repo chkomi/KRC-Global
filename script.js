@@ -16,7 +16,7 @@ let markerGroups = {
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
     attractions: '#8B5A6B',  // 관광지 (레드와인 계열 어두운 버건디)
-    restaurants: '#C4A484',  // 식당 (진한 베이지)
+    restaurants: '#6B8E5A',  // 식당 (녹색 계열)
     airports: '#B87A8F',     // 공항 (레드와인과 상아색 중간톤)
     hotels: '#7B9EA8'        // 호텔 (따뜻한 파란색)
 };
@@ -205,7 +205,7 @@ function displayMarkers() {
 
     const typeColors = {
         attractions: '#8B5A6B',
-        restaurants: '#C4A484',
+        restaurants: '#6B8E5A',
         hotels: '#7B9EA8',
         airports: '#B87A8F'
     };
@@ -764,15 +764,16 @@ function displayItinerary(dayKey) {
             totalTransportCost += dayCosts.transport;
             totalMealCost += dayCosts.meal;
             totalActivityCost += dayCosts.activity;
+            
             allItineraryHTML += `<div class="day-schedule all-day-schedule wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 0;">
                 <h4 class="wine" style="margin:0 0 8px 0;padding:0 18px;font-size:1.1em;text-align:center;"><i class="fas fa-calendar-day wine"></i> ${dayTitle}</h4>
                 <div class="day-cost-summary wine-theme" style="padding:0 18px;">
                     <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-                        <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport}</span></div>
-                        <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal}</span></div>
-                        <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity}</span></div>
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.transport * 195).toLocaleString()})</span></div>
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.meal * 195).toLocaleString()})</span></div>
+                        <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.activity * 195).toLocaleString()})</span></div>
                     </div>
-                    <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total}</div>
+                    <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total.toLocaleString()} (₩${(dayCosts.total * 195).toLocaleString()})</div>
                 </div>
                 <div class="schedule-grid" style="padding:0 18px;">`;
             const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
@@ -820,13 +821,22 @@ function displayItinerary(dayKey) {
             allItineraryHTML += `</div></div>`;
         }
         const totalCost = totalTransportCost + totalMealCost + totalActivityCost;
+        // 숙소와 항공료 추가 (전체일정에서만 표시)
+        const hotelCost = 1504879; // 한화
+        const flightCost = 2191700; // 한화
+        const hotelCostYuan = Math.round(hotelCost / 195); // 위안화로 변환
+        const flightCostYuan = Math.round(flightCost / 195); // 위안화로 변환
+        const totalCostWithAccommodation = totalCost + hotelCostYuan + flightCostYuan;
+        
         allItineraryHTML = `<div class="day-cost-summary total-cost-summary wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 18px;">
             <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${totalTransportCost}</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${totalMealCost}</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${totalActivityCost}</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${totalTransportCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalTransportCost * 195).toLocaleString()})</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${totalMealCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalMealCost * 195).toLocaleString()})</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${totalActivityCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalActivityCost * 195).toLocaleString()})</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>🏨 숙소</span><br><span>¥-</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${hotelCost.toLocaleString()})</span></div>
+                <div class="cost-item" style="flex:1;text-align:center;"><span>✈️ 항공</span><br><span>¥-</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${flightCost.toLocaleString()})</span></div>
             </div>
-            <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${totalCost}</div>
+            <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${totalCostWithAccommodation.toLocaleString()} (₩${(totalCostWithAccommodation * 195).toLocaleString()})</div>
         </div>` + allItineraryHTML;
         itineraryContent.innerHTML = allItineraryHTML;
         itineraryPopup.classList.add('show');
@@ -840,13 +850,14 @@ function displayItinerary(dayKey) {
                     dayKey === 'day3' ? '11.14 (3일차)' : '11.15 (4일차)';
     // 비용 요약
     const dayCosts = calculateDayCosts(daySchedule);
+    
     let html = `<div class="day-cost-summary wine-theme">
         <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-            <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport}</span></div>
-            <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal}</span></div>
-            <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity}</span></div>
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.transport * 195).toLocaleString()})</span></div>
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${dayCosts.meal.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.meal * 195).toLocaleString()})</span></div>
+            <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${dayCosts.activity.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(dayCosts.activity * 195).toLocaleString()})</span></div>
         </div>
-        <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total}</div>
+        <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${dayCosts.total.toLocaleString()} (₩${(dayCosts.total * 195).toLocaleString()})</div>
     </div>`;
     // 일정 항목들
     const scheduleItems = Object.entries(daySchedule).sort((a, b) => {

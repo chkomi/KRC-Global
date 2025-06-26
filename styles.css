@@ -271,7 +271,7 @@ html, body {
 }
 
 .tourism-marker { background-color: #8B5A6B; }
-.restaurant-marker { background-color: #C4A484; }
+.restaurant-marker { background-color: #6B8E5A; }
 .airport-marker { background-color: #B87A8F; }
 .accommodation-marker { background-color: #7B9EA8; }
 
@@ -311,7 +311,7 @@ html, body {
 
 /* Marker Background Colors */
 .attractions-bg { background-color: #8B5A6B; }
-.restaurants-bg { background-color: #C4A484; }
+.restaurants-bg { background-color: #6B8E5A; }
 .airports-bg { background-color: #B87A8F; }
 .hotels-bg { background-color: #7B9EA8; }
 
@@ -552,8 +552,8 @@ html, body {
     color: #8B5A6B;
 }
 
-.marker-label[data-color="#C4A484"] {
-    color: #C4A484;
+.marker-label[data-color="#6B8E5A"] {
+    color: #6B8E5A;
 }
 
 .marker-label[data-color="#B87A8F"] {
