@@ -782,7 +782,7 @@ function displayItinerary(dayKey) {
             totalMealCost += dayCosts.meal;
             totalActivityCost += dayCosts.activity;
             allItineraryHTML += `<div class="day-schedule all-day-schedule wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 0;">
-                <h4 class="wine" style="margin:0 0 8px 0;padding:0 18px;font-size:1.1em;"><i class="fas fa-calendar-day wine"></i> ${dayTitle}</h4>
+                <h4 class="wine" style="margin:0 0 8px 0;padding:0 18px;font-size:1.1em;text-align:center;"><i class="fas fa-calendar-day wine"></i> ${dayTitle}</h4>
                 <div class="day-cost-summary wine-theme" style="padding:0 18px;">
                     <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
                         <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${dayCosts.transport}</span></div>
@@ -802,17 +802,17 @@ function displayItinerary(dayKey) {
                 const itemClass = getScheduleItemClass(key);
                 const locationName = extractKorean(schedule.location);
                 const distance = schedule.distance || '-';
-                const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-                const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
-                const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+                const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+                const mealCost = schedule.cost?.meal ? `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
+                const activityCost = schedule.cost?.activity ? `<span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
                 allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
                     <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
                     <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
                     <div class="bottom-sheet-distance" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
-                    <div class="bottom-sheet-cost" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
-                        ${mealCost ? `<div class="meal-cost">${mealCost}</div>` : ''}
-                        ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
+                    <div class="bottom-sheet-cost wine" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;">
+                        ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
+                        ${mealCost ? `<div class="meal-cost wine">${mealCost}</div>` : ''}
+                        ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
                     </div>
                 </div>`;
                 // 일정과 일정 사이에 레드와인 구분선 추가 (마지막 항목 제외)
@@ -862,17 +862,17 @@ function displayItinerary(dayKey) {
         const itemClass = getScheduleItemClass(key);
         const locationName = extractKorean(schedule.location);
         const distance = schedule.distance || '-';
-        const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-        const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
-        const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+        const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+        const mealCost = schedule.cost?.meal ? `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
+        const activityCost = schedule.cost?.activity ? `<span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
         html += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
             <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
             <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
             <div class="bottom-sheet-distance" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
-            <div class="bottom-sheet-cost" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
-                ${mealCost ? `<div class="meal-cost">${mealCost}</div>` : ''}
-                ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
+            <div class="bottom-sheet-cost wine" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;">
+                ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
+                ${mealCost ? `<div class="meal-cost wine">${mealCost}</div>` : ''}
+                ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
             </div>
         </div>`;
         // 일정과 일정 사이에 레드와인 구분선 추가 (마지막 항목 제외)
