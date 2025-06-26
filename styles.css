@@ -389,19 +389,33 @@ html, body {
 }
 
 /* Popup Styles - 새롭게 개선된 디자인 */
-.custom-popup, .popup-card, .popup-inner-box, .itinerary-popup-content {
-    min-width: 320px !important;
+.popup-card, .custom-popup, .popup-inner-box {
+    min-width: 420px !important;
     max-width: 420px !important;
-    width: auto !important;
+    width: 420px !important;
     border-radius: 16px !important;
 }
-
+.popup-body, .popup-info, .popup-inner-box {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+.itinerary-popup-content {
+    width: 60vw !important;
+    max-width: 60vw !important;
+    min-width: 320px !important;
+    border-radius: 16px !important;
+}
 @media (max-width: 768px) {
-    .custom-popup, .popup-card, .popup-inner-box, .itinerary-popup-content {
+    .popup-card, .custom-popup, .popup-inner-box {
         min-width: 90vw !important;
         max-width: 90vw !important;
         width: 90vw !important;
         font-size: 0.95em !important;
+    }
+    .itinerary-popup-content {
+        width: 90vw !important;
+        max-width: 90vw !important;
+        min-width: 0 !important;
     }
 }
 
@@ -1005,18 +1019,6 @@ html, body {
 
 .itinerary-popup.show {
     display: flex;
-}
-
-.itinerary-popup-content {
-    border: 2px solid #8B1E3F !important;
-    border-radius: 16px !important;
-    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
-    color: #8B1E3F !important;
-    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif !important;
-    min-width: 700px !important;
-    max-width: 700px !important;
-    font-size: 1em !important;
-    box-shadow: 0 12px 40px rgba(139,30,63,0.12);
 }
 
 .itinerary-popup-header, .itinerary-popup-body {
