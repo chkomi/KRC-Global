@@ -340,10 +340,10 @@ function createPopupContent(place) {
     const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
     let html = `<div class='custom-popup'>`;
-    html += `<div class='popup-header'>
-        <div class='popup-title-main'>${koreanName}</div>
-        <div class='popup-title-sub' style="font-size:0.92em;color:#B2455E;margin-bottom:2px;">${englishName}</div>
-        <div class='popup-type-label'>${typeLabel}</div>
+    html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;">
+        <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:#8B1E3F;margin-bottom:2px;text-align:center;">${koreanName}</div>
+        <div class='popup-title-sub' style="font-size:0.92em;color:#B2455E;margin-bottom:6px;text-align:center;">${englishName}</div>
+        <div class='popup-type-label' style="display:inline-block;margin:0 auto 8px auto;padding:3px 16px;border-radius:14px;background:#8B1E3F;color:#FFF8F0;font-family:'Yangjin','Noto Sans KR',sans-serif;font-size:0.95em;font-weight:700;border:1.5px solid #8B1E3F;box-shadow:0 1px 4px rgba(139,30,63,0.04);">${typeLabel}</div>
     </div>`;
     html += `<div class='popup-body'>`;
     html += `<div class='popup-info'>`;
