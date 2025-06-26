@@ -781,7 +781,7 @@ function displayItinerary(dayKey) {
                 const timeB = b[1].time || '00:00';
                 return timeA.localeCompare(timeB);
             });
-            scheduleItems.forEach(([key, schedule]) => {
+            scheduleItems.forEach(([key, schedule], idx) => {
                 const icon = getScheduleIcon(key);
                 const itemClass = getScheduleItemClass(key);
                 const locationName = extractKorean(schedule.location);
@@ -789,16 +789,20 @@ function displayItinerary(dayKey) {
                 const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
                 const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
                 const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
-                allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
-                    <div class="bottom-sheet-time wine"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
-                    <div class="bottom-sheet-location wine" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
-                    <div class="bottom-sheet-distance wine" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
-                    <div class="bottom-sheet-cost wine" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
-                        ${mealCost ? `<div class="meal-cost wine">${mealCost}</div>` : ''}
-                        ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
+                allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
+                    <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
+                    <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
+                    <div class="bottom-sheet-distance" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
+                    <div class="bottom-sheet-cost" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
+                        ${mealCost ? `<div class="meal-cost">${mealCost}</div>` : ''}
+                        ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
                     </div>
                 </div>`;
+                // 일정과 일정 사이에 레드와인 구분선 추가 (마지막 항목 제외)
+                if (idx < scheduleItems.length - 1) {
+                    allItineraryHTML += `<div style="height:2px;width:98%;margin:0 auto;background:linear-gradient(90deg,#8B1E3F 0%,#B2455E 100%);opacity:0.7;border-radius:2px;"></div>`;
+                }
             });
             allItineraryHTML += `</div></div>`;
         }
@@ -837,7 +841,7 @@ function displayItinerary(dayKey) {
         const timeB = b[1].time || '00:00';
         return timeA.localeCompare(timeB);
     });
-    scheduleItems.forEach(([key, schedule]) => {
+    scheduleItems.forEach(([key, schedule], idx) => {
         const icon = getScheduleIcon(key);
         const itemClass = getScheduleItemClass(key);
         const locationName = extractKorean(schedule.location);
@@ -845,7 +849,7 @@ function displayItinerary(dayKey) {
         const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
         const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
         const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
-        html += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
+        html += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
             <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
             <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
             <div class="bottom-sheet-distance" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
@@ -855,6 +859,10 @@ function displayItinerary(dayKey) {
                 ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
             </div>
         </div>`;
+        // 일정과 일정 사이에 레드와인 구분선 추가 (마지막 항목 제외)
+        if (idx < scheduleItems.length - 1) {
+            html += `<div style="height:2px;width:98%;margin:0 auto;background:linear-gradient(90deg,#8B1E3F 0%,#B2455E 100%);opacity:0.7;border-radius:2px;"></div>`;
+        }
     });
     itineraryContent.innerHTML = html;
     itineraryPopup.classList.add('show');
