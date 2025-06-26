@@ -336,7 +336,9 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수 (마커 팝업)
 function createPopupContent(place) {
-    const koreanName = extractKorean(place.name);
+    let koreanName = extractKorean(place.name);
+    // 쉼표(,)가 있으면 앞부분만 사용
+    if (koreanName.includes(',')) koreanName = koreanName.split(',')[0].trim();
     const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
     let html = `<div class='custom-popup'>`;
