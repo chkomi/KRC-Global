@@ -365,10 +365,10 @@ function createPopupContent(place) {
     }
     html += `</div>`;
     html += `<div class='map-buttons row'>
-        <a class='map-btn google-btn' style='min-width:135px' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn google-btn' style='min-width:135px;text-align:center' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fab fa-google'></i>구글지도
         </a>
-        <a class='map-btn amap-btn' style='min-width:135px' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn amap-btn' style='min-width:135px;text-align:center' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fas fa-map-marked-alt'></i>가오더지도
         </a>
     </div>`;
