@@ -337,46 +337,41 @@ function getTypeLabel(type) {
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
     const koreanName = extractKorean(place.name);
+    const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
-    const typeColors = {
-        attractions: '#EA4335',
-        restaurants: '#34A853',
-        hotels: '#1A73E8',
-        airports: '#9B59B6',
-        default: '#667eea'
-    };
-    const color = typeColors[place.type] || typeColors.default;
     let html = `<div class='popup-card modern-popup'>`;
     html += `<div class='popup-inner-box'>`;
-    html += `<div class='popup-color-bar' style='background:${color}'></div>`;
-    html += `<div class='popup-header'>
+    html += `<div class='popup-header center'>
         <div class='popup-title-row'>
-            <h3 class='popup-title'>${koreanName}</h3>
-            <span class="place-type-pill type-${place.type}">${typeLabel}</span>
+            <div class='popup-title-block'>
+                <div class='popup-title-main'>${koreanName}</div>
+                <div class='popup-title-sub'>${englishName}</div>
+            </div>
         </div>
+        <div class='popup-type-label wine'>${typeLabel}</div>
     </div>`;
     html += `<div class='popup-body compact'>`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span>${place.address}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt wine'></i><span>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span>${compressDescription(place.description)}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-info-circle wine'></i><span>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-star wine'></i><span>${place.features.join(', ')}</span></div>`;
     }
     if (place.price) {
         const priceInWon = Math.round(parseInt(place.price) * 0.18);
         html += `<div class='price-info modern'>
-            <i class='fas fa-coins'></i>
+            <i class='fas fa-coins wine'></i>
             <span class='price-highlight'>${priceInWon.toLocaleString()}원</span>
             <span class='price-sub'>(약 ${parseInt(place.price).toLocaleString()}엔)</span>
         </div>`;
     }
     html += `</div>`;
     html += `<div class='map-links modern'>
-        <div class='map-buttons'>
+        <div class='map-buttons column'>
             <a class='map-btn google-btn modern' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
                 <i class='fab fa-google'></i>구글지도
             </a>

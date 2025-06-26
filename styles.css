@@ -1903,98 +1903,78 @@ html, body {
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Yangjin&display=swap');
 
 .custom-popup, .popup-card {
-    padding: 2px !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.18) !important;
+    padding: 1px !important;
 }
 
-.popup-inner-box {
-    border: 2px solid #8B1E3F;
-    border-radius: 10px;
-    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat;
-    box-sizing: border-box;
-    padding: 18px 18px 14px 18px;
-    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-    min-width: 220px;
-    max-width: 340px;
-    margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(139,30,63,0.07);
+.popup-inner-box, .popup-body, .map-btn, .google-btn, .amap-btn {
+    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
 }
 
-.popup-title, .popup-header h3 {
+.popup-header.center {
+    text-align: center;
+    padding-bottom: 0;
+    background: none;
+    border-bottom: none;
+}
+
+.popup-title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.popup-title-main {
     font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-    font-weight: 700;
-    font-size: 1.18em;
+    font-size: 1.25em;
+    font-weight: 800;
     color: #8B1E3F;
+    margin-bottom: 0.1em;
     letter-spacing: -0.01em;
 }
 
-.popup-info, .popup-info-row, .price-info, .map-links, .place-type-pill {
-    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+.popup-title-sub {
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 0.92em;
+    color: #B2455E;
+    margin-bottom: 0.2em;
+    font-weight: 500;
 }
 
-.popup-info-row {
-    margin: 6px 0;
-    padding: 0;
-    line-height: 1.4;
-    font-size: 0.97em;
-}
-
-.price-info.modern {
-    border-radius: 7px;
-    background: #FBE9E6;
-    border: 1.5px solid #8B1E3F;
+.popup-type-label.wine {
+    display: inline-block;
+    margin: 0 auto 6px auto;
+    padding: 3px 16px;
+    border-radius: 14px;
+    background: #fff8f0;
     color: #8B1E3F;
-    margin: 10px 0 8px 0;
-    padding: 8px 12px;
-    font-weight: 600;
-    font-size: 1em;
-    box-shadow: 0 1px 4px rgba(139,30,63,0.04);
-}
-
-.map-links.modern {
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px dashed #8B1E3F;
-}
-
-.map-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.map-btn.modern {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    border-radius: 7px;
     font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-    font-size: 0.98em;
-    padding: 8px 0;
-    margin-bottom: 4px;
-    background: linear-gradient(90deg, #8B1E3F 0%, #B2455E 100%);
-    color: #fff;
-    border: none;
-    font-weight: 600;
-    box-shadow: 0 1px 4px rgba(139,30,63,0.08);
-    transition: background 0.2s;
+    font-size: 0.95em;
+    font-weight: 700;
+    border: 1.5px solid #8B1E3F;
+    box-shadow: 0 1px 4px rgba(139,30,63,0.04);
+    margin-bottom: 8px;
 }
 
-.map-btn.modern:hover {
-    background: linear-gradient(90deg, #B2455E 0%, #8B1E3F 100%);
-    color: #fff;
+.wine, .wine i, .wine svg {
+    color: #8B1E3F !important;
+    fill: #8B1E3F !important;
 }
 
-@media (max-width: 768px) {
-    .popup-inner-box {
-        padding: 10px 6px 8px 6px;
-        min-width: 0;
-        max-width: 95vw;
-    }
-    .map-btn.modern {
-        font-size: 0.8em;
-        padding: 6px 0;
-    }
+.popup-info-row i {
+    margin-right: 7px;
+    font-size: 1em;
+    vertical-align: middle;
+}
+
+.map-buttons.column {
+    flex-direction: column;
+    gap: 6px;
+}
+
+.popup-info-row span {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    display: inline;
 }
