@@ -802,9 +802,23 @@ function displayItinerary(dayKey) {
                 const itemClass = getScheduleItemClass(key);
                 const locationName = extractKorean(schedule.location);
                 const distance = schedule.distance || '-';
+                // 교통비
                 const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-                const mealCost = schedule.cost?.meal ? `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
-                const activityCost = schedule.cost?.activity ? `<span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+                // activity에 식사 관련 키워드가 있으면 식사로, 아니면 관광으로
+                let mealCost = '';
+                let activityCost = '';
+                if (schedule.cost?.activity) {
+                    const activityStr = schedule.cost.activity;
+                    if (activityStr.includes('식사') || activityStr.toLowerCase().includes('meal')) {
+                        mealCost = `<span class='cost-label'>식사</span> ¥${parseInt(activityStr).toLocaleString()}`;
+                    } else {
+                        activityCost = `<span class='cost-label'>관광</span> ¥${parseInt(activityStr).toLocaleString()}`;
+                    }
+                }
+                // 별도 meal 필드가 있으면 식사비용으로
+                if (schedule.cost?.meal) {
+                    mealCost = `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}`;
+                }
                 allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
                     <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
                     <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
@@ -862,9 +876,23 @@ function displayItinerary(dayKey) {
         const itemClass = getScheduleItemClass(key);
         const locationName = extractKorean(schedule.location);
         const distance = schedule.distance || '-';
+        // 교통비
         const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-        const mealCost = schedule.cost?.meal ? `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
-        const activityCost = schedule.cost?.activity ? `<span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+        // activity에 식사 관련 키워드가 있으면 식사로, 아니면 관광으로
+        let mealCost = '';
+        let activityCost = '';
+        if (schedule.cost?.activity) {
+            const activityStr = schedule.cost.activity;
+            if (activityStr.includes('식사') || activityStr.toLowerCase().includes('meal')) {
+                mealCost = `<span class='cost-label'>식사</span> ¥${parseInt(activityStr).toLocaleString()}`;
+            } else {
+                activityCost = `<span class='cost-label'>관광</span> ¥${parseInt(activityStr).toLocaleString()}`;
+            }
+        }
+        // 별도 meal 필드가 있으면 식사비용으로
+        if (schedule.cost?.meal) {
+            mealCost = `<span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}`;
+        }
         html += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-radius:0;margin-bottom:0;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
             <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
             <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
