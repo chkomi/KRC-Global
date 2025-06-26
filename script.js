@@ -15,10 +15,10 @@ let markerGroups = {
 
 // 마커 타입에 따른 배경색 정의 (라벨 테두리 색상에 사용)
 const markerColors = {
-    attractions: '#ea4335',  // 관광지 (Google Red)
-    restaurants: '#34a853',  // 식당 (Google Green)
-    airports: '#9b59b6',     // 공항 (Purple)
-    hotels: '#1a73e8'        // 호텔 (Google Blue)
+    attractions: '#8B5A6B',  // 관광지 (레드와인 계열 어두운 버건디)
+    restaurants: '#C4A484',  // 식당 (진한 베이지)
+    airports: '#B87A8F',     // 공항 (레드와인과 상아색 중간톤)
+    hotels: '#7B9EA8'        // 호텔 (따뜻한 파란색)
 };
 
 // 마커 타입별 우선순위 정의
@@ -204,10 +204,10 @@ function displayMarkers() {
     Object.values(clusterGroups).forEach(group => group.clearLayers());
 
     const typeColors = {
-        attractions: '#ea4335',
-        restaurants: '#34a853',
-        hotels: '#1a73e8',
-        airports: '#9b59b6'
+        attractions: '#8B5A6B',
+        restaurants: '#C4A484',
+        hotels: '#7B9EA8',
+        airports: '#B87A8F'
     };
 
     ['attractions', 'restaurants', 'hotels', 'airports'].forEach(type => {
@@ -233,7 +233,7 @@ function displayMarkers() {
                     const label = document.createElement('div');
                     label.className = 'marker-label';
                     label.innerText = labelText;
-                    label.style.background = typeColors[type];
+                    label.setAttribute('data-color', typeColors[type]);
                     markerElem.appendChild(label);
                 }
                 // hover 효과 제거

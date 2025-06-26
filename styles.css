@@ -134,7 +134,7 @@ html, body {
 /* Map Tile Selection Control */
 .map-tile-control {
     position: absolute;
-    left: 15px;
+    left: 5px;
     right: auto;
     bottom: 15px;
     background: transparent !important;
@@ -270,10 +270,10 @@ html, body {
     flex-shrink: 0;
 }
 
-.tourism-marker { background-color: #ea4335; }
-.restaurant-marker { background-color: #34a853; }
-.airport-marker { background-color: #9b59b6; }
-.accommodation-marker { background-color: #1a73e8; }
+.tourism-marker { background-color: #8B5A6B; }
+.restaurant-marker { background-color: #C4A484; }
+.airport-marker { background-color: #B87A8F; }
+.accommodation-marker { background-color: #7B9EA8; }
 
 /* Custom Marker Styles */
 .google-circle-marker {
@@ -310,10 +310,10 @@ html, body {
 }
 
 /* Marker Background Colors */
-.attractions-bg { background-color: #ea4335; }
-.restaurants-bg { background-color: #34a853; }
-.airports-bg { background-color: #9b59b6; }
-.hotels-bg { background-color: #1a73e8; }
+.attractions-bg { background-color: #8B5A6B; }
+.restaurants-bg { background-color: #C4A484; }
+.airports-bg { background-color: #B87A8F; }
+.hotels-bg { background-color: #7B9EA8; }
 
 /* Tooltip Styles */
 .leaflet-tooltip {
@@ -530,21 +530,38 @@ html, body {
 .marker-label {
     position: absolute;
     left: 50%;
-    top: -22px;
+    top: 25px;
     transform: translateX(-50%);
-    padding: 2px 10px 2px 10px;
-    border-radius: 8px;
+    padding: 2px 8px;
+    border-radius: 4px;
     font-size: 0.85em;
     font-weight: 600;
-    color: #fff;
-    background: #333;
     white-space: nowrap;
     pointer-events: none;
     z-index: 1001;
     box-shadow: none;
     opacity: 0.95;
-    border: none;
     outline: none;
+    background: transparent;
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 마커 타입별 라벨 색상 */
+.marker-label[data-color="#8B5A6B"] {
+    color: #8B5A6B;
+}
+
+.marker-label[data-color="#C4A484"] {
+    color: #C4A484;
+}
+
+.marker-label[data-color="#B87A8F"] {
+    color: #B87A8F;
+}
+
+.marker-label[data-color="#7B9EA8"] {
+    color: #7B9EA8;
 }
 
 /* 마커 hover 효과 완전 제거 */
