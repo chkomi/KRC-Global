@@ -896,95 +896,94 @@ html, body {
 }
 
 .schedule-item {
-    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
-    border-left: 4px solid #8B1E3F !important;
-    border-radius: 8px !important;
-    margin-bottom: 2px !important;
-    padding: 3px 6px !important;
-    font-size: 0.92em !important;
+    background: #FFF8F0;
+    border-left: 4px solid #8B1E3F;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 10px 14px 10px 12px;
     display: grid;
-    grid-template-columns: 45px 1fr 55px 70px;
-    gap: 2px !important;
+    grid-template-columns: 44px 1fr 54px 70px;
+    gap: 6px;
     align-items: center;
-    color: #8B1E3F;
-    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-}
-
-.schedule-item .bottom-sheet-time i {
-    color: #8B1E3F !important;
+    font-family: 'Noto Sans KR', 'Yangjin', sans-serif;
+    font-size: 0.93em;
+    transition: box-shadow 0.18s, background 0.18s, transform 0.18s;
+    box-shadow: 0 1px 4px rgba(139,30,63,0.04);
 }
 
 .schedule-item:hover {
     background: #F3E6E1;
-    transform: none;
-    box-shadow: 0 2px 8px rgba(139,30,63,0.06);
+    box-shadow: 0 4px 16px rgba(139,30,63,0.10);
+    transform: translateY(-2px);
 }
 
-.schedule-item i {
-    color: #6c757d;
-    width: 16px;
-    text-align: center;
-}
-
-.schedule-time {
+.schedule-item .bottom-sheet-time {
+    color: #8B1E3F;
+    font-family: 'Yangjin', 'Noto Sans KR', sans-serif;
+    font-size: 0.98em;
     font-weight: 700;
-    color: #8B1E3F;
-    min-width: 45px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 4px;
-    font-size: 0.98em;
+    gap: 2px;
 }
 
-.schedule-location {
-    font-weight: 600;
+.schedule-item .bottom-sheet-time i {
     color: #8B1E3F;
-    flex: 1;
-    font-size: 0.98em;
-    line-height: 1.2;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+    font-size: 1.15em;
+    margin-bottom: 2px;
 }
 
-.schedule-desc {
-    color: #6B2B3A;
+.schedule-item .bottom-sheet-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.schedule-item .bottom-sheet-location {
+    color: #8B1E3F;
+    font-family: 'Yangjin', 'Noto Sans KR', sans-serif;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+    white-space: normal;
+    word-break: keep-all;
+}
+
+.schedule-item .bottom-sheet-desc {
+    color: #B2455E;
     font-size: 0.92em;
-    line-height: 1.3;
+    line-height: 1.35;
+    font-weight: 500;
     white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+    word-break: keep-all;
 }
 
-.schedule-distance {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-size: 0.85em;
+.schedule-item .bottom-sheet-distance {
     color: #B2455E;
-    text-align: center;
-    min-width: 55px;
+    font-size: 0.88em;
+    text-align: right;
+    font-weight: 500;
 }
 
-.schedule-cost {
+.schedule-item .bottom-sheet-cost {
+    color: #B2455E;
+    font-size: 0.88em;
+    text-align: right;
+    font-weight: 600;
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-size: 0.85em;
-    color: #B2455E;
-    min-width: 70px;
 }
 
-.schedule-cost .transport-cost {
+.schedule-item .bottom-sheet-cost .transport-cost {
     color: #8B1E3F;
-    font-weight: 600;
 }
 
-.schedule-cost .activity-cost {
+.schedule-item .bottom-sheet-cost .activity-cost {
     color: #B2455E;
-    font-weight: 600;
 }
 
 /* 전체 일정 보기 스타일 */
@@ -1013,479 +1012,6 @@ html, body {
 
 .schedule-grid {
     padding: 12px;
-}
-
-.all-schedule-item {
-    display: grid;
-    grid-template-columns: 45px 1fr 55px 70px;
-    gap: 8px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    margin-bottom: 6px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border-left: 4px solid #667eea;
-    font-size: 0.85em;
-    align-items: center;
-}
-
-.all-schedule-item:hover {
-    background: #e9ecef;
-    transform: translateX(3px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.all-schedule-item .schedule-time {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.8em;
-    text-align: center;
-    height: 100%;
-    min-width: 45px;
-}
-
-.all-schedule-item .schedule-time i {
-    font-size: 1.1em;
-    color: #667eea;
-}
-
-.all-schedule-item .schedule-time span {
-    font-size: 0.7em;
-    font-weight: 500;
-}
-
-.all-schedule-item .schedule-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-}
-
-.all-schedule-item .schedule-location {
-    font-weight: 600;
-    color: #212529;
-    font-size: 0.85em;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.all-schedule-item .schedule-desc {
-    color: #6c757d;
-    font-size: 0.75em;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.all-schedule-item .schedule-distance {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-size: 0.7em;
-    color: #6c757d;
-    text-align: center;
-    min-width: 55px;
-}
-
-.all-schedule-item .schedule-distance .distance-value {
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.8em;
-}
-
-.all-schedule-item .schedule-cost {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.65em;
-    color: #6c757d;
-    min-width: 70px;
-}
-
-.all-schedule-item .schedule-cost .transport-cost {
-    color: #007bff;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.all-schedule-item .schedule-cost .activity-cost {
-    color: #28a745;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* 각 일차별 일정 스타일 */
-.bottom-sheet-item {
-    display: grid;
-    grid-template-columns: 45px 1fr 55px 70px;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border-left: 4px solid #667eea;
-    align-items: center;
-    font-size: 0.85em;
-}
-
-.bottom-sheet-item:hover {
-    background: #e9ecef;
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.bottom-sheet-item .bottom-sheet-time {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    font-weight: 600;
-    color: #495057;
-    min-width: 45px;
-    text-align: center;
-    height: 100%;
-    font-size: 0.8em;
-}
-
-.bottom-sheet-item .bottom-sheet-time i {
-    font-size: 1.1em;
-    color: #667eea;
-}
-
-.bottom-sheet-item .bottom-sheet-time span {
-    font-size: 0.7em;
-    font-weight: 500;
-}
-
-.bottom-sheet-item .bottom-sheet-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-}
-
-.bottom-sheet-item .bottom-sheet-location {
-    font-weight: 600;
-    color: #212529;
-    font-size: 0.85em;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.bottom-sheet-item .bottom-sheet-desc {
-    color: #6c757d;
-    font-size: 0.75em;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.bottom-sheet-item .bottom-sheet-distance {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-size: 0.7em;
-    color: #6c757d;
-    text-align: center;
-    min-width: 55px;
-}
-
-.bottom-sheet-item .bottom-sheet-distance .distance-value {
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.8em;
-}
-
-.bottom-sheet-item .bottom-sheet-cost {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.65em;
-    color: #6c757d;
-    min-width: 70px;
-}
-
-.bottom-sheet-item .bottom-sheet-cost .transport-cost {
-    color: #007bff;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.bottom-sheet-item .bottom-sheet-cost .activity-cost {
-    color: #28a745;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* 일정 항목 색상 구분 - 전체 일정 */
-.all-schedule-item.meal-item {
-    border-left: 4px solid #28a745 !important;
-    background: rgba(40, 167, 69, 0.05) !important;
-}
-
-.all-schedule-item.meal-item:hover {
-    background: rgba(40, 167, 69, 0.1) !important;
-}
-
-.all-schedule-item.meal-item .schedule-time i {
-    color: #28a745 !important;
-}
-
-.all-schedule-item.attraction-item {
-    border-left: 4px solid #dc3545 !important;
-    background: rgba(220, 53, 69, 0.05) !important;
-}
-
-.all-schedule-item.attraction-item:hover {
-    background: rgba(220, 53, 69, 0.1) !important;
-}
-
-.all-schedule-item.attraction-item .schedule-time i {
-    color: #dc3545 !important;
-}
-
-.all-schedule-item.transport-item {
-    border-left: 4px solid #6c757d !important;
-    background: rgba(108, 117, 125, 0.05) !important;
-}
-
-.all-schedule-item.transport-item:hover {
-    background: rgba(108, 117, 125, 0.1) !important;
-}
-
-.all-schedule-item.transport-item .schedule-time i {
-    color: #6c757d !important;
-}
-
-.all-schedule-item.hotel-item {
-    border-left: 4px solid #17a2b8 !important;
-    background: rgba(23, 162, 184, 0.05) !important;
-}
-
-.all-schedule-item.hotel-item:hover {
-    background: rgba(23, 162, 184, 0.1) !important;
-}
-
-.all-schedule-item.hotel-item .schedule-time i {
-    color: #17a2b8 !important;
-}
-
-/* Marker Cluster Customization */
-.marker-cluster-small {
-    background-color: rgba(181, 226, 140, 0.8);
-}
-
-.marker-cluster-small div {
-    background-color: rgba(110, 204, 57, 0.8);
-}
-
-.marker-cluster-medium {
-    background-color: rgba(241, 211, 87, 0.8);
-}
-
-.marker-cluster-medium div {
-    background-color: rgba(240, 194, 56, 0.8);
-}
-
-.marker-cluster-large {
-    background-color: rgba(253, 156, 115, 0.8);
-}
-
-.marker-cluster-large div {
-    background-color: rgba(241, 128, 23, 0.8);
-}
-
-.marker-cluster {
-    background-clip: padding-box;
-    border-radius: 20px;
-}
-
-.marker-cluster div {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-    margin-top: 5px;
-    text-align: center;
-    border-radius: 15px;
-    font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
-    color: white;
-    font-weight: bold;
-}
-
-.marker-cluster span {
-    line-height: 30px;
-}
-
-#bottom-sheet {
-    position: fixed;
-    bottom: -100%;
-    left: 0;
-    right: 0;
-    height: 40vh;
-    background: white;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 1500;
-    transition: bottom 0.3s ease;
-    overflow: hidden;
-    user-select: none;
-}
-
-#bottom-sheet.show {
-    bottom: 0;
-}
-
-.bottom-sheet-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 20px 10px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    position: relative;
-}
-
-.drag-handle {
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 2px;
-    cursor: grab;
-}
-
-.drag-handle:active {
-    cursor: grabbing;
-}
-
-.bottom-sheet-title {
-    margin: 0;
-    font-size: 1.1em;
-    font-weight: 600;
-    flex: 1;
-    text-align: center;
-}
-
-.bottom-sheet-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-
-.bottom-sheet-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.bottom-sheet-content {
-    padding: 15px 20px;
-    height: calc(100% - 60px);
-    overflow-y: auto;
-}
-
-.bottom-sheet-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.bottom-sheet-item:hover {
-    background: #e9ecef;
-    transform: translateX(5px);
-}
-
-.bottom-sheet-time {
-    font-weight: 600;
-    color: #495057;
-    min-width: 60px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.bottom-sheet-location {
-    font-weight: 500;
-    color: #212529;
-    flex: 1;
-}
-
-.bottom-sheet-desc {
-    color: #6c757d;
-    font-size: 0.9em;
-    margin-top: 4px;
-}
-
-/* 전체 일정 보기 스타일 - 한 줄로 표시 */
-.all-itinerary {
-    max-height: 65vh;
-    overflow-y: auto;
-}
-
-.all-day-schedule {
-    margin-bottom: 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.all-day-schedule h4 {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    margin: 0;
-    padding: 10px 12px;
-    font-size: 0.9em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.schedule-grid {
-    padding: 10px;
 }
 
 .all-schedule-item {
@@ -1754,10 +1280,104 @@ html, body {
 
 /* 마커 팝업 헤더: 배경 레드와인, 글자 아이보리 */
 .custom-popup .popup-header {
+    background: #FFF8F0;
+    color: #8B1E3F;
+    border-radius: 14px 14px 0 0;
+    text-align: center;
+    padding: 18px 10px 8px 10px;
+    border-bottom: 1.5px solid #8B1E3F;
+}
+.custom-popup .popup-title-main {
+    font-family: 'Yangjin', 'Noto Sans KR', sans-serif;
+    font-size: 1.18em;
+    font-weight: 800;
+    color: #8B1E3F;
+    margin-bottom: 2px;
+    text-align: center;
+}
+.custom-popup .popup-title-sub {
+    font-size: 0.92em;
+    color: #B2455E;
+    margin-bottom: 6px;
+    font-weight: 500;
+    text-align: center;
+}
+.custom-popup .popup-type-label {
+    display: inline-block;
+    margin: 0 auto 8px auto;
+    padding: 3px 16px;
+    border-radius: 14px;
+    background: #FFF8F0;
+    color: #8B1E3F;
+    font-family: 'Yangjin', 'Noto Sans KR', sans-serif;
+    font-size: 0.95em;
+    font-weight: 700;
+    border: 1.5px solid #8B1E3F;
+    box-shadow: 0 1px 4px rgba(139,30,63,0.04);
+}
+.custom-popup .popup-body {
+    background: #FFF8F0;
+    color: #6B2B3A;
+    padding: 16px 18px 18px 18px;
+    font-size: 0.97em;
+    line-height: 1.4;
+}
+.custom-popup .popup-info-row {
+    color: #8B1E3F;
+    font-size: 0.95em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.custom-popup .popup-info-row i {
+    color: #8B1E3F;
+    font-size: 1.08em;
+    margin-right: 6px;
+}
+.custom-popup .map-buttons.row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+.custom-popup .map-btn, .custom-popup .google-btn, .custom-popup .amap-btn {
+    background: #FFF8F0;
+    border: 1.5px solid #8B1E3F;
+    color: #8B1E3F;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 7px 0;
+    font-size: 0.97em;
+    min-width: 90px;
+    transition: background 0.15s, color 0.15s;
+}
+.custom-popup .map-btn:hover, .custom-popup .google-btn:hover, .custom-popup .amap-btn:hover {
     background: #8B1E3F;
     color: #FFF8F0;
-    border-radius: 14px 14px 0 0;
 }
-.custom-popup .popup-header h3 {
-    color: #FFF8F0;
+@media (max-width: 768px) {
+    .custom-popup .popup-header {
+        padding: 12px 4px 6px 4px;
+    }
+    .custom-popup .popup-title-main {
+        font-size: 1em;
+    }
+    .custom-popup .popup-title-sub {
+        font-size: 0.85em;
+    }
+    .custom-popup .popup-type-label {
+        font-size: 0.85em;
+        padding: 2px 10px;
+    }
+    .custom-popup .popup-body {
+        font-size: 0.9em;
+        padding: 10px 6px 12px 6px;
+    }
+    .custom-popup .map-btn, .custom-popup .google-btn, .custom-popup .amap-btn {
+        min-width: 60px;
+        font-size: 0.9em;
+        padding: 4px 0;
+    }
 }

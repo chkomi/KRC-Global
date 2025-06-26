@@ -337,19 +337,24 @@ function getTypeLabel(type) {
 // 팝업 내용 생성 함수 (마커 팝업)
 function createPopupContent(place) {
     const koreanName = extractKorean(place.name);
+    const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
     let html = `<div class='custom-popup'>`;
-    html += `<div class='popup-header'><h3>${koreanName}</h3></div>`;
+    html += `<div class='popup-header'>
+        <div class='popup-title-main'>${koreanName}</div>
+        <div class='popup-title-sub'>${englishName}</div>
+        <div class='popup-type-label'>${typeLabel}</div>
+    </div>`;
     html += `<div class='popup-body'>`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span class='wine'>${place.address}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span class='wine'>${place.description}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span class='wine'>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span>${place.features.join(', ')}</span></div>`;
     }
     if (place.price) {
         const priceYuan = parseInt(place.price);
@@ -844,14 +849,14 @@ function displayItinerary(dayKey) {
         const transportCost = schedule.cost?.transport ? `¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
         const activityCost = schedule.cost?.activity ? `¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
         html += `<div class="schedule-item wine-theme ${itemClass}">
-            <div class="bottom-sheet-time"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
+            <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
             <div class="bottom-sheet-content">
-                <div class="bottom-sheet-location wine">${locationName}</div>
+                <div class="bottom-sheet-location">${locationName}</div>
             </div>
-            <div class="bottom-sheet-distance wine">${distance}</div>
-            <div class="bottom-sheet-cost wine">
-                ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
-                ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
+            <div class="bottom-sheet-distance">${distance}</div>
+            <div class="bottom-sheet-cost">
+                ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
+                ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
             </div>
         </div>`;
     });
