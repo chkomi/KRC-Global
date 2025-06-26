@@ -958,6 +958,8 @@ html, body {
     gap: 8px;
     font-family: 'Noto Sans KR', sans-serif;
     border-radius: 8px;
+    text-align: center;
+    justify-content: center;
 }
 
 .schedule-grid {
