@@ -1981,6 +1981,7 @@ html, body {
 
 .popup-inner-box {
     border: 2px solid #8B1E3F !important;
+    border-radius: 12px !important;
 }
 
 .map-buttons.row {

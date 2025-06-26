@@ -336,7 +336,8 @@ function getTypeLabel(type) {
 
 // 팝업 내용 생성 함수
 function createPopupContent(place) {
-    const koreanName = extractKorean(place.name);
+    let koreanName = extractKorean(place.name);
+    koreanName = koreanName.replace(/[^\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F\s]/g, ''); // 한글만 남김
     const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
     let html = `<div class='popup-card modern-popup'>`;
