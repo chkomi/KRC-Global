@@ -1020,12 +1020,16 @@ html, body {
 .itinerary-popup-content {
     background: white;
     border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 85vh;
+    width: 50vw !important;
+    max-width: 700px !important;
+    max-height: 50vh !important;
+    min-width: 340px !important;
+    min-height: 320px !important;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     animation: popupFadeIn 0.3s ease-out;
+    font-size: 0.8em !important;
+    padding: 10px 0 !important;
 }
 
 .itinerary-popup-header {
@@ -1121,6 +1125,8 @@ html, body {
     margin-bottom: 8px;
     transition: all 0.2s ease;
     cursor: pointer;
+    font-size: 0.8em !important;
+    padding: 4px 5px !important;
 }
 
 .schedule-item:hover {
@@ -1783,8 +1789,8 @@ html, body {
     box-shadow: 0 12px 40px rgba(0,0,0,0.18);
     background: #fff;
     overflow: hidden;
-    min-width: 260px;
-    max-width: 350px;
+    min-width: 700px !important;
+    max-width: 700px !important;
     font-family: 'Noto Sans KR', sans-serif;
     position: relative;
     border: none;
@@ -1857,7 +1863,7 @@ html, body {
 /* 모바일 대응 */
 @media (max-width: 768px) {
     .popup-card {
-        max-width: 95vw;
+        max-width: 95vw !important;
         min-width: 0;
         border-radius: 12px;
     }

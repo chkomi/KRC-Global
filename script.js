@@ -345,7 +345,7 @@ function createPopupContent(place) {
     html += `<div class='popup-header center'>
         <div class='popup-title-row'>
             <div class='popup-title-block'>
-                <div class='popup-title-main'>${koreanName}</div>
+                <div class='popup-title-main small'>${koreanName}</div>
             </div>
         </div>
         <div class='popup-title-sub'>${englishName}</div>
@@ -354,13 +354,13 @@ function createPopupContent(place) {
     html += `<div class='popup-body compact'>`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt wine'></i><span>${place.address}</span></div>`;
+        html += `<div class='popup-info-row small'><i class='fas fa-map-marker-alt wine'></i><span>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row'><i class='fas fa-info-circle wine'></i><span>${place.description}</span></div>`;
+        html += `<div class='popup-info-row small'><i class='fas fa-info-circle wine'></i><span>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row'><i class='fas fa-star wine'></i><span>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row small'><i class='fas fa-star wine'></i><span>${place.features.join(', ')}</span></div>`;
     }
     if (place.price) {
         const priceInWon = Math.round(parseInt(place.price) * 0.18);

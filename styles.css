@@ -1018,12 +1018,13 @@ html, body {
 }
 
 .itinerary-popup-content {
-    border: 2px solid #8B1E3F !important;
-    border-radius: 12px !important;
-    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
-    color: #8B1E3F !important;
-    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif !important;
-    box-shadow: 0 12px 40px rgba(139,30,63,0.12);
+    width: 50vw !important;
+    max-width: 700px !important;
+    max-height: 50vh !important;
+    min-width: 340px !important;
+    min-height: 320px !important;
+    font-size: 0.8em !important;
+    padding: 10px 0 !important;
 }
 
 .itinerary-popup-header, .itinerary-popup-body {
@@ -1086,11 +1087,11 @@ html, body {
     border-left: 4px solid #8B1E3F !important;
     border-radius: 8px !important;
     margin-bottom: 4px !important;
-    padding: 6px 8px !important;
-    font-size: 0.93em !important;
+    padding: 4px 5px !important;
+    font-size: 0.8em !important;
     display: grid;
     grid-template-columns: 45px 1fr 55px 70px;
-    gap: 6px;
+    gap: 4px !important;
     align-items: center;
 }
 
@@ -1758,8 +1759,8 @@ html, body {
     box-shadow: 0 12px 40px rgba(0,0,0,0.18);
     background: #fff;
     overflow: hidden;
-    min-width: 260px;
-    max-width: 350px;
+    min-width: 700px !important;
+    max-width: 700px !important;
     font-family: 'Noto Sans KR', sans-serif;
     position: relative;
     border: none;
@@ -1832,9 +1833,9 @@ html, body {
 /* 모바일 대응 */
 @media (max-width: 768px) {
     .popup-card {
-        max-width: 95vw;
-        min-width: 0;
-        border-radius: 12px;
+        min-width: 95vw !important;
+        max-width: 95vw !important;
+        font-size: 0.9em !important;
     }
     .popup-header, .popup-body {
         padding-left: 12px;
