@@ -241,16 +241,11 @@ function displayMarkers() {
                 markerElem.style.boxShadow = 'none';
                 markerElem.style.outline = 'none';
             });
-            // 마우스오버/아웃/클릭 시 불필요한 효과 제거
-            marker.off('mouseover');
-            marker.off('mouseout');
-            // 클러스터 그룹에 추가
             clusterGroups[type].addLayer(marker);
             allMarkers.push({ marker, place: { ...place, type } });
         });
     });
     Object.values(clusterGroups).forEach(group => map.addLayer(group));
-    updateLabelVisibility();
 }
 
 // 영문명 추출 함수 (구글지도용)
@@ -541,23 +536,11 @@ function updateLabelVisibility() {
     allMarkers.forEach(markerData => {
         const marker = markerData.marker;
         const isInBounds = bounds.contains(marker.getLatLng());
-        
         // 클러스터 상태 확인
         const isClustered = marker._icon && marker._icon.parentNode && 
                            marker._icon.parentNode.classList.contains('marker-cluster');
-        
         // 클러스터링되지 않은 마커는 줌 레벨에 상관없이 라벨 표시
-        if (!isClustered && isInBounds) {
-            if (!markerData.visible) {
-                marker.bindTooltip(markerData.tooltip);
-                markerData.visible = true;
-            }
-        } else {
-            if (markerData.visible) {
-                marker.unbindTooltip();
-                markerData.visible = false;
-            }
-        }
+        // (툴팁 관련 코드 완전 제거)
     });
 }
 
