@@ -346,8 +346,8 @@ function createPopupContent(place) {
         default: '#667eea'
     };
     const color = typeColors[place.type] || typeColors.default;
-    // 카드형, 미니멀, 컬러포인트, 라운드, 정보구역 분리, 작은 태그 등 적용
     let html = `<div class='popup-card modern-popup'>`;
+    html += `<div class='popup-inner-box'>`;
     html += `<div class='popup-color-bar' style='background:${color}'></div>`;
     html += `<div class='popup-header'>
         <div class='popup-title-row'>
@@ -385,6 +385,7 @@ function createPopupContent(place) {
             </a>
         </div>
     </div>`;
+    html += `</div>`;
     html += `</div>`;
     html += `</div>`;
     return html;
