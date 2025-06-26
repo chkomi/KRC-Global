@@ -788,8 +788,9 @@ function displayItinerary(dayKey) {
                 const itemClass = getScheduleItemClass(key);
                 const locationName = extractKorean(schedule.location);
                 const distance = schedule.distance || '-';
-                const transportCost = schedule.cost?.transport ? `¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-                const activityCost = schedule.cost?.activity ? `¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+                const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+                const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
+                const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
                 allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;display:grid;grid-template-columns:45px 1fr 55px 70px;gap:2px;align-items:center;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
                     <div class="bottom-sheet-time wine"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
                     <div class="bottom-sheet-content">
@@ -798,6 +799,7 @@ function displayItinerary(dayKey) {
                     <div class="bottom-sheet-distance wine" style="color:#B2455E;">${distance}</div>
                     <div class="bottom-sheet-cost wine">
                         ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
+                        ${mealCost ? `<div class="meal-cost wine">${mealCost}</div>` : ''}
                         ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
                     </div>
                 </div>`;
@@ -846,8 +848,9 @@ function displayItinerary(dayKey) {
         const itemClass = getScheduleItemClass(key);
         const locationName = extractKorean(schedule.location);
         const distance = schedule.distance || '-';
-        const transportCost = schedule.cost?.transport ? `¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
-        const activityCost = schedule.cost?.activity ? `¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+        const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+        const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
+        const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
         html += `<div class="schedule-item wine-theme ${itemClass}">
             <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
             <div class="bottom-sheet-content">
@@ -856,6 +859,7 @@ function displayItinerary(dayKey) {
             <div class="bottom-sheet-distance">${distance}</div>
             <div class="bottom-sheet-cost">
                 ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
+                ${mealCost ? `<div class="meal-cost">${mealCost}</div>` : ''}
                 ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
             </div>
         </div>`;

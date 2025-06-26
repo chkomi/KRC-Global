@@ -1383,3 +1383,16 @@ html, body {
         padding: 4px 0;
     }
 }
+
+.cost-label {
+    display: inline-block;
+    background: #8B1E3F;
+    color: #FFF8F0;
+    border-radius: 10px;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 1px 7px 1px 7px;
+    margin: 0 4px 0 2px;
+    vertical-align: middle;
+    letter-spacing: 0.01em;
+}
