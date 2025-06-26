@@ -345,9 +345,9 @@ function createPopupContent(place) {
         <div class='popup-title-row'>
             <div class='popup-title-block'>
                 <div class='popup-title-main'>${koreanName}</div>
-                <div class='popup-title-sub'>${englishName}</div>
             </div>
         </div>
+        <div class='popup-title-sub'>${englishName}</div>
         <div class='popup-type-label wine'>${typeLabel}</div>
     </div>`;
     html += `<div class='popup-body compact'>`;
@@ -371,11 +371,11 @@ function createPopupContent(place) {
     }
     html += `</div>`;
     html += `<div class='map-links modern'>
-        <div class='map-buttons column'>
-            <a class='map-btn google-btn modern' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <div class='map-buttons row'>
+            <a class='map-btn google-btn modern wine-text' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
                 <i class='fab fa-google'></i>구글지도
             </a>
-            <a class='map-btn amap-btn modern' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+            <a class='map-btn amap-btn modern wine-text' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
                 <i class='fas fa-map-marked-alt'></i>가오더지도
             </a>
         </div>

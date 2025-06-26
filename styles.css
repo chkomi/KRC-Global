@@ -1978,3 +1978,55 @@ html, body {
     text-overflow: unset !important;
     display: inline;
 }
+
+.popup-inner-box {
+    border: 2px solid #8B1E3F !important;
+}
+
+.map-buttons.row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+}
+
+.map-btn.wine-text {
+    color: #8B1E3F !important;
+    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
+    border: 1.5px solid #8B1E3F;
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(139,30,63,0.04);
+    width: 50%;
+    min-width: 0;
+    padding: 8px 0;
+    border-radius: 7px;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.map-btn.wine-text:hover {
+    background: #FBE9E6 !important;
+    color: #B2455E !important;
+}
+
+@media (max-width: 768px) {
+    .map-buttons.row {
+        flex-direction: row;
+        gap: 8px;
+    }
+    .map-btn.wine-text {
+        width: 50%;
+        min-width: 0;
+        font-size: 0.85em;
+        padding: 7px 0;
+    }
+}
+
+.popup-title-main {
+    margin-bottom: 0.1em;
+}
+
+.popup-title-sub {
+    margin-bottom: 0.2em;
+    text-align: center;
+}
