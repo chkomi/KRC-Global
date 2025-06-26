@@ -212,6 +212,9 @@ function displayMarkers() {
 
     ['attractions', 'restaurants', 'hotels', 'airports'].forEach(type => {
         (shanghaiData[type] || []).forEach(place => {
+            // place 객체에 type 정보 추가
+            place.type = type;
+            
             const marker = L.marker([place.latitude, place.longitude], {
                 icon: createCustomIcon(type),
                 name: place.name,
@@ -336,34 +339,45 @@ function createPopupContent(place) {
     if (koreanName.includes(',')) koreanName = koreanName.split(',')[0].trim();
     const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
-    let html = `<div class='custom-popup'>`;
-    html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;">
-        <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:#8B1E3F;margin-bottom:2px;text-align:center;">${koreanName}</div>
-        <div class='popup-title-english' style="font-size:0.92em;color:#B2455E;margin-bottom:6px;text-align:center;font-weight:400;letter-spacing:0.01em;">${englishName}</div>
-        <div class='popup-type-label' style="display:inline-block;margin:0 auto 8px auto;padding:3px 16px;border-radius:14px;background:#8B1E3F;color:#FFF8F0;font-family:'Yangjin','Noto Sans KR',sans-serif;font-size:0.95em;font-weight:700;border:1.5px solid #8B1E3F;box-shadow:0 1px 4px rgba(139,30,63,0.04);">${typeLabel}</div>
+    
+    // 타입별 색상 정의
+    const typeColors = {
+        attractions: { border: '#8B5A6B', background: '#FFF8F0', text: '#8B5A6B' },
+        restaurants: { border: '#6B8E5A', background: '#FFF8F0', text: '#6B8E5A' },
+        hotels: { border: '#7B9EA8', background: '#FFF8F0', text: '#7B9EA8' },
+        airports: { border: '#B87A8F', background: '#FFF8F0', text: '#B87A8F' }
+    };
+    
+    const colors = typeColors[place.type || 'attractions'];
+    
+    let html = `<div class='custom-popup' style="border-color: ${colors.border}; background: ${colors.background}; color: ${colors.text};">`;
+    html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;background: #FFF8F0; color: ${colors.text};">
+        <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:${colors.text};margin-bottom:2px;text-align:center;">${koreanName}</div>
+        <div class='popup-title-english' style="font-size:0.92em;color:${colors.text};margin-bottom:6px;text-align:center;font-weight:400;letter-spacing:0.01em;opacity:0.9;">${englishName}</div>
+        <div class='popup-type-label' style="display:inline-block;margin:0 auto 8px auto;padding:3px 16px;border-radius:14px;background: ${colors.border};color:#FFF8F0;font-family:'Yangjin','Noto Sans KR',sans-serif;font-size:0.95em;font-weight:700;border:1.5px solid ${colors.border};box-shadow:0 1px 4px rgba(0,0,0,0.1);">${typeLabel}</div>
     </div>`;
-    html += `<div class='popup-body'>`;
+    html += `<div class='popup-body' style="background: ${colors.background}; color: ${colors.text};">`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row'><i class='fas fa-map-marker-alt'></i><span>${place.address}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-map-marker-alt' style="color: ${colors.text};"></i><span>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row'><i class='fas fa-info-circle'></i><span>${place.description}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-info-circle' style="color: ${colors.text};"></i><span>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row'><i class='fas fa-star'></i><span>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-star' style="color: ${colors.text};"></i><span>${place.features.join(', ')}</span></div>`;
     }
     if (place.price) {
         const priceYuan = parseInt(place.price);
-        const priceWon = Math.round(priceYuan * 180);
-        html += `<div class='popup-info-row price'><i class='fas fa-coins'></i><span>¥${priceYuan.toLocaleString()} (₩${priceWon.toLocaleString()})</span></div>`;
+        const priceWon = Math.round(priceYuan * 195);
+        html += `<div class='popup-info-row price' style="color: ${colors.text};"><i class='fas fa-coins' style="color: ${colors.text};"></i><span>¥${priceYuan.toLocaleString()} (₩${priceWon.toLocaleString()})</span></div>`;
     }
     html += `</div>`;
     html += `<div class='map-buttons row'>
-        <a class='map-btn google-btn' style='min-width:135px;text-align:center' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn google-btn' style='min-width:135px;text-align:center;background: ${colors.background}; border-color: ${colors.border}; color: ${colors.text};' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fab fa-google'></i>구글지도
         </a>
-        <a class='map-btn amap-btn' style='min-width:135px;text-align:center' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn amap-btn' style='min-width:135px;text-align:center;background: ${colors.background}; border-color: ${colors.border}; color: ${colors.text};' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fas fa-map-marked-alt'></i>가오더지도
         </a>
     </div>`;
@@ -828,15 +842,18 @@ function displayItinerary(dayKey) {
         const flightCostYuan = Math.round(flightCost / 195); // 위안화로 변환
         const totalCostWithAccommodation = totalCost + hotelCostYuan + flightCostYuan;
         
-        allItineraryHTML = `<div class="day-cost-summary total-cost-summary wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 18px;">
-            <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${totalTransportCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalTransportCost * 195).toLocaleString()})</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${totalMealCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalMealCost * 195).toLocaleString()})</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${totalActivityCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalActivityCost * 195).toLocaleString()})</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>🏨 숙소</span><br><span>¥-</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${hotelCost.toLocaleString()})</span></div>
-                <div class="cost-item" style="flex:1;text-align:center;"><span>✈️ 항공</span><br><span>¥-</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${flightCost.toLocaleString()})</span></div>
+        allItineraryHTML = `<div style="position:relative;">
+            <div style="position:absolute;top:-15px;right:0;font-size:0.65em;color:#B2455E;font-weight:500;z-index:1;">(1¥=₩195)</div>
+            <div class="day-cost-summary total-cost-summary wine-theme" style="background:#FFF8F0;border:2px solid #8B1E3F;border-radius:16px;margin-bottom:18px;padding:10px 18px;">
+                <div class="cost-breakdown" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
+                    <div class="cost-item" style="flex:1;text-align:center;"><span>🚇 교통</span><br><span>¥${totalTransportCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalTransportCost * 195).toLocaleString()})</span></div>
+                    <div class="cost-item" style="flex:1;text-align:center;"><span>🍽️ 식사</span><br><span>¥${totalMealCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalMealCost * 195).toLocaleString()})</span></div>
+                    <div class="cost-item" style="flex:1;text-align:center;"><span>🎯 관광</span><br><span>¥${totalActivityCost.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${(totalActivityCost * 195).toLocaleString()})</span></div>
+                    <div class="cost-item" style="flex:1;text-align:center;"><span>🏨 숙소</span><br><span>¥${hotelCostYuan.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${hotelCost.toLocaleString()})</span></div>
+                    <div class="cost-item" style="flex:1;text-align:center;"><span>✈️ 항공</span><br><span>¥${flightCostYuan.toLocaleString()}</span><br><span style="font-size:0.7em;color:#B2455E;letter-spacing:-0.5px;">(₩${flightCost.toLocaleString()})</span></div>
+                </div>
+                <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${totalCostWithAccommodation.toLocaleString()} (₩${(totalCostWithAccommodation * 195).toLocaleString()})</div>
             </div>
-            <div class="cost-total" style="text-align:center;font-weight:700;font-size:1.08em;">총합: ¥${totalCostWithAccommodation.toLocaleString()} (₩${(totalCostWithAccommodation * 195).toLocaleString()})</div>
         </div>` + allItineraryHTML;
         itineraryContent.innerHTML = allItineraryHTML;
         itineraryPopup.classList.add('show');

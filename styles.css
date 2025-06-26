@@ -1375,3 +1375,54 @@ html, body {
     padding: 0 !important;
     background: transparent !important;
 }
+
+/* 마커 팝업 타입별 색상 오버라이드 */
+.custom-popup[style*="border-color: #8B5A6B"] {
+    border-color: #8B5A6B !important;
+}
+
+.custom-popup[style*="border-color: #6B8E5A"] {
+    border-color: #6B8E5A !important;
+}
+
+.custom-popup[style*="border-color: #7B9EA8"] {
+    border-color: #7B9EA8 !important;
+}
+
+.custom-popup[style*="border-color: #B87A8F"] {
+    border-color: #B87A8F !important;
+}
+
+/* 팝업 헤더 타입별 색상 */
+.custom-popup .popup-header[style*="background: #8B5A6B"] {
+    background: #8B5A6B !important;
+}
+
+.custom-popup .popup-header[style*="background: #6B8E5A"] {
+    background: #6B8E5A !important;
+}
+
+.custom-popup .popup-header[style*="background: #7B9EA8"] {
+    background: #7B9EA8 !important;
+}
+
+.custom-popup .popup-header[style*="background: #B87A8F"] {
+    background: #B87A8F !important;
+}
+
+/* 팝업 바디 타입별 색상 */
+.custom-popup .popup-body[style*="color: #8B5A6B"] {
+    color: #8B5A6B !important;
+}
+
+.custom-popup .popup-body[style*="color: #6B8E5A"] {
+    color: #6B8E5A !important;
+}
+
+.custom-popup .popup-body[style*="color: #7B9EA8"] {
+    color: #7B9EA8 !important;
+}
+
+.custom-popup .popup-body[style*="color: #B87A8F"] {
+    color: #B87A8F !important;
+}
