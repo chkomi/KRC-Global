@@ -759,165 +759,54 @@ function calculateDayCosts(daySchedule) {
 }
 
 function displayItinerary(dayKey) {
-    const content = document.getElementById('itinerary-content');
-    
-    if (dayKey === 'all') {
-        // 전체 일정 표시
-        let allItineraryHTML = '<div class="all-itinerary">';
-        
-        // 전체 합산 비용 계산
-        let totalTransportCost = 0;
-        let totalMealCost = 0;
-        let totalActivityCost = 0;
-        
-        for (let i = 1; i <= 4; i++) {
-            const dayKey = `day${i}`;
-            const daySchedule = shanghaiData.itinerary[dayKey];
-            if (daySchedule) {
-                const dayCosts = calculateDayCosts(daySchedule);
-                totalTransportCost += dayCosts.transport;
-                totalMealCost += dayCosts.meal;
-                totalActivityCost += dayCosts.activity;
-            }
-        }
-        
-        const totalCost = totalTransportCost + totalMealCost + totalActivityCost;
-        
-        // 전체 합산 비용을 맨 위에 표시
-        allItineraryHTML += `
-            <div class="day-cost-summary total-cost-summary">
-                <h4><i class="fas fa-calculator"></i> 전체 여행 비용 합계</h4>
-                <div class="cost-breakdown">
-                    <div class="cost-item">
-                        <div class="cost-item-label">🚇 교통</div>
-                        <div class="cost-item-value">¥${totalTransportCost}</div>
-                    </div>
-                    <div class="cost-item">
-                        <div class="cost-item-label">🍽️ 식사</div>
-                        <div class="cost-item-value">¥${totalMealCost}</div>
-                    </div>
-                    <div class="cost-item">
-                        <div class="cost-item-label">🎯 관광</div>
-                        <div class="cost-item-value">¥${totalActivityCost}</div>
-                    </div>
-                </div>
-                <div class="cost-total">
-                    총합: ¥${totalCost}
-                </div>
+    const itineraryPopup = document.getElementById('itinerary-popup');
+    const itineraryContent = document.getElementById('itinerary-content');
+    if (!itineraryPopup || !itineraryContent) return;
+    const daySchedule = shanghaiData.itinerary[dayKey];
+    if (!daySchedule) return;
+    const dayTitle = dayKey === 'day1' ? '11.12 (1일차)' : 
+                    dayKey === 'day2' ? '11.13 (2일차)' : 
+                    dayKey === 'day3' ? '11.14 (3일차)' : '11.15 (4일차)';
+    // 비용 요약
+    const dayCosts = calculateDayCosts(daySchedule);
+    let html = `<div class="day-cost-summary wine-theme">
+        <h4><i class="fas fa-calculator wine"></i> ${dayTitle} 비용</h4>
+        <div class="cost-breakdown">
+            <div class="cost-item"><span>🚇 교통</span> <span>¥${dayCosts.transport}</span></div>
+            <div class="cost-item"><span>🍽️ 식사</span> <span>¥${dayCosts.meal}</span></div>
+            <div class="cost-item"><span>🎯 관광</span> <span>¥${dayCosts.activity}</span></div>
+        </div>
+        <div class="cost-total">총합: ¥${dayCosts.total}</div>
+    </div>`;
+    // 일정 항목들
+    const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
+        const timeA = a[1].time || '00:00';
+        const timeB = b[1].time || '00:00';
+        return timeA.localeCompare(timeB);
+    });
+    scheduleItems.forEach(([key, schedule]) => {
+        const icon = getScheduleIcon(key);
+        const itemClass = getScheduleItemClass(key);
+        const locationName = extractKorean(schedule.location);
+        const distance = schedule.distance || '-';
+        const transportCost = schedule.cost?.transport || '';
+        const activityCost = schedule.cost?.activity || '';
+        html += `<div class="schedule-item wine-theme ${itemClass}">
+            <div class="bottom-sheet-time"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
+            <div class="bottom-sheet-content">
+                <div class="bottom-sheet-location wine">${locationName}</div>
+                <div class="bottom-sheet-desc wine">${schedule.description}</div>
             </div>
-        `;
-        
-        for (let i = 1; i <= 4; i++) {
-            const dayKey = `day${i}`;
-            const daySchedule = shanghaiData.itinerary[dayKey];
-            if (!daySchedule) continue;
-            
-            const dayTitle = i === 1 ? '11.12 (1일차)' : 
-                           i === 2 ? '11.13 (2일차)' : 
-                           i === 3 ? '11.14 (3일차)' : '11.15 (4일차)';
-            
-            // 각 일자별 비용 계산
-            const dayCosts = calculateDayCosts(daySchedule);
-            
-            allItineraryHTML += `
-                <div class="day-schedule all-day-schedule">
-                    <h4><i class="fas fa-calendar-day"></i> ${dayTitle}</h4>
-                    
-                    <!-- 일자별 비용 요약 -->
-                    <div class="day-cost-summary">
-                        <div class="cost-breakdown">
-                            <div class="cost-item">
-                                <div class="cost-item-label">🚇 교통</div>
-                                <div class="cost-item-value">¥${dayCosts.transport}</div>
-                            </div>
-                            <div class="cost-item">
-                                <div class="cost-item-label">🍽️ 식사</div>
-                                <div class="cost-item-value">¥${dayCosts.meal}</div>
-                            </div>
-                            <div class="cost-item">
-                                <div class="cost-item-label">🎯 관광</div>
-                                <div class="cost-item-value">¥${dayCosts.activity}</div>
-                            </div>
-                        </div>
-                        <div class="cost-total">
-                            총합: ¥${dayCosts.total}
-                        </div>
-                    </div>
-                    
-                    <div class="schedule-grid">
-            `;
-            
-            // 일정 항목들을 시간순으로 정렬
-            const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
-                const timeA = a[1].time || '00:00';
-                const timeB = b[1].time || '00:00';
-                return timeA.localeCompare(timeB);
-            });
-            
-            scheduleItems.forEach(([key, schedule]) => {
-                const icon = getScheduleIcon(key);
-                const itemClass = getScheduleItemClass(key);
-                const locationName = extractKorean(schedule.location);
-                const distance = schedule.distance || '-';
-                const transportCost = schedule.cost?.transport || '';
-                const activityCost = schedule.cost?.activity || '';
-                const compressedDesc = compressDescription(schedule.description);
-                
-                allItineraryHTML += `
-                    <div class="schedule-item all-schedule-item ${itemClass}">
-                        <div class="schedule-time">
-                            <i class="${icon}"></i>
-                            <span>${schedule.time}</span>
-                        </div>
-                        <div class="schedule-content">
-                            <div class="schedule-location">${locationName}</div>
-                            <div class="schedule-desc">${compressedDesc}</div>
-                        </div>
-                        <div class="schedule-distance">
-                            <div class="distance-value">${distance}</div>
-                        </div>
-                        <div class="schedule-cost">
-                            ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
-                            ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            allItineraryHTML += `
-                    </div>
-                </div>
-            `;
-        }
-        
-        allItineraryHTML += '</div>';
-        content.innerHTML = allItineraryHTML;
-    } else {
-        // 개별 일정 표시 (기존 로직)
-        const daySchedule = shanghaiData.itinerary[dayKey];
-        if (!daySchedule) {
-            content.innerHTML = '<p>일정 정보를 찾을 수 없습니다.</p>';
-            return;
-        }
-        
-        let itineraryHTML = '<div class="day-schedule">';
-        
-        // 일정 항목들을 시간순으로 정렬
-        const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
-            const timeA = a[1].time || '00:00';
-            const timeB = b[1].time || '00:00';
-            return timeA.localeCompare(timeB);
-        });
-        
-        scheduleItems.forEach(([key, schedule]) => {
-            itineraryHTML += createItineraryItem(key, schedule);
-        });
-        
-        itineraryHTML += '</div>';
-        content.innerHTML = itineraryHTML;
-    }
-    
-    addItineraryClickListeners();
+            <div class="bottom-sheet-distance wine">${distance}</div>
+            <div class="bottom-sheet-cost wine">
+                ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
+                ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
+            </div>
+        </div>`;
+    });
+    itineraryContent.innerHTML = html;
+    itineraryPopup.classList.add('show');
+    // 닫기 버튼 및 외부 클릭 이벤트는 기존과 동일하게 유지
 }
 
 function getScheduleIcon(key) {
@@ -1150,117 +1039,7 @@ function filterMarkersByDay(selectedDay) {
 }
 
 function showDayBottomSheet(dayKey) {
-    const bottomSheet = document.getElementById('bottom-sheet');
-    const bottomSheetItems = document.getElementById('bottom-sheet-items');
-    const closeButton = document.getElementById('close-bottom-sheet');
-    
-    if (!bottomSheet || !bottomSheetItems) return;
-    
-    const daySchedule = shanghaiData.itinerary[dayKey];
-    if (!daySchedule) return;
-    
-    const dayTitle = dayKey === 'day1' ? '11.12 (1일차)' : 
-                    dayKey === 'day2' ? '11.13 (2일차)' : 
-                    dayKey === 'day3' ? '11.14 (3일차)' : '11.15 (4일차)';
-    
-    // 제목 업데이트
-    const titleElement = bottomSheet.querySelector('.bottom-sheet-title');
-    if (titleElement) {
-        titleElement.textContent = dayTitle;
-    }
-    
-    // 총 비용 계산
-    const dayCosts = calculateDayCosts(daySchedule);
-    
-    // 비용 요약을 상단에 표시
-    let dayItineraryHTML = `
-        <div class="day-cost-summary">
-            <h4><i class="fas fa-calculator"></i> ${dayTitle} 비용</h4>
-            <div class="cost-breakdown">
-                <div class="cost-item">
-                    <div class="cost-item-label">🚇 교통</div>
-                    <div class="cost-item-value">¥${dayCosts.transport}</div>
-                </div>
-                <div class="cost-item">
-                    <div class="cost-item-label">🍽️ 식사</div>
-                    <div class="cost-item-value">¥${dayCosts.meal}</div>
-                </div>
-                <div class="cost-item">
-                    <div class="cost-item-label">🎯 관광</div>
-                    <div class="cost-item-value">¥${dayCosts.activity}</div>
-                </div>
-            </div>
-            <div class="cost-total">
-                총합: ¥${dayCosts.total}
-            </div>
-        </div>
-    `;
-    
-    // 일정 항목들을 시간순으로 정렬
-    const scheduleItems = Object.entries(daySchedule).sort((a, b) => {
-        const timeA = a[1].time || '00:00';
-        const timeB = b[1].time || '00:00';
-        return timeA.localeCompare(timeB);
-    });
-
-    scheduleItems.forEach(([key, schedule]) => {
-        const icon = getScheduleIcon(key);
-        const itemClass = getScheduleItemClass(key);
-        const locationName = extractKorean(schedule.location);
-        const distance = schedule.distance || '-';
-        const transportCost = schedule.cost?.transport || '';
-        const activityCost = schedule.cost?.activity || '';
-        const compressedDesc = compressDescription(schedule.description);
-        
-        dayItineraryHTML += `
-            <div class="schedule-item bottom-sheet-item ${itemClass}">
-                <div class="bottom-sheet-time">
-                    <i class="${icon}"></i>
-                    <span>${schedule.time}</span>
-                </div>
-                <div class="bottom-sheet-content">
-                    <div class="bottom-sheet-location">${locationName}</div>
-                    <div class="bottom-sheet-desc">${compressedDesc}</div>
-                </div>
-                <div class="bottom-sheet-distance">
-                    <div class="distance-value">${distance}</div>
-                </div>
-                <div class="bottom-sheet-cost">
-                    ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
-                    ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
-                </div>
-            </div>
-        `;
-    });
-    
-    bottomSheetItems.innerHTML = dayItineraryHTML;
-    bottomSheet.classList.add('show');
-    
-    // 닫기 버튼 이벤트
-    if (closeButton) {
-        closeButton.onclick = () => {
-            bottomSheet.classList.remove('show', 'expanded');
-        };
-    }
-    
-    // 지도 클릭 시 닫기
-    if (map) {
-        map.once('click', () => {
-            bottomSheet.classList.remove('show', 'expanded');
-        });
-    }
-    
-    // 드래그 기능 추가
-    setupDragToExpand(bottomSheet);
-    
-    // 일정 항목 클릭 이벤트
-    const items = bottomSheetItems.querySelectorAll('.bottom-sheet-item');
-    items.forEach(item => {
-        item.addEventListener('click', () => {
-            const location = item.getAttribute('data-location');
-            zoomToLocation(location);
-        });
-    });
+    displayItinerary(dayKey);
 }
 
 function setupDragToExpand(bottomSheet) {

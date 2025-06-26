@@ -1018,51 +1018,21 @@ html, body {
 }
 
 .itinerary-popup-content {
-    background: white;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 85vh;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    animation: popupFadeIn 0.3s ease-out;
+    border: 2px solid #8B1E3F !important;
+    border-radius: 12px !important;
+    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
+    color: #8B1E3F !important;
+    font-family: 'Yangjin', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif !important;
+    box-shadow: 0 12px 40px rgba(139,30,63,0.12);
 }
 
-.itinerary-popup-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.itinerary-popup-header, .itinerary-popup-body {
+    background: transparent !important;
+    color: #8B1E3F !important;
 }
 
-.itinerary-popup-header h3 {
-    margin: 0;
-    font-size: 1.2em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.close-button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.close-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
+.itinerary-popup-header h3, .itinerary-popup-header i {
+    color: #8B1E3F !important;
 }
 
 .itinerary-popup-body {
@@ -1112,15 +1082,20 @@ html, body {
 }
 
 .schedule-item {
-    display: flex;
+    background: #FFF8F0 url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect fill="none"/><g opacity="0.08"><circle cx="10" cy="10" r="1.5" fill="%238B1E3F"/><circle cx="30" cy="30" r="1.5" fill="%238B1E3F"/><circle cx="50" cy="50" r="1.5" fill="%238B1E3F"/></g></svg>') repeat !important;
+    border-left: 4px solid #8B1E3F !important;
+    border-radius: 8px !important;
+    margin-bottom: 4px !important;
+    padding: 6px 8px !important;
+    font-size: 0.93em !important;
+    display: grid;
+    grid-template-columns: 45px 1fr 55px 70px;
+    gap: 6px;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #f8f9fa;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-    cursor: pointer;
+}
+
+.schedule-item .bottom-sheet-time i {
+    color: #8B1E3F !important;
 }
 
 .schedule-item:hover {
