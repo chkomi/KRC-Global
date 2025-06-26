@@ -134,8 +134,9 @@ html, body {
 /* Map Tile Selection Control */
 .map-tile-control {
     position: absolute;
+    left: 15px;
+    right: auto;
     bottom: 15px;
-    right: 15px;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
