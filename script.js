@@ -342,7 +342,7 @@ function createPopupContent(place) {
     let html = `<div class='custom-popup'>`;
     html += `<div class='popup-header'>
         <div class='popup-title-main'>${koreanName}</div>
-        <div class='popup-title-sub'>${englishName}</div>
+        <div class='popup-title-sub' style="font-size:0.92em;color:#B2455E;margin-bottom:2px;">${englishName}</div>
         <div class='popup-type-label'>${typeLabel}</div>
     </div>`;
     html += `<div class='popup-body'>`;
@@ -791,13 +791,11 @@ function displayItinerary(dayKey) {
                 const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
                 const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
                 const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
-                allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;display:grid;grid-template-columns:45px 1fr 55px 70px;gap:2px;align-items:center;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
+                allItineraryHTML += `<div class="schedule-item wine-theme ${itemClass}" style="background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
                     <div class="bottom-sheet-time wine"><i class="${icon} wine"></i><span>${schedule.time}</span></div>
-                    <div class="bottom-sheet-content">
-                        <div class="bottom-sheet-location wine" style="color:#8B1E3F;font-size:1em;">${locationName}</div>
-                    </div>
-                    <div class="bottom-sheet-distance wine" style="color:#B2455E;">${distance}</div>
-                    <div class="bottom-sheet-cost wine">
+                    <div class="bottom-sheet-location wine" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
+                    <div class="bottom-sheet-distance wine" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
+                    <div class="bottom-sheet-cost wine" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                         ${transportCost ? `<div class="transport-cost wine">${transportCost}</div>` : ''}
                         ${mealCost ? `<div class="meal-cost wine">${mealCost}</div>` : ''}
                         ${activityCost ? `<div class="activity-cost wine">${activityCost}</div>` : ''}
@@ -851,13 +849,11 @@ function displayItinerary(dayKey) {
         const transportCost = schedule.cost?.transport ? `🚇 <span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
         const mealCost = schedule.cost?.meal ? `🍽️ <span class='cost-label'>식사</span> ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
         const activityCost = schedule.cost?.activity ? `🎯 <span class='cost-label'>관광</span> ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
-        html += `<div class="schedule-item wine-theme ${itemClass}">
+        html += `<div class="schedule-item wine-theme ${itemClass}" style="display:grid;grid-template-columns:48px 1.2fr 0.8fr 1.1fr;gap:2px;align-items:center;background:#FFF8F0;border-left:4px solid #8B1E3F;border-radius:8px;margin-bottom:2px;padding:3px 6px;font-size:0.85em;color:#8B1E3F;font-family:'Yangjin','Noto Sans KR','Apple SD Gothic Neo',sans-serif;">
             <div class="bottom-sheet-time"><i class="${icon}"></i><span>${schedule.time}</span></div>
-            <div class="bottom-sheet-content">
-                <div class="bottom-sheet-location">${locationName}</div>
-            </div>
-            <div class="bottom-sheet-distance">${distance}</div>
-            <div class="bottom-sheet-cost">
+            <div class="bottom-sheet-location" style="color:#8B1E3F;font-size:1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${locationName}</div>
+            <div class="bottom-sheet-distance" style="color:#B2455E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${distance}</div>
+            <div class="bottom-sheet-cost" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                 ${transportCost ? `<div class="transport-cost">${transportCost}</div>` : ''}
                 ${mealCost ? `<div class="meal-cost">${mealCost}</div>` : ''}
                 ${activityCost ? `<div class="activity-cost">${activityCost}</div>` : ''}
