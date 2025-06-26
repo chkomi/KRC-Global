@@ -183,36 +183,20 @@ html, body {
 }
 
 /* 일정 항목 색상 구분 */
-.schedule-item.meal-item {
-    border-left: 4px solid #28a745 !important;
-    background: rgba(40, 167, 69, 0.05) !important;
+.schedule-item, .all-schedule-item, .schedule-item.meal-item, .schedule-item.attraction-item, .schedule-item.transport-item, .schedule-item.hotel-item {
+    border-left: none !important;
 }
 
 .schedule-item.meal-item:hover {
     background: rgba(40, 167, 69, 0.1) !important;
 }
 
-.schedule-item.attraction-item {
-    border-left: 4px solid #dc3545 !important;
-    background: rgba(220, 53, 69, 0.05) !important;
-}
-
 .schedule-item.attraction-item:hover {
     background: rgba(220, 53, 69, 0.1) !important;
 }
 
-.schedule-item.transport-item {
-    border-left: 4px solid #6c757d !important;
-    background: rgba(108, 117, 125, 0.05) !important;
-}
-
 .schedule-item.transport-item:hover {
     background: rgba(108, 117, 125, 0.1) !important;
-}
-
-.schedule-item.hotel-item {
-    border-left: 4px solid #17a2b8 !important;
-    background: rgba(23, 162, 184, 0.05) !important;
 }
 
 .schedule-item.hotel-item:hover {
@@ -860,7 +844,6 @@ html, body {
 
 .schedule-item {
     background: #FFF8F0;
-    border-left: 4px solid #8B1E3F;
     border-radius: 12px;
     margin-bottom: 10px;
     padding: 10px 14px 10px 12px;

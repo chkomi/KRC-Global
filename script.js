@@ -747,7 +747,19 @@ function calculateDayCosts(daySchedule) {
 function displayItinerary(dayKey) {
     const itineraryPopup = document.getElementById('itinerary-popup');
     const itineraryContent = document.getElementById('itinerary-content');
-    if (!itineraryPopup || !itineraryContent) return;
+    // 일정 팝업 헤더에 텍스트 동적 추가
+    const itineraryHeader = itineraryPopup.querySelector('.itinerary-popup-header');
+    if (itineraryHeader) {
+        let titleText = '';
+        if (dayKey === 'all') titleText = '전체 일정';
+        else if (dayKey === 'day1') titleText = '1일차 일정';
+        else if (dayKey === 'day2') titleText = '2일차 일정';
+        else if (dayKey === 'day3') titleText = '3일차 일정';
+        else if (dayKey === 'day4') titleText = '4일차 일정';
+        itineraryHeader.innerHTML = `<div style='width:100%;text-align:center;font-size:1.15em;font-weight:700;color:#8B1E3F;letter-spacing:-0.01em;'>${titleText}</div><button id="close-itinerary" class="close-button" style="position:absolute;top:12px;right:16px;background:rgba(139,30,63,0.08);border:none;border-radius:50%;color:#8B1E3F;font-size:1.2em;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background-color 0.2s,transform 0.2s;z-index:10;"><i class="fas fa-times"></i></button>`;
+        // 닫기 버튼 이벤트 재연결
+        document.getElementById('close-itinerary').onclick = () => itineraryPopup.classList.remove('show');
+    }
     if (dayKey === 'all') {
         // 전체 일정 출력
         let allItineraryHTML = '<div class="all-itinerary">';
