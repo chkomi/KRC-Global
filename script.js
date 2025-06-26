@@ -335,21 +335,16 @@ function getTypeLabel(type) {
 // 팝업 내용 생성 함수 (마커 팝업)
 function createPopupContent(place) {
     let koreanName = extractKorean(place.name);
-    // 쉼표(,)가 있으면 앞부분만 사용
     if (koreanName.includes(',')) koreanName = koreanName.split(',')[0].trim();
     const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
-    
-    // 타입별 색상 정의
     const typeColors = {
         attractions: { border: '#8B5A6B', background: '#FFF8F0', text: '#8B5A6B' },
         restaurants: { border: '#6B8E5A', background: '#FFF8F0', text: '#6B8E5A' },
         hotels: { border: '#7B9EA8', background: '#FFF8F0', text: '#7B9EA8' },
         airports: { border: '#B87A8F', background: '#FFF8F0', text: '#B87A8F' }
     };
-    
     const colors = typeColors[place.type || 'attractions'];
-    
     let html = `<div class='custom-popup' style="border-color: ${colors.border}; background: ${colors.background}; color: ${colors.text};">`;
     html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;background: #FFF8F0; color: ${colors.text};">
         <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:${colors.text};margin-bottom:2px;text-align:center;">${koreanName}</div>
@@ -359,18 +354,18 @@ function createPopupContent(place) {
     html += `<div class='popup-body' style="background: ${colors.background}; color: ${colors.text};">`;
     html += `<div class='popup-info'>`;
     if (place.address && place.address !== "N/A") {
-        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-map-marker-alt' style="color: ${colors.text};"></i><span>${place.address}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-map-marker-alt' style="color: ${colors.text} !important;"></i><span style='color:${colors.text};'>${place.address}</span></div>`;
     }
     if (place.description) {
-        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-info-circle' style="color: ${colors.text};"></i><span>${place.description}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-info-circle' style="color: ${colors.text} !important;"></i><span style='color:${colors.text};'>${place.description}</span></div>`;
     }
     if (place.features && place.features.length > 0) {
-        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-star' style="color: ${colors.text};"></i><span>${place.features.join(', ')}</span></div>`;
+        html += `<div class='popup-info-row' style="color: ${colors.text};"><i class='fas fa-star' style="color: ${colors.text} !important;"></i><span style='color:${colors.text};'>${place.features.join(', ')}</span></div>`;
     }
-    if (place.price) {
+    if (place.price && place.type !== 'hotels') {
         const priceYuan = parseInt(place.price);
         const priceWon = Math.round(priceYuan * 195);
-        html += `<div class='popup-info-row price' style="color: ${colors.text};"><i class='fas fa-coins' style="color: ${colors.text};"></i><span>¥${priceYuan.toLocaleString()} (₩${priceWon.toLocaleString()})</span></div>`;
+        html += `<div class='popup-info-row price' style="color: ${colors.text};"><i class='fas fa-coins' style="color: ${colors.text} !important;"></i><span style='color:${colors.text};'>¥${priceYuan.toLocaleString()} (₩${priceWon.toLocaleString()})</span></div>`;
     }
     html += `</div>`;
     html += `<div class='map-buttons row'>
