@@ -144,36 +144,35 @@ html, body {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.tile-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
+.map-tile-control .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
 }
 
-.tile-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 6px;
-    background: #f8f9fa;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.2s ease;
+.map-tile-control .tile-btn {
+    width: 100%;
+    aspect-ratio: 2/1;
+    min-width: 0;
+    height: auto;
+    font-size: 1.2em;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
+    border-radius: 12px;
+    border: none;
+    background: #FFF8F0;
+    color: #8B1E3F;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(139,30,63,0.08);
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    padding: 0;
 }
 
-.tile-btn:hover {
-    background: #e9ecef;
-    transform: translateY(-1px);
-}
-
-.tile-btn.active {
-    background: #3498db;
-    color: white;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+.map-tile-control .tile-btn.active {
+    background: #8B1E3F;
+    color: #FFF8F0;
 }
 
 .day-number {
