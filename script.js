@@ -337,12 +337,10 @@ function getTypeLabel(type) {
 // 팝업 내용 생성 함수 (마커 팝업)
 function createPopupContent(place) {
     const koreanName = extractKorean(place.name);
-    const englishName = extractEnglishName(place.name);
     const typeLabel = getTypeLabel(place.type || 'attractions');
     let html = `<div class='custom-popup'>`;
     html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;">
-        <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:#8B1E3F;margin-bottom:2px;text-align:center;">${koreanName}</div>
-        <div class='popup-title-sub' style="font-size:0.92em;color:#B2455E;margin-bottom:6px;text-align:center;">${englishName}</div>
+        <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:#8B1E3F;margin-bottom:8px;text-align:center;">${koreanName}</div>
         <div class='popup-type-label' style="display:inline-block;margin:0 auto 8px auto;padding:3px 16px;border-radius:14px;background:#8B1E3F;color:#FFF8F0;font-family:'Yangjin','Noto Sans KR',sans-serif;font-size:0.95em;font-weight:700;border:1.5px solid #8B1E3F;box-shadow:0 1px 4px rgba(139,30,63,0.04);">${typeLabel}</div>
     </div>`;
     html += `<div class='popup-body'>`;
@@ -363,10 +361,10 @@ function createPopupContent(place) {
     }
     html += `</div>`;
     html += `<div class='map-buttons row'>
-        <a class='map-btn google-btn' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn google-btn' style='min-width:135px' href='javascript:void(0)' onclick='openGoogleMaps("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fab fa-google'></i>구글지도
         </a>
-        <a class='map-btn amap-btn' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
+        <a class='map-btn amap-btn' style='min-width:135px' href='javascript:void(0)' onclick='openAmapSearch("${place.name}", ${place.latitude}, ${place.longitude})'>
             <i class='fas fa-map-marked-alt'></i>가오더지도
         </a>
     </div>`;
