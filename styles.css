@@ -1000,14 +1000,16 @@ html, body {
 }
 
 .all-day-schedule h4 {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    margin: 0;
-    padding: 12px 15px;
-    font-size: 1em;
+    background: #8B1E3F;
+    color: #FFF8F0;
+    margin: 0 0 12px 0;
+    padding: 0 12px;
+    font-size: 1.05em;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 8px;
 }
 
 .schedule-grid {
@@ -1073,19 +1075,19 @@ html, body {
 
 /* 전체 합산 비용 스타일 */
 .total-cost-summary {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    background: #8B1E3F !important;
     margin-bottom: 20px;
-    border: 2px solid #3498db;
+    border: 2px solid #8B1E3F !important;
 }
 
 .total-cost-summary h4 {
     font-size: 1.1em;
-    color: #fff;
+    color: #FFF8F0 !important;
 }
 
 .total-cost-summary .cost-total {
     font-size: 1.3em;
-    color: #f39c12;
+    color: #FFDAA5 !important;
 }
 
 /* 카드형 팝업 최상위 래퍼 */
