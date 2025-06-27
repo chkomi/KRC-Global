@@ -22,8 +22,8 @@
       {
         "name": "上海博物馆 (상하이박물관, Shanghai Museum)",
         "address": "上海市人民大道201号 (No. 201 Renmin Avenue, Shanghai)",
-        "latitude": 31.2248,
-        "longitude": 121.469,
+        "latitude": 31.230170,
+        "longitude": 121.470884,
         "description": "풍부한 중국 예술품과 역사 컬렉션을 전시하는 문화시설",
         "features": ["무료 입장", "문화시설"],
         "image": "images/attractions/shanghai-museum.jpg"
