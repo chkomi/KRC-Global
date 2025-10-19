@@ -25,13 +25,9 @@
     <!-- 지도 컨테이너 -->
     <div id="map"></div>
     
-    <!-- Day buttons -->
-    <div class="day-buttons-container">
-        <button class="day-btn all-days-btn" data-day="all">전체 일정</button>
-        <button class="day-btn" data-day="day1">11.12<br><span class="day-number">(1일차)</span></button>
-        <button class="day-btn" data-day="day2">11.13<br><span class="day-number">(2일차)</span></button>
-        <button class="day-btn" data-day="day3">11.14<br><span class="day-number">(3일차)</span></button>
-        <button class="day-btn" data-day="day4">11.15<br><span class="day-number">(4일차)</span></button>
+    <!-- 상단 일정표 배지 버튼 -->
+    <div class="itinerary-badge-control">
+        <button id="itinerary-badge-btn" class="itinerary-badge" title="일정표">일정표</button>
     </div>
     
     <!-- 하단 일정 팝업 -->
@@ -71,12 +67,7 @@
         </button>
     </div>
 
-    <!-- 일정표 버튼 (우측 하단) -->
-    <div class="itinerary-control">
-        <button id="itinerary-btn" class="itinerary-button" title="일정표">
-            <i class="fas fa-route"></i>
-        </button>
-    </div>
+    
 
     <!-- 지도 타입 선택 -->
     <div class="map-tile-control">

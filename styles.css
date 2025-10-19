@@ -94,32 +94,29 @@ html, body {
     font-size: 16px;
 }
 
-/* Itinerary Button (bottom-right) */
-.itinerary-control {
+/* 상단 일정표 배지 버튼 (기존 Day Buttons 위치) */
+.itinerary-badge-control {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
-    z-index: 1000;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1200;
 }
-.itinerary-button {
-    width: 52px;
-    height: 52px;
+.itinerary-badge {
+    border: 1.5px solid #8B1E3F;
     background: #8B1E3F;
-    border: none;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
     color: #FFF8F0;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    box-shadow: 0 2px 8px rgba(139,30,63,0.15);
+    cursor: pointer;
 }
-.itinerary-button:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-    transform: translateY(-1px);
+.itinerary-badge:hover {
+    background: #B2455E;
+    border-color: #B2455E;
 }
-.itinerary-button i { font-size: 18px; }
 
 /* Timeline styles inside itinerary popup */
 .timeline-table {

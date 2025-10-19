@@ -357,10 +357,10 @@ function setupEventListeners() {
         });
     });
 
-    // 일정표 버튼 (우측 하단) 클릭 시 타임라인 팝업 오픈
-    const itineraryBtn = document.getElementById('itinerary-btn');
-    if (itineraryBtn) {
-        itineraryBtn.addEventListener('click', function() {
+    // 일정표 버튼 클릭 시 타임라인 팝업 오픈 (상단 배지)
+    const itineraryBadgeBtn = document.getElementById('itinerary-badge-btn');
+    if (itineraryBadgeBtn) {
+        itineraryBadgeBtn.addEventListener('click', function() {
             displayItineraryTimeline('day1');
         });
     }
@@ -1285,7 +1285,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
-            showDayBottomSheet('all');
             setupMapClickToClosePopup();
         });
 });
