@@ -636,8 +636,9 @@ function buildTimelineHTML(dayKey) {
                 </div>
               </div>`;
             if (next) {
-              const dist = schedule.distance || '-';
-              const moveCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+              // 구간(A→B)은 '다음 일정(B)'에 기록된 거리/교통비를 사용해 A와 B 사이에 표시
+              const dist = (next.distance && next.distance !== null) ? next.distance : '-';
+              const moveCost = next.cost?.transport ? `교통 ¥${parseInt(next.cost.transport).toLocaleString()}` : '';
               html += `
                 <div class='timeline-segment-row'>
                   <div class='timeline-col-line'></div>
