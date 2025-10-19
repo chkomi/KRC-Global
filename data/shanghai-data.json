@@ -441,20 +441,19 @@
       "day2": {
         "breakfast": {
           "time": "09:00",
-          "location": "富春小笼-虹桥南丰城店(푸춘샤오롱, FuChunXiaoLong)",
-          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오",
-          "distance": "10km",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소에서 준비",
+          "distance": null,
           "cost": {
-            "transport": "50위안 (디디)",
-            "activity": "700위안 (식사)"
-          },
-          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
+            "transport": null,
+            "activity": null
+          }
         },
         "morning": {
           "time": "10:00",
           "location": "武康大楼(우캉맨션, WuKang Mansion, WuKangDaLou)",
           "description": "독특한 삼각형 외관의 역사적인 건축물 관람",
-          "distance": "5km",
+          "distance": "7km",
           "cost": {
             "transport": "40위안 (디디)",
             "activity": null
@@ -462,41 +461,33 @@
         },
         "lunch": {
           "time": "12:00",
-          "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
-          "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑",
-          "distance": "10km",
-          "cost": {
-            "transport": "60위안 (디디)",
-            "activity": "700위안 (식사)"
-          }
-        },
-        "afternoon": {
-          "time": "14:00",
-          "location": "南京东路 (난징동루, Nanjing Road East)",
-          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방",
-          "distance": "5km",
-          "cost": {
-            "transport": "40위안 (디디)",
-            "activity": null
-          }
-        },
-        "evening1": {
-          "time": "15:00",
-          "location": "外滩 (와이탄, The Bund)",
-          "description": "황푸강 야경과 상하이의 번화한 밤 풍경 감상",
-          "distance": "2km",
+          "location": "富春小笼-虹桥南丰城店(푸춘샤오롱, FuChunXiaoLong)",
+          "description": "상하이 3대 샤오롱바오 맛집에서 단황시엔 샤오롱바오",
+          "distance": null,
           "cost": {
             "transport": null,
+            "activity": "700위안 (식사)"
+          },
+          "alternative": "호텔 조식 (SSAW 부티크 호텔상하이 번드)"
+        },
+        "afternoon": {
+          "time": "13:00",
+          "location": "上海乐高乐园度假区 (레고랜드 상하이 리조트, LEGOLAND Shanghai Resort)",
+          "description": "야외형 가족 테마파크에서 테마존과 체험 즐기기",
+          "distance": "40km",
+          "cost": {
+            "transport": "200위안 (디디)",
             "activity": null
           }
         },
+        
         "dinner": {
           "time": "18:00",
           "location": "很久以前羊肉串-光音广场店(옛날옛적에, HenJiuYiQian)",
           "description": "정통 신장 스타일의 양꼬치 전문점",
-          "distance": "5km",
+          "distance": "40km",
           "cost": {
-            "transport": "30위안 (디디)",
+            "transport": "200위안 (디디)",
             "activity": "700위안 (식사)"
           }
         },
@@ -599,19 +590,13 @@
       "day4": {
         "breakfast": {
           "time": "08:00",
-          "location": "小绍兴(시에샤오싱, XiaoShaoXing)",
-          "description": "상하이 전통 조식 전문점",
-          "distance": "2km",
+          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+          "description": "공항으로 이동",
+          "distance": null,
           "cost": {
-            "transport": "40위안 (디디)",
-            "activity": "400위안 (식사)"
-          },
-          "alternative": "호텔 조식"
-        },
-        "morning": {
-          "time": "09:00",
-          "location": "南京东路 (난징동루, Nanjing Road East)",
-          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리 탐방"
+            "transport": null,
+            "activity": null
+          }
         },
         "departure": {
           "time": "11:00",
