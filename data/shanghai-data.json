@@ -162,6 +162,15 @@
         "description": "상하이 남부 금산구에 위치한 야외형 가족 테마파크로, 브릭토피아, 레고 시티, 닌자고 등 테마존과 손으로 만드는 체험형 공간, 미니랜드(상하이 랜드마크 축소 모형), 퍼레이드/캐릭터 그리팅 등 아이 중심의 인터랙티브 콘텐츠가 특징입니다.",
         "features": ["테마파크", "가족", "야외", "인터랙티브", "어린이"],
         "image": "images/attractions/legoland-shanghai.jpg"
+      },
+      {
+        "name": "思南公馆 (쓰난공관, Sinan Mansion)",
+        "address": "上海市黄浦区思南路一带 (Sinan Road area, Huangpu District, Shanghai)",
+        "latitude": 31.216371,
+        "longitude": 121.464822,
+        "description": "프랑스 조계지 시절의 가든 하우스와 근현대 건축이 조화된 복합 문화·상업 공간으로, 카페와 레스토랑, 갤러리가 모여 산책하기 좋은 거리",
+        "features": ["역사적 건축", "카페/레스토랑", "산책"],
+        "image": "images/attractions/sinan-mansion.jpg"
       }
     ],
     "restaurants": [
