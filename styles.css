@@ -97,12 +97,14 @@ html, body {
 /* 상단 일정표 배지 버튼 (기존 Day Buttons 위치) */
 .itinerary-badge-control {
     position: absolute;
-    top: 30px;
+    top: 24px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1200;
+    z-index: 3000; /* ensure above map overlays */
+    pointer-events: auto;
 }
 .itinerary-badge {
+    display: inline-block;
     border: 1.5px solid #8B1E3F;
     background: #8B1E3F;
     color: #FFF8F0;
@@ -112,6 +114,8 @@ html, body {
     letter-spacing: -0.02em;
     box-shadow: 0 2px 8px rgba(139,30,63,0.15);
     cursor: pointer;
+    line-height: 1;
+    font-size: 0.95em;
 }
 .itinerary-badge:hover {
     background: #B2455E;
