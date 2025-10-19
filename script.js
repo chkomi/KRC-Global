@@ -1176,12 +1176,11 @@ function filterMarkersByDay(selectedDay) {
         });
 
         if (isVisible) {
-            if (clusterGroups[place.type]) {
-                clusterGroups[place.type].addLayer(marker);
+            // 단일 혼합 클러스터 그룹 사용
+            if (clusterGroups.all) {
+                clusterGroups.all.addLayer(marker);
                 visibleCount++;
                 console.log('마커 표시:', place.name, '(타입:', place.type, ')');
-            } else {
-                console.warn('알 수 없는 타입:', place.type, '장소:', place.name);
             }
         }
     });
