@@ -94,6 +94,111 @@ html, body {
     font-size: 16px;
 }
 
+/* Itinerary Button (bottom-right) */
+.itinerary-control {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1000;
+}
+.itinerary-button {
+    width: 52px;
+    height: 52px;
+    background: #8B1E3F;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #FFF8F0;
+}
+.itinerary-button:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
+.itinerary-button i { font-size: 18px; }
+
+/* Timeline styles inside itinerary popup */
+.timeline-container {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 12px;
+    padding: 10px 16px 16px 16px;
+}
+.timeline-line {
+    grid-column: 1 / 2;
+    position: relative;
+}
+.timeline-line::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: #8B1E3F;
+    opacity: 0.8;
+}
+.timeline-items { grid-column: 2 / 3; }
+.timeline-item {
+    position: relative;
+    padding: 6px 0 12px 0;
+}
+.timeline-dot {
+    position: absolute;
+    left: -38px;
+    top: 10px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8B1E3F;
+    border: 2px solid #FFF8F0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.timeline-content {
+    background: #FFF8F0;
+    border: 1.5px solid #8B1E3F;
+    border-radius: 10px;
+    padding: 8px 10px;
+    color: #8B1E3F;
+}
+.timeline-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 700;
+}
+.timeline-time { font-family: 'Yangjin','Noto Sans KR',sans-serif; }
+.timeline-place { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timeline-cost { margin-left: auto; font-weight: 700; }
+.timeline-desc { margin-top: 4px; font-size: 0.92em; opacity: 0.9; }
+.timeline-segment {
+    margin: 6px 0 0 0;
+    padding: 4px 8px;
+    font-size: 0.9em;
+    color: #B2455E;
+    display: flex;
+    gap: 10px;
+}
+.day-tabs {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    padding: 8px 8px 6px 8px;
+}
+.day-tab {
+    border: 1.5px solid #8B1E3F;
+    color: #8B1E3F;
+    background: #FFF8F0;
+    padding: 6px 10px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.day-tab.active { background: #8B1E3F; color: #FFF8F0; }
 /* Current Location Marker */
 .current-location-marker {
     background: transparent;

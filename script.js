@@ -357,6 +357,14 @@ function setupEventListeners() {
         });
     });
 
+    // 일정표 버튼 (우측 하단) 클릭 시 타임라인 팝업 오픈
+    const itineraryBtn = document.getElementById('itinerary-btn');
+    if (itineraryBtn) {
+        itineraryBtn.addEventListener('click', function() {
+            displayItineraryTimeline('day1');
+        });
+    }
+
     // 날짜 버튼 이벤트 리스너
     document.querySelectorAll('.day-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -570,6 +578,88 @@ function displayGroupDetails(group) {
     popup.setContent(content);
     popup.setLatLng([group.latitude, group.longitude]);
     popup.openOn(map);
+}
+
+// 새 일정 타임라인 팝업 렌더러
+function displayItineraryTimeline(dayKey) {
+    const itineraryPopup = document.getElementById('itinerary-popup');
+    const itineraryContent = document.getElementById('itinerary-content');
+    if (!itineraryPopup || !itineraryContent) return;
+
+    // 헤더 탭 구성
+    const header = itineraryPopup.querySelector('.itinerary-popup-header');
+    if (header) {
+        header.innerHTML = `
+          <div class='day-tabs'>
+            <button class='day-tab ${dayKey==='day1'?'active':''}' data-day='day1'>1일차</button>
+            <button class='day-tab ${dayKey==='day2'?'active':''}' data-day='day2'>2일차</button>
+            <button class='day-tab ${dayKey==='day3'?'active':''}' data-day='day3'>3일차</button>
+            <button class='day-tab ${dayKey==='day4'?'active':''}' data-day='day4'>4일차</button>
+            <button class='day-tab ${dayKey==='all'?'active':''}' data-day='all'>전체</button>
+          </div>
+          <button id="close-itinerary" class="close-button" style="position:absolute;top:12px;right:16px;background:rgba(139,30,63,0.08);border:none;border-radius:50%;color:#8B1E3F;font-size:1.2em;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background-color 0.2s,transform 0.2s;z-index:10;"><i class='fas fa-times'></i></button>`;
+        header.querySelectorAll('.day-tab').forEach(btn => btn.addEventListener('click', () => displayItineraryTimeline(btn.dataset.day)));
+        document.getElementById('close-itinerary').onclick = () => itineraryPopup.classList.remove('show');
+    }
+
+    itineraryContent.innerHTML = buildTimelineHTML(dayKey);
+    itineraryPopup.classList.add('show');
+}
+
+function buildTimelineHTML(dayKey) {
+    const buildItems = (daySchedule) => {
+        const entries = Object.entries(daySchedule).sort((a,b)=> (a[1].time||'00:00').localeCompare(b[1].time||'00:00'));
+        let html = '';
+        for (let i=0;i<entries.length;i++) {
+            const [key, schedule] = entries[i];
+            const next = entries[i+1]?.[1];
+            const locName = extractKorean(schedule.location);
+            const transportCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+            const activityCost = schedule.cost?.activity ? `활동 ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
+            const mealCost = schedule.cost?.meal ? `식사 ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
+            const costLabel = [transportCost, mealCost, activityCost].filter(Boolean).join(' · ');
+            html += `
+              <div class='timeline-item'>
+                <div class='timeline-dot'></div>
+                <div class='timeline-content'>
+                  <div class='timeline-top'>
+                    <div class='timeline-time'>${schedule.time || ''}</div>
+                    <div class='timeline-place'>${locName}</div>
+                    ${costLabel ? `<div class='timeline-cost'>${costLabel}</div>` : ''}
+                  </div>
+                  ${schedule.description ? `<div class='timeline-desc'>${schedule.description}</div>` : ''}
+                  ${next ? buildSegment(schedule, next) : ''}
+                </div>
+              </div>`;
+        }
+        return html;
+    };
+    const buildSegment = (a, b) => {
+        const dist = a.distance || '-';
+        const moveCost = a.cost?.transport ? `교통 ¥${parseInt(a.cost.transport).toLocaleString()}` : '';
+        return `<div class='timeline-segment'>이동: ${dist}${moveCost ? ` · ${moveCost}`: ''}</div>`;
+    };
+    if (dayKey === 'all') {
+        let out = '';
+        for (let i=1;i<=4;i++) {
+            const dk = `day${i}`;
+            const ds = shanghaiData.itinerary[dk];
+            if (!ds) continue;
+            out += `<div style='padding:6px 12px;font-weight:700;color:#8B1E3F;'>${i}일차</div>`;
+            out += `<div class='timeline-container'>
+                      <div class='timeline-line'></div>
+                      <div class='timeline-items'>${buildItems(ds)}</div>
+                    </div>`;
+        }
+        return out || `<div style='padding:12px;'>전체 일정이 없습니다.</div>`;
+    } else {
+        const ds = shanghaiData.itinerary[dayKey];
+        if (!ds) return '<div style="padding:14px;">해당 일자의 일정이 없습니다.</div>';
+        return `<div class='timeline-container'>
+                  <div class='timeline-line'></div>
+                  <div class='timeline-items'>${buildItems(ds)}</div>
+                </div>`;
+    }
 }
 
 // 외부 지도 열기 함수
