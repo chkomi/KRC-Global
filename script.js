@@ -225,19 +225,24 @@ function displayMarkers() {
             // 마커 라벨 생성 및 동적 표시 (hover 효과 없이)
             marker.on('add', function() {
                 const markerElem = marker._icon;
-                if (markerElem && !markerElem.querySelector('.marker-label')) {
-                    // 괄호 내 첫 단어 추출
-                    let labelText = '';
-                    const match = place.name.match(/\(([^,\s)]+)/);
-                    if (match && match[1]) {
-                        labelText = match[1];
+                if (markerElem) {
+                    // 팝업에 사용하는 한글명과 동일한 라벨 표시
+                    let labelText = extractKorean(place.name);
+                    if (labelText && labelText.includes(',')) {
+                        labelText = labelText.split(',')[0].trim();
                     }
-                    if (!labelText) labelText = place.name.split('/')[0].trim();
-                    const label = document.createElement('div');
-                    label.className = 'marker-label';
-                    label.innerText = labelText;
+                    if (!labelText || labelText.trim() === '') {
+                        labelText = place.name.split('/')[0].trim();
+                    }
+
+                    let label = markerElem.querySelector('.marker-label');
+                    if (!label) {
+                        label = document.createElement('div');
+                        label.className = 'marker-label';
+                        markerElem.appendChild(label);
+                    }
                     label.setAttribute('data-color', typeColors[type]);
-                    markerElem.appendChild(label);
+                    label.innerText = labelText;
                 }
                 // hover 효과 제거
                 markerElem.style.filter = 'none';
@@ -292,8 +297,13 @@ function extractChineseName(text) {
 
 // 한국어 이름 추출 함수
 function extractKorean(text) {
+    // 괄호 안 내용을 우선 추출
     const match = text.match(/\(([^)]+)\)/);
-    return match ? match[1] : text;
+    let inside = match ? match[1] : text;
+    // 쉼표(영문 , / 중문 ，)로 분리하여 한글 포함 파트를 우선 선택
+    const parts = inside.split(/[，,]/).map(s => s.trim()).filter(Boolean);
+    const hangulPart = parts.find(p => /[\u3131-\u318E\uAC00-\uD7A3]/.test(p));
+    return (hangulPart || parts[0] || text).trim();
 }
 
 // 설명을 3단어로 압축하는 함수

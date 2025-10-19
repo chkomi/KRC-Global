@@ -144,6 +144,24 @@
         "description": "황푸강을 따라 상하이의 아름다운 야경을 감상할 수 있는 유람선 투어",
         "features": ["야경", "유람선", "강변풍경"],
         "image": "images/attractions/huangpu-river-cruise.jpg"
+      },
+      {
+        "name": "上海马戏城 (상하이 서커스월드, Shanghai Circus World)",
+        "address": "上海市静安区共和新路2266号 (No. 2266 Gonghexin Road, Jing'an District, Shanghai)",
+        "latitude": 31.308828,
+        "longitude": 121.442935,
+        "description": "세계적인 수준의 아크로바틱과 서커스를 선보이는 상하이 대표 공연장으로, 대형 원형극장과 전용 무대 장치가 갖춰져 가족 관람에 적합합니다.",
+        "features": ["서커스", "공연", "가족"],
+        "image": "images/attractions/shanghai-circus-world.jpg"
+      },
+      {
+        "name": "上海乐高乐园度假区 (레고랜드 상하이 리조트, LEGOLAND Shanghai Resort)",
+        "address": "上海市金山区枫泾镇乐高路999号",
+        "latitude": 30.88639,
+        "longitude": 121.09390,
+        "description": "상하이 남부 금산구에 위치한 야외형 가족 테마파크로, 브릭토피아, 레고 시티, 닌자고 등 테마존과 손으로 만드는 체험형 공간, 미니랜드(상하이 랜드마크 축소 모형), 퍼레이드/캐릭터 그리팅 등 아이 중심의 인터랙티브 콘텐츠가 특징입니다.",
+        "features": ["테마파크", "가족", "야외", "인터랙티브", "어린이"],
+        "image": "images/attractions/legoland-shanghai.jpg"
       }
     ],
     "restaurants": [
@@ -245,6 +263,33 @@
         "description": "상하이에서 가장 유명한 에그타르트 전문점. 바삭한 페이스트리와 부드러운 커스터드가 일품.",
         "menu": ["에그타르트", "커스터드타르트"],
         "image": "images/restaurants/lillian-bakery.jpg"
+      },
+      {
+        "name": "星巴克臻选烘焙工坊 (스타벅스 로스터리, Starbucks Reserve Roastery Shanghai)",
+        "address": "上海市静安区南京西路789号 (No. 789 West Nanjing Road, Jing'an District, Shanghai)",
+        "latitude": 31.231979,
+        "longitude": 121.456797,
+        "description": "세계 최대 규모급의 스타벅스 로스터리로, 현장 로스팅과 다양한 커피 체험이 가능한 명소",
+        "menu": ["스페셜티 커피", "로스터리 투어", "디저트"],
+        "image": "images/restaurants/starbucks-reserve-roastery-shanghai.jpg"
+      },
+      {
+        "name": "VUE Bar - 上海外滩茂悦大酒店 (하야트 뷰바, VUE Bar at Hyatt on the Bund)",
+        "address": "上海市虹口区黄浦路199号 外滩茂悦大酒店32-33层 (199 Huangpu Road, Hyatt on the Bund)",
+        "latitude": 31.247227,
+        "longitude": 121.488758,
+        "description": "와이탄과 루자쭈이 스카이라인을 한눈에 담는 루프탑 바",
+        "menu": ["루프탑 바", "와이탄 전망", "칵테일"],
+        "image": "images/restaurants/vue-bar-hyatt-on-the-bund.jpg"
+      },
+      {
+        "name": "Flair Rooftop Restaurant & Bar (플레어 루프탑, The Ritz-Carlton Shanghai, Pudong)",
+        "address": "上海市浦东新区世纪大道8号 上海国金中心二期58层 (8 Century Ave, IFC Tower 2, Pudong)",
+        "latitude": 31.238552,
+        "longitude": 121.496783,
+        "description": "루자쭈이의 초고층 전망과 함께 즐기는 럭셔리 루프탑 레스토랑 & 바",
+        "menu": ["루프탑", "와이탄 전망", "아시아 퓨전"],
+        "image": "images/restaurants/flair-ritz-carlton-pudong.jpg"
       }
     ],
     "hotels": [
@@ -261,12 +306,12 @@
     ],
     "airports": [
       {
-        "name": "上海浦东国际机场 (푸동국제공항, Shanghai Pudong International Airport)",
-        "address": "上海市浦东新区迎宾大道18호(No. 18 Yingbin Avenue, Pudong New Area, Shanghai)",
-        "latitude": 31.1443,
-        "longitude": 121.8058,
-        "description": "중국 최대 규모의 국제공항 중 하나로 연간 7천만 명이 이용하는 동북아시아 항공 허브, 최신 시설과 다양한 면세점, 레스토랑 보유",
-        "features": ["국제항공허브", "면세쇼핑", "다양한식당", "마그레브연결"],
+        "name": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+        "address": "上海市长宁区/闵行区 虹桥国际机场(Shanghai Hongqiao International Airport)",
+        "latitude": 31.1979,
+        "longitude": 121.3363,
+        "description": "도심과 가까운 교통 허브로, 고속철도(Hongqiao Railway)와 연계되어 이동이 편리하며 쇼핑과 식음 시설이 잘 갖춰진 공항",
+        "features": ["도심근접", "고속철연결", "교통허브", "편의시설"],
         "image": "images/airports/pudong-international-airport.jpg"
       }
     ],
@@ -274,9 +319,9 @@
       "day1": {
         "arrival": {
           "time": "09:00",
-          "location": "上海浦东国际机场 (푸동국제공항, Shanghai Pudong International Airport)",
-          "description": "상하이 푸동국제공항 도착",
-          "distance": "44km",
+          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+          "description": "상하이 홍치아오국제공항 도착",
+          "distance": "15km",
           "cost": {
             "transport": "620위안 (디디)",
             "activity": null
@@ -561,9 +606,9 @@
         },
         "departure": {
           "time": "11:00",
-          "location": "上海浦东国际机场 (푸동국제공항, Shanghai Pudong International Airport)",
-          "description": "상하이 푸동국제공항 출발",
-          "distance": "44km",
+          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+          "description": "상하이 홍치아오국제공항 출발",
+          "distance": "15km",
           "cost": {
             "transport": "620위안 (디디)",
             "activity": null
