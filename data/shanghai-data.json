@@ -327,9 +327,9 @@
     "itinerary": {
       "day1": {
         "arrival": {
-          "time": "10:00",
+          "time": "09:45",
           "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
-          "description": "상하이 홍치아오국제공항 도착",
+          "description": "상하이 홍치아오국제공항 도착 (항공편: OZ3615)",
           "distance": "15km",
           "cost": {
             "transport": "620위안 (디디)",
@@ -588,23 +588,33 @@
         }
       },
       "day4": {
-        "breakfast": {
-          "time": "08:00",
-          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
-          "description": "공항으로 이동",
+        "hotel_departure": {
+          "time": "07:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소 출발",
           "distance": null,
           "cost": {
             "transport": null,
             "activity": null
           }
         },
-        "departure": {
-          "time": "11:00",
+        "breakfast": {
+          "time": "08:00",
           "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
-          "description": "상하이 홍치아오국제공항 출발",
+          "description": "공항으로 이동",
           "distance": "15km",
           "cost": {
             "transport": "620위안 (디디)",
+            "activity": null
+          }
+        },
+        "departure": {
+          "time": "10:55",
+          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+          "description": "상하이 홍치아오국제공항 출발 (항공편: OZ3625)",
+          "distance": "15km",
+          "cost": {
+            "transport": null,
             "activity": null
           }
         }
