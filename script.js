@@ -617,7 +617,8 @@ function buildTimelineHTML(dayKey) {
             const transportCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
             const activityCost = schedule.cost?.activity ? `활동 ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
             const mealCost = schedule.cost?.meal ? `식사 ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
-            const costLabel = [transportCost, mealCost, activityCost].filter(Boolean).join(' · ');
+            // 점(일정)에서는 교통비 제외: 이동 구간에서만 표기
+            const costLabel = [mealCost, activityCost].filter(Boolean).join(' · ');
             html += `
               <div class='timeline-row'>
                 <div class='timeline-col-line'>
