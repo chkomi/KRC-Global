@@ -47,81 +47,27 @@ const tileLayers = {
 
 let currentTileLayerType = 'cartodb';
 
-// 클러스터 그룹들
+// 단일 클러스터 그룹 (카테고리 혼합 클러스터링 + 동일 크기 아이콘)
 let clusterGroups = {
-    attractions: L.markerClusterGroup({
+    all: L.markerClusterGroup({
         chunkedLoading: true,
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        maxClusterRadius: 40,
+        maxClusterRadius: 48,
         disableClusteringAtZoom: 16,
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
             return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
+                html: `
+                  <div class="cluster-marker">
+                    <div class="circle-marker cluster-circle"><i class="fas fa-layer-group"></i></div>
+                    <span class="cluster-badge">${count}</span>
+                  </div>
+                `,
                 className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    restaurants: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 50,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    hotels: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 60,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
-            });
-        }
-    }),
-    airports: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 70,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            const type = cluster.getAllChildMarkers()[0].options.type;
-            const color = markerColors[type];
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(30, 30),
-                iconAnchor: L.point(15, 15)
+                iconSize: L.point(18, 18),
+                iconAnchor: L.point(9, 9)
             });
         }
     })
@@ -170,18 +116,15 @@ async function initMap() {
             airports: L.featureGroup()
         };
 
-        // 클러스터 그룹들을 지도에 추가
-        Object.values(clusterGroups).forEach(group => {
-            group.addTo(map);
-            
-            // 클러스터 이벤트 리스너 추가
-            group.on('animationend', updateLabelVisibility);
-            group.on('spiderfied', updateLabelVisibility);
-            group.on('unspiderfied', updateLabelVisibility);
-            group.on('clusterclick', updateLabelVisibility);
-            group.on('clustermouseover', updateLabelVisibility);
-            group.on('clustermouseout', updateLabelVisibility);
-        });
+        // 단일 혼합 클러스터 그룹을 지도에 추가
+        const mixedCluster = clusterGroups.all;
+        mixedCluster.addTo(map);
+        mixedCluster.on('animationend', updateLabelVisibility);
+        mixedCluster.on('spiderfied', updateLabelVisibility);
+        mixedCluster.on('unspiderfied', updateLabelVisibility);
+        mixedCluster.on('clusterclick', updateLabelVisibility);
+        mixedCluster.on('clustermouseover', updateLabelVisibility);
+        mixedCluster.on('clustermouseout', updateLabelVisibility);
 
         displayMarkers();
         
@@ -249,7 +192,7 @@ function displayMarkers() {
                 markerElem.style.boxShadow = 'none';
                 markerElem.style.outline = 'none';
             });
-            clusterGroups[type].addLayer(marker);
+            clusterGroups.all.addLayer(marker);
             allMarkers.push({ marker, place: { ...place, type } });
         });
     });
