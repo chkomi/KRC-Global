@@ -356,7 +356,7 @@ function createPopupContent(place) {
     };
     const colors = typeColors[place.type || 'attractions'];
     let html = `<div class='custom-popup' style="border-color: ${colors.border}; background: ${colors.background}; color: ${colors.text};">`;
-    html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;background: #FFF8F0; color: ${colors.text};">
+    html += `<div class='popup-header center' style="display:flex;flex-direction:column;align-items:center;gap:0;background: #FFF8F0; color: ${colors.text}; border-bottom: 1.5px solid ${colors.border};">
         <div class='popup-title-main' style="font-size:1.18em;font-weight:800;color:${colors.text};margin-bottom:2px;text-align:center;">${koreanName}</div>
         <div class='popup-title-english' style="font-size:0.92em;color:${colors.text};margin-bottom:6px;text-align:center;font-weight:400;letter-spacing:0.01em;opacity:0.9;">${englishName}</div>
         <div class='popup-type-label' style="display:inline-block;margin:0 auto 8px auto;padding:3px 16px;border-radius:14px;background: ${colors.border};color:#FFF8F0;font-family:'Yangjin','Noto Sans KR',sans-serif;font-size:0.95em;font-weight:700;border:1.5px solid ${colors.border};box-shadow:0 1px 4px rgba(0,0,0,0.1);">${typeLabel}</div>
