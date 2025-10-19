@@ -316,24 +316,7 @@ html, body {
 .hotels-bg { background-color: #7B9EA8; }
 
 /* Mixed cluster icon styled same size as marker */
-.cluster-marker { position: relative; width: 18px; height: 18px; }
-.cluster-circle { background-color: #8B1E3F; } /* neutral wine */
-.cluster-marker .cluster-badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    min-width: 12px;
-    height: 12px;
-    padding: 0 2px;
-    background: #8B1E3F;
-    color: #FFF8F0;
-    border-radius: 8px;
-    font-size: 9px;
-    line-height: 12px;
-    border: 1px solid #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    text-align: center;
-}
+.cluster-circle { background-color: #E6E6E6; color: #333 !important; }
 
 /* Tooltip Styles */
 .leaflet-tooltip {

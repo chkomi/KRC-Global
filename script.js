@@ -59,12 +59,7 @@ let clusterGroups = {
         iconCreateFunction: function(cluster) {
             const count = cluster.getChildCount();
             return L.divIcon({
-                html: `
-                  <div class="cluster-marker">
-                    <div class="circle-marker cluster-circle"><i class="fas fa-layer-group"></i></div>
-                    <span class="cluster-badge">${count}</span>
-                  </div>
-                `,
+                html: `<div class="circle-marker cluster-circle">${count}</div>`,
                 className: 'custom-cluster-icon',
                 iconSize: L.point(18, 18),
                 iconAnchor: L.point(9, 9)
