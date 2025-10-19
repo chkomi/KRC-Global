@@ -607,9 +607,9 @@ function displayItineraryTimeline(dayKey) {
 }
 
 function buildTimelineHTML(dayKey) {
-    const buildItems = (daySchedule) => {
+    const buildTable = (daySchedule) => {
         const entries = Object.entries(daySchedule).sort((a,b)=> (a[1].time||'00:00').localeCompare(b[1].time||'00:00'));
-        let html = '';
+        let html = `<div class='timeline-table'>`;
         for (let i=0;i<entries.length;i++) {
             const [key, schedule] = entries[i];
             const next = entries[i+1]?.[1];
@@ -619,25 +619,35 @@ function buildTimelineHTML(dayKey) {
             const mealCost = schedule.cost?.meal ? `식사 ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
             const costLabel = [transportCost, mealCost, activityCost].filter(Boolean).join(' · ');
             html += `
-              <div class='timeline-item'>
-                <div class='timeline-dot'></div>
-                <div class='timeline-content'>
-                  <div class='timeline-top'>
-                    <div class='timeline-time'>${schedule.time || ''}</div>
-                    <div class='timeline-place'>${locName}</div>
-                    ${costLabel ? `<div class='timeline-cost'>${costLabel}</div>` : ''}
+              <div class='timeline-row'>
+                <div class='timeline-col-line'>
+                  <div class='timeline-dot'></div>
+                </div>
+                <div class='timeline-col-content'>
+                  <div class='timeline-content'>
+                    <div class='timeline-top'>
+                      <div class='timeline-time'>${schedule.time || ''}</div>
+                      <div class='timeline-place'>${locName}</div>
+                      ${costLabel ? `<div class='timeline-cost'>${costLabel}</div>` : ''}
+                    </div>
+                    ${schedule.description ? `<div class='timeline-desc'>${schedule.description}</div>` : ''}
                   </div>
-                  ${schedule.description ? `<div class='timeline-desc'>${schedule.description}</div>` : ''}
-                  ${next ? buildSegment(schedule, next) : ''}
                 </div>
               </div>`;
+            if (next) {
+              const dist = schedule.distance || '-';
+              const moveCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
+              html += `
+                <div class='timeline-segment-row'>
+                  <div class='timeline-col-line'></div>
+                  <div class='timeline-col-content'>
+                    <div class='timeline-segment'>이동: ${dist}${moveCost ? ` · ${moveCost}`: ''}</div>
+                  </div>
+                </div>`;
+            }
         }
+        html += `</div>`;
         return html;
-    };
-    const buildSegment = (a, b) => {
-        const dist = a.distance || '-';
-        const moveCost = a.cost?.transport ? `교통 ¥${parseInt(a.cost.transport).toLocaleString()}` : '';
-        return `<div class='timeline-segment'>이동: ${dist}${moveCost ? ` · ${moveCost}`: ''}</div>`;
     };
     if (dayKey === 'all') {
         let out = '';
@@ -646,19 +656,13 @@ function buildTimelineHTML(dayKey) {
             const ds = shanghaiData.itinerary[dk];
             if (!ds) continue;
             out += `<div style='padding:6px 12px;font-weight:700;color:#8B1E3F;'>${i}일차</div>`;
-            out += `<div class='timeline-container'>
-                      <div class='timeline-line'></div>
-                      <div class='timeline-items'>${buildItems(ds)}</div>
-                    </div>`;
+            out += buildTable(ds);
         }
         return out || `<div style='padding:12px;'>전체 일정이 없습니다.</div>`;
     } else {
         const ds = shanghaiData.itinerary[dayKey];
         if (!ds) return '<div style="padding:14px;">해당 일자의 일정이 없습니다.</div>';
-        return `<div class='timeline-container'>
-                  <div class='timeline-line'></div>
-                  <div class='timeline-items'>${buildItems(ds)}</div>
-                </div>`;
+        return buildTable(ds);
     }
 }
 

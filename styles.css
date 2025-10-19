@@ -122,35 +122,34 @@ html, body {
 .itinerary-button i { font-size: 18px; }
 
 /* Timeline styles inside itinerary popup */
-.timeline-container {
-    display: grid;
-    grid-template-columns: 26px 1fr;
-    gap: 12px;
-    padding: 10px 16px 16px 16px;
-}
-.timeline-line {
-    grid-column: 1 / 2;
+.timeline-table {
     position: relative;
+    padding: 8px 16px 16px 16px;
 }
-.timeline-line::before {
+.timeline-table::before {
+    /* vertical line */
     content: '';
     position: absolute;
-    left: 12px;
-    top: 4px;
-    bottom: 4px;
+    left: 36px; /* center of left column */
+    top: 8px;
+    bottom: 8px;
     width: 2px;
     background: #8B1E3F;
     opacity: 0.8;
 }
-.timeline-items { grid-column: 2 / 3; }
-.timeline-item {
-    position: relative;
-    padding: 6px 0 12px 0;
+.timeline-row, .timeline-segment-row {
+    display: grid;
+    grid-template-columns: 40px 1fr; /* left lane + content */
+    gap: 12px;
+    align-items: center;
 }
+.timeline-row { margin: 8px 0; }
+.timeline-col-line { position: relative; height: 100%; }
 .timeline-dot {
     position: absolute;
-    left: -38px;
-    top: 10px;
+    top: 50%;
+    left: 20px; /* center over the line (36px from table left minus 16px padding) */
+    transform: translate(-50%, -50%);
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -158,6 +157,7 @@ html, body {
     border: 2px solid #FFF8F0;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
+.timeline-col-content {}
 .timeline-content {
     background: #FFF8F0;
     border: 1.5px solid #8B1E3F;
@@ -175,13 +175,15 @@ html, body {
 .timeline-place { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .timeline-cost { margin-left: auto; font-weight: 700; }
 .timeline-desc { margin-top: 4px; font-size: 0.92em; opacity: 0.9; }
+.timeline-segment-row { margin: -2px 0 6px 0; }
 .timeline-segment {
-    margin: 6px 0 0 0;
-    padding: 4px 8px;
-    font-size: 0.9em;
-    color: #B2455E;
-    display: flex;
-    gap: 10px;
+    display: inline-block;
+    background: rgba(139,30,63,0.08);
+    border: 1px dashed #8B1E3F;
+    color: #8B1E3F;
+    border-radius: 10px;
+    padding: 3px 8px;
+    font-size: 0.88em;
 }
 .day-tabs {
     display: flex;
