@@ -493,8 +493,8 @@
         },
         "evening2": {
           "time": "19:00",
-          "location": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
-          "description": "황푸강 양쪽 전경을 감상할 수 있는 전망대",
+          "location": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
+          "description": "황푸강을 따라 상하이의 아름다운 야경을 감상하는 유람선 투어",
           "distance": "1km",
           "cost": {
             "transport": null,
@@ -537,14 +537,13 @@
         },
         "lunch": {
           "time": "12:00",
-          "location": "红樽楼(홍췐루, HongZunLou)",
-          "description": "한인타운",
+          "location": "点都德-环宇荟店(점도덕, DianDouDe)",
+          "description": "광동식 딤섬 전문점에서 전통 딤섬",
           "distance": "35km",
           "cost": {
             "transport": "150위안 (디디)",
             "activity": "700위안 (식사)"
-          },
-          "alternative": "外滩老饭店(와이포지아, Waitan Lao Fandian)"
+          }
         },
         "afternoon": {
           "time": "14:00",
@@ -556,23 +555,43 @@
             "activity": null
           }
         },
-        "dinner": {
-          "time": "18:00",
-          "location": "点都德-环宇荟店(점도덕, DianDouDe)",
-          "description": "광동식 딤섬 전문점에서 전통 딤섬",
-          "distance": "1km",
+        "afternoon2": {
+          "time": "15:00",
+          "location": "思南公馆 (쓰난공관, Sinan Mansion)",
+          "description": "프랑스 조계지 가든 하우스와 근현대 건축이 조화된 복합 문화 거리",
+          "distance": "2km",
           "cost": {
             "transport": null,
+            "activity": null
+          }
+        },
+        "afternoon3": {
+          "time": "16:30",
+          "location": "南京东路 (난징동루, Nanjing Road East)",
+          "description": "쇼핑과 문화가 공존하는 도심 보행자 거리",
+          "distance": "3km",
+          "cost": {
+            "transport": null,
+            "activity": null
+          }
+        },
+        "dinner": {
+          "time": "18:00",
+          "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
+          "description": "대만음식 전문점, 파인애플볶음밥과 굴전이 유명한 대만 가정식 레스토랑",
+          "distance": "5km",
+          "cost": {
+            "transport": "40위안 (디디)",
             "activity": "700위안 (식사)"
           }
         },
         "evening": {
           "time": "19:00",
-          "location": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
-          "description": "황푸강을 따라 상하이의 아름다운 야경을 감상하는 유람선 투어",
-          "distance": "4km",
+          "location": "上海马戏城 (상하이 서커스월드, Shanghai Circus World)",
+          "description": "세계적인 수준의 아크로바틱과 서커스를 감상",
+          "distance": "10km",
           "cost": {
-            "transport": "40위안 (디디)",
+            "transport": "50위안 (디디)",
             "activity": "700위안 (관광)"
           }
         },
