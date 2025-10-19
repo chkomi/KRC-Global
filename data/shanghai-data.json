@@ -327,7 +327,7 @@
     "itinerary": {
       "day1": {
         "arrival": {
-          "time": "09:00",
+          "time": "10:00",
           "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
           "description": "상하이 홍치아오국제공항 도착",
           "distance": "15km",
@@ -337,7 +337,7 @@
           }
         },
         "hotel": {
-          "time": "10:00",
+          "time": "11:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소 체크인 및 짐 두기",
           "distance": null,
@@ -347,7 +347,7 @@
           }
         },
         "morning": {
-          "time": "10:30",
+          "time": "11:30",
           "location": "豫园 (예원, Yu Garden)",
           "description": "중국 전통 정원에서 아름다운 풍경 감상",
           "distance": "2km",
@@ -357,7 +357,7 @@
           }
         },
         "lunch": {
-          "time": "12:00",
+          "time": "13:00",
           "location": "四季民福烤鸭店-香港广场店(사계민복, Sihai Minfu)",
           "description": "베이징 오리 요리 전문점",
           "distance": "3km",
@@ -367,7 +367,7 @@
           }
         },
         "afternoon1": {
-          "time": "13:30",
+          "time": "14:00",
           "location": "上海博物馆 (상하이박물관, Shanghai Museum)",
           "description": "풍부한 중국 예술품과 역사 컬렉션 관람",
           "distance": null,
@@ -377,7 +377,7 @@
           }
         },
         "afternoon2": {
-          "time": "15:00",
+          "time": "15:30",
           "location": "大韩民国上海临时政府(상하이임시정부)",
           "description": "독립운동의 성지에서 역사 교육",
           "distance": "2km",
@@ -408,8 +408,8 @@
         },
         "evening": {
           "time": "19:00",
-          "location": "上海中心大厦 (상하이타워, Shanghai Tower)",
-          "description": "현대 상하이의 랜드마크 건물에서 전망 감상",
+          "location": "Flair Rooftop Restaurant & Bar (플레어 루프탑, The Ritz-Carlton Shanghai, Pudong)",
+          "description": "루자쭈이의 초고층 전망과 함께 즐기는 럭셔리 루프탑 레스토랑 & 바",
           "distance": "5km",
           "cost": {
             "transport": "30위안 (디디)",
@@ -428,7 +428,7 @@
           }
         },
         "lillian_bakery": {
-          "time": "14:30",
+          "time": "15:00",
           "location": "莉莲蛋挞-人民广场站店 (릴리안에그타르트, Lillian Bakery)",
           "description": "상하이 대표 에그타르트 맛집 방문 및 간식",
           "distance": null,
