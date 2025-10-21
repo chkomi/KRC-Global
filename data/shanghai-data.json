@@ -581,11 +581,9 @@
           "time": "21:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소로 복귀",
-          "distance": "2km",
-          "cost": {
-            "transport": "40위안 (디디)",
-            "activity": null
-          }
+          "distance": "1km",
+          "moveMode": "도보",
+          "cost": {"transport": null, "activity": null}
         }
       },
       "day4": {
