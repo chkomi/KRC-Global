@@ -1563,7 +1563,7 @@ html, body {
 .mobile-timeline .mt-tabs {
     display: flex;
     gap: 6px;
-    padding: 6px 10px 0 10px;
+    padding: 10px 10px 2px 10px; /* 상단 여백 증가 */
     justify-content: center;
 }
 

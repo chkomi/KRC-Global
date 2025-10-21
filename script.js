@@ -256,6 +256,14 @@ function extractKorean(text) {
     return (hangulPart || parts[0] || text).trim();
 }
 
+// 일정표 전용 표시 이름 변환 (호텔은 '숙소'로 표기)
+function displayLocationForSchedule(text) {
+    const korean = extractKorean(text || '');
+    const raw = text || '';
+    const isHotel = /SSAW|부티크\s*호텔|上海中星铂尔曼酒店/i.test(raw) || /SSAW|부티크\s*호텔|上海中星铂尔曼酒店/i.test(korean);
+    return isHotel ? '숙소' : korean;
+}
+
 // 설명을 3단어로 압축하는 함수
 function compressDescription(description) {
     const words = description.split(' ');
@@ -687,7 +695,7 @@ function buildTimelineHTML(dayKey) {
         for (let i=0;i<entries.length;i++) {
             const [key, schedule] = entries[i];
             const next = entries[i+1]?.[1];
-            const locName = extractKorean(schedule.location);
+            const locName = displayLocationForSchedule(schedule.location);
             const transportCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
             const activityCost = schedule.cost?.activity ? `활동 ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
             const mealCost = schedule.cost?.meal ? `식사 ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
@@ -911,7 +919,7 @@ function displayItinerary(dayKey) {
             scheduleItems.forEach(([key, schedule], idx) => {
                 const icon = getScheduleIcon(key);
                 const itemClass = getScheduleItemClass(key);
-                const locationName = extractKorean(schedule.location);
+                const locationName = displayLocationForSchedule(schedule.location);
                 const distance = schedule.distance || '-';
                 // 교통비
                 const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
@@ -998,7 +1006,7 @@ function displayItinerary(dayKey) {
     scheduleItems.forEach(([key, schedule], idx) => {
         const icon = getScheduleIcon(key);
         const itemClass = getScheduleItemClass(key);
-        const locationName = extractKorean(schedule.location);
+        const locationName = displayLocationForSchedule(schedule.location);
         const distance = schedule.distance || '-';
         // 교통비
         const transportCost = schedule.cost?.transport ? `<span class='cost-label'>교통</span> ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
@@ -1418,7 +1426,7 @@ function renderMobileTimeline(dayKey) {
         time.textContent = item.time || '';
         const place = document.createElement('div');
         place.className = 'mt-place';
-        place.textContent = extractKorean(item.location);
+        place.textContent = displayLocationForSchedule(item.location);
         card.appendChild(time);
         card.appendChild(place);
         if (item.costLabel) {
@@ -1485,7 +1493,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
             const topEl = document.createElement('div');
             topEl.className = 'mt-move-abs';
             topEl.style.left = `${mid}px`;
-            topEl.style.top = `${y - 16}px`;
+            topEl.style.top = `${y - 22}px`; // 선에서 더 떨어뜨림
             topEl.innerHTML = badgeHtml;
             scroll.appendChild(topEl);
         }
@@ -1493,7 +1501,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
             const bottomEl = document.createElement('div');
             bottomEl.className = 'mt-move-abs';
             bottomEl.style.left = `${mid}px`;
-            bottomEl.style.top = `${y + 10}px`;
+            bottomEl.style.top = `${y + 14}px`; // 선에서 더 떨어뜨림
             bottomEl.textContent = distText;
             scroll.appendChild(bottomEl);
         }
