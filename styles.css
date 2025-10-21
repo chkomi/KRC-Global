@@ -1592,6 +1592,14 @@ html, body {
     -webkit-overflow-scrolling: touch;
     position: relative; /* for absolute track/labels */
 }
+.mobile-timeline .mt-daybox {
+    position: absolute;
+    border: 1.5px dashed #8B1E3F;
+    border-radius: 10px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 0;
+}
 .mobile-timeline .mt-track {
     position: absolute;
     height: 2px;

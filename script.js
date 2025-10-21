@@ -1385,7 +1385,7 @@ function initMobileTimeline() {
     tabs.innerHTML = '';
     days.forEach(d => {
         const btn = document.createElement('button');
-        btn.className = 'mt-tab' + (d === 'day1' ? ' active' : '');
+        btn.className = 'mt-tab' + (d === 'all' ? ' active' : '');
         btn.dataset.day = d;
         btn.textContent = d === 'all' ? '전체' : d.replace('day', '') + '일차';
         btn.addEventListener('click', () => {
@@ -1397,8 +1397,9 @@ function initMobileTimeline() {
         tabs.appendChild(btn);
     });
 
-    renderMobileTimeline('day1');
-    filterMarkersByDay('day1');
+    // 기본 디폴트는 전체
+    renderMobileTimeline('all');
+    filterMarkersByDay('all');
 }
 
 function renderMobileTimeline(dayKey) {
@@ -1410,6 +1411,7 @@ function renderMobileTimeline(dayKey) {
     const centers = [];
     const badges = [];
     const labelsDist = [];
+    const dayLabels = [];
     data.forEach((item, idx) => {
         const node = document.createElement('div');
         node.className = 'mt-node';
@@ -1444,15 +1446,16 @@ function renderMobileTimeline(dayKey) {
             badges.push(item.moveBadge || '');
             labelsDist.push(item.moveDistance || '');
         }
+        dayLabels.push(item.day || '');
     });
 
     // 다음 프레임에서 트랙과 이동 라벨 절대 배치
-    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist));
+    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey));
 }
 
-function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
+function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey) {
     // 기존 트랙/라벨 제거
-    scroll.querySelectorAll('.mt-track, .mt-move-abs').forEach(el => el.remove());
+    scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox').forEach(el => el.remove());
 
     if (centers.length === 0) return;
     const scrollRect = scroll.getBoundingClientRect();
@@ -1502,9 +1505,34 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
         }
     }
 
+    // 전체 보기에서 각 일자별 범위를 점선 박스로 표시
+    if (dayKey === 'all' && dayLabels && dayLabels.length === centers.length) {
+        const groups = [];
+        let start = 0;
+        for (let i = 1; i <= dayLabels.length; i++) {
+            if (i === dayLabels.length || dayLabels[i] !== dayLabels[i - 1]) {
+                groups.push({ start, end: i - 1, day: dayLabels[i - 1] });
+                start = i;
+            }
+        }
+        const topEdge = y - 30; // 뱃지 위편까지 포함
+        const bottomEdge = y + 52; // 지점 이름 밑까지 포함
+        groups.forEach(g => {
+            const leftX = toContentX(centers[g.start].dot);
+            const rightX = toContentX(centers[g.end].dot);
+            const box = document.createElement('div');
+            box.className = 'mt-daybox';
+            box.style.left = `${leftX - 8}px`;
+            box.style.top = `${topEdge}px`;
+            box.style.width = `${Math.max(0, rightX - leftX) + 16}px`;
+            box.style.height = `${Math.max(12, bottomEdge - topEdge)}px`;
+            scroll.appendChild(box);
+        });
+    }
+
     // 리사이즈 시 재배치
     window.addEventListener('resize', () => {
-        requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist));
+        requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey));
     }, { once: true });
 }
 
@@ -1512,14 +1540,15 @@ function buildMobileTimelineData(dayKey) {
     const out = [];
     if (!window.itineraryData) return out;
 
-    const pushDay = (ds) => {
+    const pushDay = (ds, dayLabel) => {
         const entries = Object.entries(ds).sort((a,b)=> (a[1].time||'00:00').localeCompare(b[1].time||'00:00'));
         for (let i=0;i<entries.length;i++) {
             const [key, schedule] = entries[i];
             const next = entries[i+1]?.[1];
             const item = {
                 time: schedule.time || '',
-                location: schedule.location || ''
+                location: schedule.location || '',
+                day: dayLabel || dayKey
             };
             // 모바일 가로 일정표에서는 비용 표시를 제외
             // 점 사이 이동 정보: 다음 항목의 거리/이동수단 배지 사용 (비용은 제외)
@@ -1547,11 +1576,11 @@ function buildMobileTimelineData(dayKey) {
         for (let i=1;i<=4;i++) {
             const dk = `day${i}`;
             const ds = window.itineraryData[dk];
-            if (ds) pushDay(ds);
+            if (ds) pushDay(ds, dk);
         }
     } else {
         const ds = window.itineraryData[dayKey];
-        if (ds) pushDay(ds);
+        if (ds) pushDay(ds, dayKey);
     }
     return out;
 }
