@@ -1665,15 +1665,17 @@ html, body {
     font-size: 0.72em;
     opacity: 0.9;
     z-index: 1;
+    white-space: nowrap; /* 한 줄 유지 */
 }
 .mobile-timeline .mt-move-abs .mt-badge {
     display: inline-block;
-    padding: 1px 6px;
+    padding: 1px 5px;
     border-radius: 10px;
-    font-size: 0.72em;
+    font-size: 0.7em;
     font-weight: 800;
     margin-left: 6px;
     vertical-align: middle;
+    white-space: nowrap; /* 배지도 줄바꿈 방지 */
 }
 .mobile-timeline .mt-badge.wine { background: #8B1E3F; color: #FFF8F0; }
 .mobile-timeline .mt-badge.taxi { background: rgba(139,30,63,0.08); color: #8B1E3F; border: 1px solid #8B1E3F; }
