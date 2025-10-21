@@ -390,23 +390,12 @@
             "activity": null
           }
         },
-        "afternoon2": {
-          "time": "15:30",
-          "location": "大韩民国上海临时政府(상하이임시정부)",
-          "description": "독립운동의 성지에서 역사 교육",
-          "distance": "5km",
-          "moveMode": "택시",
-          "cost": {
-            "transport": "30위안 (디디)",
-            "activity": null
-          }
-        },
         "afternoon3": {
           "time": "16:00",
           "location": "南京东路 (난징동루, Nanjing Road East)",
           "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역 탐방",
-          "distance": "3km",
-          "moveMode": "택시",
+          "distance": "2km",
+          "moveMode": "도보",
           "cost": {
             "transport": null,
             "activity": "140위안 (관광)"
