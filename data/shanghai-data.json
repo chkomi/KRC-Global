@@ -537,7 +537,8 @@
           "time": "08:00",
           "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
           "description": "공항으로 이동",
-          "distance": null,
+          "distance": "15km",
+          "moveMode": "공항샌딩",
           "cost": {
             "transport": "620위안 (디디)",
             "activity": null

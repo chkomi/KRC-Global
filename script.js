@@ -1576,7 +1576,7 @@ function buildMobileTimelineData(dayKey) {
                     mode = String(next.cost.transport).match(/\(([^)]+)\)/)[1];
                 }
                 let badgeClass = '';
-                if (mode.includes('공항픽업')) badgeClass = 'wine';
+                if (mode.includes('공항픽업') || mode.includes('공항샌딩')) badgeClass = 'wine';
                 else if (mode.includes('도보')) badgeClass = 'walk';
                 else if (mode.includes('패키지')) badgeClass = 'wine';
                 else if (mode.includes('택시') || mode.includes('디디')) badgeClass = 'taxi';
