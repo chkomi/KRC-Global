@@ -148,8 +148,8 @@
       {
         "name": "上海马戏城 (상하이 서커스월드, Shanghai Circus World)",
         "address": "上海市静安区共和新路2266号 (No. 2266 Gonghexin Road, Jing'an District, Shanghai)",
-        "latitude": 31.308828,
-        "longitude": 121.442935,
+        "latitude": 31.27987,
+        "longitude": 121.44684,
         "description": "세계적인 수준의 아크로바틱과 서커스를 선보이는 상하이 대표 공연장으로, 대형 원형극장과 전용 무대 장치가 갖춰져 가족 관람에 적합합니다.",
         "features": ["서커스", "공연", "가족"],
         "image": "images/attractions/shanghai-circus-world.jpg"
@@ -171,6 +171,15 @@
         "description": "프랑스 조계지 시절의 가든 하우스와 근현대 건축이 조화된 복합 문화·상업 공간으로, 카페와 레스토랑, 갤러리가 모여 산책하기 좋은 거리",
         "features": ["역사적 건축", "카페/레스토랑", "산책"],
         "image": "images/attractions/sinan-mansion.jpg"
+      },
+      {
+        "name": "상하이구광쇼핑몰 (Shanghai JiuGuang Shopping Mall)",
+        "address": "N/A",
+        "latitude": 31.27796,
+        "longitude": 121.44671,
+        "description": "상하이 대표 쇼핑몰 중 하나",
+        "features": ["쇼핑", "실내"],
+        "image": "images/attractions/jiuguang-shopping-mall.jpg"
       }
     ],
     "restaurants": [
@@ -183,15 +192,7 @@
         "menu": ["역사공원", "프랑스조계", "문화유산"],
         "image": "images/restaurants/sihai-minfu.jpg"
       },
-      {
-        "name": "蟹小友·蟹黄面·手工点心-南京东路店 (시에소우, Xie Xiaoyou)",
-        "address": "上海市黄浦区南京东路588号丝绸商厦负一楼",
-        "latitude": 31.237807,
-        "longitude": 121.474958,
-        "description": "게 요리 전문점으로 신선한 게살을 이용한 다양한 음식을 맛볼 수 있는 곳. 추천 메뉴: 게살떡국 (58위안), 게살비빔면 (128위안)",
-        "menu": ["게살떡국", "게살비빔면"],
-        "image": "images/restaurants/xie-xiaoyou.jpg"
-      },
+      
       {
         "name": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
         "address": "上海市黄浦区福州路567号1楼东北侧-b(八仙商务楼西侧30米)",
@@ -227,6 +228,15 @@
         "description": "중국 최고의 훠궈 체인점으로 뛰어난 서비스와 다양한 육수, 신선한 재료가 특징인 프리미엄 훠궈 전문점",
         "menu": ["토마토탕", "백탕", "마라탕", "프리미엄서비스"],
         "image": "images/restaurants/hai-di-lao.jpg"
+      },
+      {
+        "name": "萍姐火锅 (핑지에훠궈, Pingjie Hotpot)",
+        "address": "上海市黄浦区徐家汇路618号 日月光中心 四楼 TK-06",
+        "latitude": 31.208516,
+        "longitude": 121.464232,
+        "description": "현지 인기 훠궈 전문점. 다양한 육수와 신선한 재료가 특징",
+        "menu": ["훠궈"],
+        "image": "images/restaurants/pingjie-huoguo.jpg"
       },
       {
         "name": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",

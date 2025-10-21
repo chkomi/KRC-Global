@@ -48,24 +48,9 @@ const tileLayers = {
 let currentTileLayerType = 'cartodb';
 
 // 단일 클러스터 그룹 (카테고리 혼합 클러스터링 + 동일 크기 아이콘)
+// 단일 레이어 그룹 (클러스터 대신 점 표시용)
 let clusterGroups = {
-    all: L.markerClusterGroup({
-        chunkedLoading: true,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 48,
-        disableClusteringAtZoom: 16,
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            return L.divIcon({
-                html: `<div class="circle-marker cluster-circle">${count}</div>`,
-                className: 'custom-cluster-icon',
-                iconSize: L.point(18, 18),
-                iconAnchor: L.point(9, 9)
-            });
-        }
-    })
+    all: L.layerGroup()
 };
 
 // 지도 초기화 함수
@@ -85,8 +70,8 @@ async function initMap() {
         shanghaiData = data.shanghai_tourism;
         console.log('데이터 로드 완료:', shanghaiData);
         
-        // 지도 생성 (초기 줌 레벨 9로 설정)
-        map = L.map('map').setView([31.2304, 121.4737], 9);
+        // 지도 생성 (초기 줌 레벨 9, 캔버스 우선 렌더러로 성능 개선)
+        map = L.map('map', { preferCanvas: true }).setView([31.2304, 121.4737], 9);
         
         // 기본 타일 레이어 설정
         currentTileLayer = tileLayers.cartodb;
@@ -111,15 +96,9 @@ async function initMap() {
             airports: L.featureGroup()
         };
 
-        // 단일 혼합 클러스터 그룹을 지도에 추가
+        // 마커 레이어 그룹을 지도에 추가 (클러스터 사용 안 함)
         const mixedCluster = clusterGroups.all;
         mixedCluster.addTo(map);
-        mixedCluster.on('animationend', updateLabelVisibility);
-        mixedCluster.on('spiderfied', updateLabelVisibility);
-        mixedCluster.on('unspiderfied', updateLabelVisibility);
-        mixedCluster.on('clusterclick', updateLabelVisibility);
-        mixedCluster.on('clustermouseover', updateLabelVisibility);
-        mixedCluster.on('clustermouseout', updateLabelVisibility);
 
         displayMarkers();
         
@@ -152,19 +131,18 @@ function displayMarkers() {
         (shanghaiData[type] || []).forEach(place => {
             // place 객체에 type 정보 추가
             place.type = type;
-            
-            const marker = L.marker([place.latitude, place.longitude], {
+
+            // 1) 일반 마커 (아이콘 + 라벨)
+            const normalMarker = L.marker([place.latitude, place.longitude], {
                 icon: createCustomIcon(type),
                 name: place.name,
                 type: type,
                 place: place
             });
-            marker.bindPopup(createPopupContent(place));
-            // 마커 라벨 생성 및 동적 표시 (hover 효과 없이)
-            marker.on('add', function() {
-                const markerElem = marker._icon;
+            normalMarker.bindPopup(createPopupContent(place));
+            normalMarker.on('add', function() {
+                const markerElem = normalMarker._icon;
                 if (markerElem) {
-                    // 팝업에 사용하는 한글명과 동일한 라벨 표시
                     let labelText = extractKorean(place.name);
                     if (labelText && labelText.includes(',')) {
                         labelText = labelText.split(',')[0].trim();
@@ -172,7 +150,6 @@ function displayMarkers() {
                     if (!labelText || labelText.trim() === '') {
                         labelText = place.name.split('/')[0].trim();
                     }
-
                     let label = markerElem.querySelector('.marker-label');
                     if (!label) {
                         label = document.createElement('div');
@@ -181,17 +158,30 @@ function displayMarkers() {
                     }
                     label.setAttribute('data-color', typeColors[type]);
                     label.innerText = labelText;
+                    markerElem.style.filter = 'none';
+                    markerElem.style.boxShadow = 'none';
+                    markerElem.style.outline = 'none';
                 }
-                // hover 효과 제거
-                markerElem.style.filter = 'none';
-                markerElem.style.boxShadow = 'none';
-                markerElem.style.outline = 'none';
             });
-            clusterGroups.all.addLayer(marker);
-            allMarkers.push({ marker, place: { ...place, type } });
+
+            // 2) 작은 점 마커 (혼잡 시 사용)
+            const dotMarker = L.circleMarker([place.latitude, place.longitude], {
+                radius: 3,
+                stroke: false,
+                fill: true,
+                fillColor: typeColors[type] || '#666',
+                fillOpacity: 1.0
+            });
+            dotMarker.bindPopup(createPopupContent(place));
+
+            // 초기에는 일반 마커 추가 (필터 후 혼잡도에 따라 dot로 전환)
+            clusterGroups.all.addLayer(normalMarker);
+            allMarkers.push({ marker: normalMarker, dot: dotMarker, place: { ...place, type } });
         });
     });
     Object.values(clusterGroups).forEach(group => map.addLayer(group));
+    // 현재 가시 범위/줌 기준으로 혼잡도에 따라 점/마커 전환
+    updateLabelVisibility();
 }
 
 // 영문명 추출 함수 (구글지도용)
@@ -235,11 +225,21 @@ function extractChineseName(text) {
 
 // 한국어 이름 추출 함수
 function extractKorean(text) {
-    // 괄호 안 내용을 우선 추출
+    // 괄호 안에 한글이 있으면 그 부분 사용, 없으면 괄호 밖(원문)에서 한글 추출
     const match = text.match(/\(([^)]+)\)/);
-    let inside = match ? match[1] : text;
-    // 쉼표(영문 , / 중문 ，)로 분리하여 한글 포함 파트를 우선 선택
-    const parts = inside.split(/[，,]/).map(s => s.trim()).filter(Boolean);
+    let source;
+    if (match) {
+        const inside = match[1];
+        if (/[\u3131-\u318E\uAC00-\uD7A3]/.test(inside)) {
+            source = inside;
+        } else {
+            // 괄호 부분 제거 후 바깥 텍스트 사용
+            source = text.replace(/\s*\([^)]*\)\s*/, '').trim();
+        }
+    } else {
+        source = text;
+    }
+    const parts = source.split(/[，,]/).map(s => s.trim()).filter(Boolean);
     const hangulPart = parts.find(p => /[\u3131-\u318E\uAC00-\uD7A3]/.test(p));
     return (hangulPart || parts[0] || text).trim();
 }
@@ -495,17 +495,79 @@ function createCurrentLocationIcon() {
 
 // 라벨 가시성 업데이트 함수
 function updateLabelVisibility() {
-    const currentZoom = map.getZoom();
-    const bounds = map.getBounds();
-    
-    allMarkers.forEach(markerData => {
-        const marker = markerData.marker;
-        const isInBounds = bounds.contains(marker.getLatLng());
-        // 클러스터 상태 확인
-        const isClustered = marker._icon && marker._icon.parentNode && 
-                           marker._icon.parentNode.classList.contains('marker-cluster');
-        // 클러스터링되지 않은 마커는 줌 레벨에 상관없이 라벨 표시
-        // (툴팁 관련 코드 완전 제거)
+    // 혼잡도 기반으로 점/마커 전환
+    updateDenseDots();
+}
+
+// 현재 지도 뷰의 가시 레이어(필터 결과)에 대해 픽셀 거리 기반 밀집 판정 후 점/마커 전환
+function updateDenseDots() {
+    if (!map) return;
+    const threshold = 24; // px 단위 임계치: 이보다 가까우면 점으로 표시
+    const cell = threshold;
+
+    // 현재 보이는 엔트리 수집 (일단 normal/dot 중 하나가 지도에 올라온 항목)
+    const visibleEntries = [];
+    allMarkers.forEach(entry => {
+        const hasNormal = clusterGroups.all.hasLayer(entry.marker) && map.hasLayer(clusterGroups.all);
+        const hasDot = clusterGroups.all.hasLayer(entry.dot) && map.hasLayer(clusterGroups.all);
+        if (hasNormal || hasDot) visibleEntries.push(entry);
+    });
+
+    // 좌표 그리드 버킷 구성
+    const buckets = new Map();
+    function keyFor(pt) {
+        return `${Math.floor(pt.x / cell)}:${Math.floor(pt.y / cell)}`;
+    }
+    const points = visibleEntries.map((entry, idx) => {
+        const latlng = entry.marker.getLatLng();
+        const pt = map.latLngToLayerPoint(latlng);
+        return { idx, pt };
+    });
+    points.forEach(p => {
+        const k = keyFor(p.pt);
+        if (!buckets.has(k)) buckets.set(k, []);
+        buckets.get(k).push(p);
+    });
+
+    // 밀집 여부 판정
+    const denseFlags = new Array(visibleEntries.length).fill(false);
+    const neighborOffsets = [-1, 0, 1];
+    points.forEach(p => {
+        const gx = Math.floor(p.pt.x / cell);
+        const gy = Math.floor(p.pt.y / cell);
+        for (let dx of neighborOffsets) {
+            for (let dy of neighborOffsets) {
+                const nk = `${gx + dx}:${gy + dy}`;
+                const arr = buckets.get(nk);
+                if (!arr) continue;
+                for (let q of arr) {
+                    if (q.idx === p.idx) continue;
+                    const dxp = q.pt.x - p.pt.x;
+                    const dyp = q.pt.y - p.pt.y;
+                    if ((dxp * dxp + dyp * dyp) <= (threshold * threshold)) {
+                        denseFlags[p.idx] = true;
+                        // 한 번 dense로 판정되면 더 볼 필요 없음
+                        break;
+                    }
+                }
+                if (denseFlags[p.idx]) break;
+            }
+            if (denseFlags[p.idx]) break;
+        }
+    });
+
+    // 토글: 밀집이면 dot, 아니면 normal
+    denseFlags.forEach((isDense, i) => {
+        const entry = visibleEntries[i];
+        const hasNormal = clusterGroups.all.hasLayer(entry.marker);
+        const hasDot = clusterGroups.all.hasLayer(entry.dot);
+        if (isDense) {
+            if (hasNormal) clusterGroups.all.removeLayer(entry.marker);
+            if (!hasDot) clusterGroups.all.addLayer(entry.dot);
+        } else {
+            if (hasDot) clusterGroups.all.removeLayer(entry.dot);
+            if (!hasNormal) clusterGroups.all.addLayer(entry.marker);
+        }
     });
 }
 
@@ -1074,7 +1136,15 @@ function zoomToLocation(location) {
             koreanName.includes(location) ||
             englishName.includes(location) ||
             chineseName.includes(location)) {
-            targetMarker = marker;
+            // 현재 지도에 올라온 레이어를 우선 선택 (dot 또는 normal)
+            if (clusterGroups.all.hasLayer(markerInfo.marker)) {
+                targetMarker = markerInfo.marker;
+            } else if (clusterGroups.all.hasLayer(markerInfo.dot)) {
+                targetMarker = markerInfo.dot;
+            } else {
+                // 기본값으로 일반 마커
+                targetMarker = markerInfo.marker;
+            }
         }
     });
     
@@ -1085,25 +1155,24 @@ function zoomToLocation(location) {
             duration: 1
         });
         
-        // 마커에 임시 하이라이트 효과
-        targetMarker.setZIndexOffset(1000);
-        setTimeout(() => {
-            targetMarker.setZIndexOffset(0);
-        }, 2000);
+        // 마커에 임시 하이라이트 효과 (Marker/CircleMarker 호환)
+        if (typeof targetMarker.setZIndexOffset === 'function') {
+            targetMarker.setZIndexOffset(1000);
+            setTimeout(() => targetMarker.setZIndexOffset(0), 2000);
+        } else if (typeof targetMarker.bringToFront === 'function' && typeof targetMarker.bringToBack === 'function') {
+            targetMarker.bringToFront();
+            setTimeout(() => targetMarker.bringToBack(), 2000);
+        }
         
         console.log('줌 이동:', location);
         
         // 팝업 닫기
         document.getElementById('itinerary-popup').classList.remove('show');
         
-        // 마커가 속한 클러스터 그룹을 열어서 마커를 보여줌
-        Object.values(clusterGroups).forEach(group => {
-            if (group.hasLayer(targetMarker)) {
-                group.zoomToShowLayer(targetMarker, () => {
-                    targetMarker.openPopup();
-                });
-            }
-        });
+        // 마커 팝업 열기 (클러스터 미사용 환경 호환)
+        if (typeof targetMarker.openPopup === 'function') {
+            targetMarker.openPopup();
+        }
     } else {
         console.log('마커를 찾을 수 없음:', location);
     }
@@ -1114,7 +1183,7 @@ function filterMarkersByDay(selectedDay) {
 
     console.log('필터링 시작:', selectedDay);
 
-    // 모든 클러스터 그룹에서 레이어를 지웁니다.
+    // 모든 레이어 그룹 초기화
     Object.values(clusterGroups).forEach(group => group.clearLayers());
 
     let dayLocations = [];
@@ -1132,7 +1201,7 @@ function filterMarkersByDay(selectedDay) {
     let visibleCount = 0;
     allMarkers.forEach(markerInfo => {
         const place = markerInfo.place;
-        const marker = markerInfo.marker;
+        const marker = markerInfo.marker; // 일반 마커
         
         const isVisible = selectedDay === 'all' || dayLocations.some(loc => {
             const placeName = place.name.split('/')[0].trim();
@@ -1178,9 +1247,9 @@ function filterMarkersByDay(selectedDay) {
         });
 
         if (isVisible) {
-            // 단일 혼합 클러스터 그룹 사용
             if (clusterGroups.all) {
-                clusterGroups.all.addLayer(marker);
+                // 초기에는 일반 마커를 추가하고, 혼잡도 함수에서 점으로 전환
+                clusterGroups.all.addLayer(markerInfo.marker);
                 visibleCount++;
                 console.log('마커 표시:', place.name, '(타입:', place.type, ')');
             }
