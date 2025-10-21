@@ -576,7 +576,7 @@
           "time": "08:00",
           "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
           "description": "공항으로 이동",
-          "distance": "15km",
+          "distance": null,
           "cost": {
             "transport": "620위안 (디디)",
             "activity": null
@@ -584,9 +584,9 @@
         },
         "departure": {
           "time": "10:55",
-          "location": "上海虹桥国际机场 (홍치아오국제공항, Shanghai Hongqiao International Airport)",
+          "location": "비행기탑승",
           "description": "상하이 홍치아오국제공항 출발 (항공편: OZ3625)",
-          "distance": "15km",
+          "distance": null,
           "cost": {
             "transport": null,
             "activity": null
