@@ -1592,8 +1592,8 @@ html, body {
 
 .mobile-timeline .mt-scroll {
     display: flex;
-    gap: 12px;
-    padding: 14px 10px;
+    gap: 14px;
+    padding: 26px 12px 18px 12px; /* 상단 확장으로 박스/배지 완전 노출 */
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x proximity;

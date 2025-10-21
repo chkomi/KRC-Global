@@ -1501,7 +1501,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const topEl = document.createElement('div');
             topEl.className = 'mt-move-abs';
             topEl.style.left = `${mid}px`;
-            topEl.style.top = `${y - 26}px`; // 선 위쪽 간격 확대
+            topEl.style.top = `${y - 20}px`; // 이전 버전으로 복원
             topEl.innerHTML = badgeHtml;
             scroll.appendChild(topEl);
         }
@@ -1531,13 +1531,13 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             // 그룹 내 카드들의 top/bottom을 이용해 자연스러운 박스 높이 산정
             const tops = cards.slice(g.start, g.end + 1).map(elTop);
             const bottoms = cards.slice(g.start, g.end + 1).map(elBottom);
-            const badgeTop = y - 20 - 12; // 배지 상단 추정 (배지 오프셋 20, 높이 12)
+            const badgeTop = y - 26 - 12; // 배지 오프셋 26, 높이 12 기준 상단
             const distBottom = y + 5 + 12; // 거리 라벨 하단 추정 (오프셋 5, 높이 12)
-            const topEdge = Math.min(badgeTop - 6, Math.min(...tops) - 6);
-            const bottomEdge = Math.max(distBottom + 6, Math.max(...bottoms) + 6);
+            const topEdge = Math.min(badgeTop - 10, Math.min(...tops) - 10);
+            const bottomEdge = Math.max(distBottom + 12, Math.max(...bottoms) + 12);
             const box = document.createElement('div');
             box.className = 'mt-daybox';
-            // 양끝 약간 줄여 겹침 완화
+            // 이전 버전: 양끝 약간만 안쪽/겹침 완화
             box.style.left = `${leftX + 4}px`;
             box.style.top = `${topEdge}px`;
             box.style.width = `${Math.max(12, rightX - leftX - 8)}px`;
