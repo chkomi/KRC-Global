@@ -1566,6 +1566,14 @@ html, body {
     padding: 10px 10px 2px 10px; /* 상단 여백 증가 */
     justify-content: center;
 }
+.mobile-timeline .mt-title {
+    text-align: center;
+    color: #8B1E3F;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    padding: 6px 8px 0 8px;
+    font-size: 0.98em;
+}
 
 .mobile-timeline .mt-tab {
     border: 1.5px solid #8B1E3F;

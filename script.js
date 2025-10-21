@@ -1501,7 +1501,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const topEl = document.createElement('div');
             topEl.className = 'mt-move-abs';
             topEl.style.left = `${mid}px`;
-            topEl.style.top = `${y - 20}px`; // 선 위쪽 20px 간격
+            topEl.style.top = `${y - 26}px`; // 선 위쪽 간격 확대
             topEl.innerHTML = badgeHtml;
             scroll.appendChild(topEl);
         }
@@ -1537,9 +1537,10 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const bottomEdge = Math.max(distBottom + 6, Math.max(...bottoms) + 6);
             const box = document.createElement('div');
             box.className = 'mt-daybox';
-            box.style.left = `${leftX - 8}px`;
+            // 양끝 약간 줄여 겹침 완화
+            box.style.left = `${leftX + 4}px`;
             box.style.top = `${topEdge}px`;
-            box.style.width = `${Math.max(0, rightX - leftX) + 16}px`;
+            box.style.width = `${Math.max(12, rightX - leftX - 8)}px`;
             box.style.height = `${Math.max(12, bottomEdge - topEdge)}px`;
             scroll.appendChild(box);
         });
