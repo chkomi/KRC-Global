@@ -1400,7 +1400,8 @@ function renderMobileTimeline(dayKey) {
 
     const data = buildMobileTimelineData(dayKey);
     const centers = [];
-    const labels = [];
+    const badges = [];
+    const labelsDist = [];
     data.forEach((item, idx) => {
         const node = document.createElement('div');
         node.className = 'mt-node';
@@ -1436,14 +1437,17 @@ function renderMobileTimeline(dayKey) {
         scroll.appendChild(node);
         // 임시로 DOM에 추가 후 좌표 계산을 위해 저장 (계산은 다음 렌더 프레임에서)
         centers.push({ dot });
-        if (idx < data.length - 1) labels.push(item.moveLabel || '');
+        if (idx < data.length - 1) {
+            badges.push(item.moveBadge || '');
+            labelsDist.push(item.moveDistance || '');
+        }
     });
 
     // 다음 프레임에서 트랙과 이동 라벨 절대 배치
-    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, labels));
+    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist));
 }
 
-function layoutMobileTrackAndLabels(scroll, centers, labels) {
+function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
     // 기존 트랙/라벨 제거
     scroll.querySelectorAll('.mt-track, .mt-move-abs').forEach(el => el.remove());
 
@@ -1470,24 +1474,34 @@ function layoutMobileTrackAndLabels(scroll, centers, labels) {
     track.style.width = `${Math.max(0, lastX - firstX)}px`;
     scroll.appendChild(track);
 
-    // 이동 라벨: 각 구간 중간 지점에 배치
+    // 이동 라벨: 각 구간 중간 지점에 배치 (배지는 선 위, 거리는 선 아래)
     for (let i = 0; i < centers.length - 1; i++) {
         const a = toContentX(centers[i].dot);
         const b = toContentX(centers[i + 1].dot);
         const mid = (a + b) / 2;
-        const label = labels[i];
-        if (!label) continue;
-        const el = document.createElement('div');
-        el.className = 'mt-move-abs';
-        el.style.left = `${mid}px`;
-        el.style.top = `${y + 8}px`; // 8px 아래에 배치
-        el.innerHTML = label; // HTML 지원 (배지 렌더링)
-        scroll.appendChild(el);
+        const badgeHtml = badges[i];
+        const distText = labelsDist[i];
+        if (badgeHtml) {
+            const topEl = document.createElement('div');
+            topEl.className = 'mt-move-abs';
+            topEl.style.left = `${mid}px`;
+            topEl.style.top = `${y - 16}px`;
+            topEl.innerHTML = badgeHtml;
+            scroll.appendChild(topEl);
+        }
+        if (distText) {
+            const bottomEl = document.createElement('div');
+            bottomEl.className = 'mt-move-abs';
+            bottomEl.style.left = `${mid}px`;
+            bottomEl.style.top = `${y + 10}px`;
+            bottomEl.textContent = distText;
+            scroll.appendChild(bottomEl);
+        }
     }
 
     // 리사이즈 시 재배치
     window.addEventListener('resize', () => {
-        requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, labels));
+        requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist));
     }, { once: true });
 }
 
@@ -1516,7 +1530,7 @@ function buildMobileTimelineData(dayKey) {
             if (activityYuan !== null) {
                 item.costLabel = `¥${activityYuan.toLocaleString()}`;
             }
-            // 점 사이 이동 정보: 다음 항목의 거리/교통비/이동수단 배지 사용
+            // 점 사이 이동 정보: 다음 항목의 거리/이동수단 배지 사용 (비용은 제외)
             if (next) {
                 const dist = (next.distance && next.distance !== null) ? String(next.distance) : '';
                 // 이동수단 배지 결정: moveMode 우선, 없으면 transport 문자열 내 괄호 텍스트 참고
@@ -1529,15 +1543,8 @@ function buildMobileTimelineData(dayKey) {
                 else if (mode.includes('도보')) badgeClass = 'walk';
                 else if (mode.includes('택시') || mode.includes('디디')) badgeClass = 'taxi';
                 const badge = mode ? `<span class="mt-badge ${badgeClass}">${mode}</span>` : '';
-
-                let costHtml = '';
-                if (next.cost?.transport) {
-                    const t = parseInt(String(next.cost.transport).replace(/[^\d]/g, ''));
-                    if (!isNaN(t) && t > 0) costHtml = ` · ¥${t.toLocaleString()}`;
-                }
-                const distHtml = dist ? `${dist}` : '';
-                const pieces = [distHtml, badge, costHtml].filter(Boolean).join(' ');
-                item.moveLabel = pieces;
+                item.moveBadge = badge;
+                item.moveDistance = dist ? `${dist}` : '';
             }
             out.push(item);
         }
