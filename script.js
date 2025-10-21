@@ -68,6 +68,8 @@ async function initMap() {
             throw new Error('데이터 형식이 올바르지 않습니다.');
         }
         shanghaiData = data.shanghai_tourism;
+        // 전역 일정 데이터 세팅 (모바일 타임라인 용)
+        window.itineraryData = shanghaiData.itinerary;
         console.log('데이터 로드 완료:', shanghaiData);
         
         // 지도 생성 (초기 줌 레벨 9, 캔버스 우선 렌더러로 성능 개선)
@@ -112,6 +114,10 @@ async function initMap() {
         setupEventListeners();
         // 일정 패널 초기화
         initializeItineraryPanel();
+        // 지도 클릭 시 동작 바인딩
+        setupMapClickToClosePopup();
+        // 모바일 하단 가로 타임라인 초기화
+        initMobileTimeline();
     } catch (error) {
         console.error('데이터 로드 중 오류:', error);
     }
@@ -1357,13 +1363,6 @@ function updateItineraryTitle(selectedDay, totalCost) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('메인 페이지 로드 완료');
     initMap();
-    fetch('data/shanghai-data.json')
-        .then(response => response.json())
-        .then(data => {
-            window.itineraryData = data.shanghai_tourism.itinerary;
-            setupMapClickToClosePopup();
-            initMobileTimeline();
-        });
 });
 
 // 팝업 닫힘 이벤트는 initMap에서 바인딩
