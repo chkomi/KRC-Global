@@ -1412,6 +1412,7 @@ function renderMobileTimeline(dayKey) {
     const badges = [];
     const labelsDist = [];
     const dayLabels = [];
+    const cards = [];
     data.forEach((item, idx) => {
         const node = document.createElement('div');
         node.className = 'mt-node';
@@ -1447,13 +1448,14 @@ function renderMobileTimeline(dayKey) {
             labelsDist.push(item.moveDistance || '');
         }
         dayLabels.push(item.day || '');
+        cards.push(card);
     });
 
     // 다음 프레임에서 트랙과 이동 라벨 절대 배치
-    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey));
+    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey, cards));
 }
 
-function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey) {
+function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey, cards) {
     // 기존 트랙/라벨 제거
     scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox').forEach(el => el.remove());
 
@@ -1464,9 +1466,17 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
         const r = dotEl.getBoundingClientRect();
         return scroll.scrollLeft + (r.left - scrollRect.left) + r.width / 2;
     };
-    const toContentY = (dotEl) => {
-        const r = dotEl.getBoundingClientRect();
+    const toContentY = (el) => {
+        const r = el.getBoundingClientRect();
         return (r.top - scrollRect.top) + r.height / 2; // content y within scroll
+    };
+    const elTop = (el) => {
+        const r = el.getBoundingClientRect();
+        return (r.top - scrollRect.top);
+    };
+    const elBottom = (el) => {
+        const r = el.getBoundingClientRect();
+        return (r.bottom - scrollRect.top);
     };
 
     const firstX = toContentX(centers[0].dot);
@@ -1515,11 +1525,16 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
                 start = i;
             }
         }
-        const topEdge = y - 30; // 뱃지 위편까지 포함
-        const bottomEdge = y + 52; // 지점 이름 밑까지 포함
         groups.forEach(g => {
             const leftX = toContentX(centers[g.start].dot);
             const rightX = toContentX(centers[g.end].dot);
+            // 그룹 내 카드들의 top/bottom을 이용해 자연스러운 박스 높이 산정
+            const tops = cards.slice(g.start, g.end + 1).map(elTop);
+            const bottoms = cards.slice(g.start, g.end + 1).map(elBottom);
+            const badgeTop = y - 20 - 12; // 배지 상단 추정 (배지 오프셋 20, 높이 12)
+            const distBottom = y + 5 + 12; // 거리 라벨 하단 추정 (오프셋 5, 높이 12)
+            const topEdge = Math.min(badgeTop - 6, Math.min(...tops) - 6);
+            const bottomEdge = Math.max(distBottom + 6, Math.max(...bottoms) + 6);
             const box = document.createElement('div');
             box.className = 'mt-daybox';
             box.style.left = `${leftX - 8}px`;

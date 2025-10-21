@@ -1584,8 +1584,8 @@ html, body {
 
 .mobile-timeline .mt-scroll {
     display: flex;
-    gap: 10px;
-    padding: 10px;
+    gap: 12px;
+    padding: 14px 10px;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x proximity;
@@ -1606,7 +1606,7 @@ html, body {
     background: #8B1E3F;
     opacity: 0.85;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
 }
 .mobile-timeline .mt-scroll::-webkit-scrollbar { height: 6px; }
 .mobile-timeline .mt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 6px; }
@@ -1672,7 +1672,7 @@ html, body {
     color: #8B1E3F;
     font-size: 0.72em;
     opacity: 0.9;
-    z-index: 1;
+    z-index: 2;
     white-space: nowrap; /* 한 줄 유지 */
 }
 .mobile-timeline .mt-move-abs .mt-badge {
