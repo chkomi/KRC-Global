@@ -1590,18 +1590,15 @@ html, body {
     overflow-y: hidden;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
-    position: relative;
+    position: relative; /* for absolute track/labels */
 }
-.mobile-timeline .mt-scroll::before {
-    content: '';
+.mobile-timeline .mt-track {
     position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 26px; /* align with dot center */
     height: 2px;
     background: #8B1E3F;
     opacity: 0.85;
     pointer-events: none;
+    z-index: 0;
 }
 .mobile-timeline .mt-scroll::-webkit-scrollbar { height: 6px; }
 .mobile-timeline .mt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 6px; }
@@ -1619,6 +1616,7 @@ html, body {
     position: relative;
     width: 100%;
     height: 36px;
+    z-index: 1; /* dots above the track */
 }
 .mobile-timeline .mt-dot {
     position: absolute;
@@ -1659,18 +1657,14 @@ html, body {
 .mobile-timeline .mt-place { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.86em; }
 .mobile-timeline .mt-cost { font-size: 0.78em; opacity: 0.95; margin-top: 2px; font-weight: 700; }
 
-.mobile-timeline .mt-link {
-    min-width: 90px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-.mobile-timeline .mt-link .mt-move {
-    margin-top: 20px; /* appear under the baseline between dots */
+.mobile-timeline .mt-move-abs {
+    position: absolute;
+    transform: translateX(-50%);
     text-align: center;
     color: #8B1E3F;
     font-size: 0.72em;
     opacity: 0.9;
+    z-index: 1;
 }
 .mobile-timeline .mt-seg {
     display: inline-block;

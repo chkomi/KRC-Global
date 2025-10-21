@@ -1399,6 +1399,8 @@ function renderMobileTimeline(dayKey) {
     scroll.innerHTML = '';
 
     const data = buildMobileTimelineData(dayKey);
+    const centers = [];
+    const labels = [];
     data.forEach((item, idx) => {
         const node = document.createElement('div');
         node.className = 'mt-node';
@@ -1432,18 +1434,61 @@ function renderMobileTimeline(dayKey) {
         node.appendChild(dotWrap);
         node.appendChild(card);
         scroll.appendChild(node);
-
-        // 점과 점 사이 이동 정보(거리 · 교통비)는 별도 링크 블록으로 추가
-        if (idx < data.length - 1 && item.moveLabel) {
-            const link = document.createElement('div');
-            link.className = 'mt-link';
-            const move = document.createElement('div');
-            move.className = 'mt-move';
-            move.textContent = item.moveLabel;
-            link.appendChild(move);
-            scroll.appendChild(link);
-        }
+        // 임시로 DOM에 추가 후 좌표 계산을 위해 저장 (계산은 다음 렌더 프레임에서)
+        centers.push({ dot });
+        if (idx < data.length - 1) labels.push(item.moveLabel || '');
     });
+
+    // 다음 프레임에서 트랙과 이동 라벨 절대 배치
+    requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, labels));
+}
+
+function layoutMobileTrackAndLabels(scroll, centers, labels) {
+    // 기존 트랙/라벨 제거
+    scroll.querySelectorAll('.mt-track, .mt-move-abs').forEach(el => el.remove());
+
+    if (centers.length === 0) return;
+    const scrollRect = scroll.getBoundingClientRect();
+
+    const toContentX = (dotEl) => {
+        const r = dotEl.getBoundingClientRect();
+        return scroll.scrollLeft + (r.left - scrollRect.left) + r.width / 2;
+    };
+    const toContentY = (dotEl) => {
+        const r = dotEl.getBoundingClientRect();
+        return (r.top - scrollRect.top) + r.height / 2; // content y within scroll
+    };
+
+    const firstX = toContentX(centers[0].dot);
+    const lastX = toContentX(centers[centers.length - 1].dot);
+    const y = toContentY(centers[0].dot);
+
+    const track = document.createElement('div');
+    track.className = 'mt-track';
+    track.style.left = `${firstX}px`;
+    track.style.top = `${y}px`;
+    track.style.width = `${Math.max(0, lastX - firstX)}px`;
+    scroll.appendChild(track);
+
+    // 이동 라벨: 각 구간 중간 지점에 배치
+    for (let i = 0; i < centers.length - 1; i++) {
+        const a = toContentX(centers[i].dot);
+        const b = toContentX(centers[i + 1].dot);
+        const mid = (a + b) / 2;
+        const label = labels[i];
+        if (!label) continue;
+        const el = document.createElement('div');
+        el.className = 'mt-move-abs';
+        el.style.left = `${mid}px`;
+        el.style.top = `${y + 8}px`; // 8px 아래에 배치
+        el.textContent = label;
+        scroll.appendChild(el);
+    }
+
+    // 리사이즈 시 재배치
+    window.addEventListener('resize', () => {
+        requestAnimationFrame(() => layoutMobileTrackAndLabels(scroll, centers, labels));
+    }, { once: true });
 }
 
 function buildMobileTimelineData(dayKey) {
