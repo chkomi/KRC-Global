@@ -514,53 +514,67 @@
         }
       },
       "day3": {
+        "hotel_morning": {
+          "time": "08:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소",
+          "distance": null,
+          "cost": {"transport": null, "activity": null}
+        },
         "breakfast": {
           "time": "09:00",
           "location": "点都德-环宇荟店(점도덕, DianDouDe)",
           "description": "아침 식사",
-          "distance": null,
+          "distance": "3km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "morning": {
           "time": "10:00",
           "location": "上海乐高乐园度假区 (레고랜드 상하이 리조트, LEGOLAND Shanghai Resort)",
           "description": "레고랜드 방문",
-          "distance": null,
+          "distance": "64km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon": {
           "time": "14:00",
           "location": "萍姐火锅 (핑지에훠궈, Pingjie Hotpot)",
           "description": "훠궈",
-          "distance": null,
+          "distance": "62km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon2": {
           "time": "15:00",
           "location": "田子坊(톈즈팡, Tianzifang)",
           "description": "톈즈팡",
-          "distance": null,
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon3": {
           "time": "17:00",
           "location": "武康大楼(우캉맨션, WuKang Mansion, WuKangDaLou)",
           "description": "우캉맨션",
-          "distance": null,
+          "distance": "5km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "dinner": {
           "time": "18:00",
           "location": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian)",
           "description": "양꼬치",
-          "distance": null,
+          "distance": "5km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "evening": {
           "time": "19:00",
           "location": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
           "description": "유람선",
-          "distance": null,
+          "distance": "6km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "hotel_return": {
