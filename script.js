@@ -1429,12 +1429,7 @@ function renderMobileTimeline(dayKey) {
         place.textContent = displayLocationForSchedule(item.location);
         card.appendChild(time);
         card.appendChild(place);
-        if (item.costLabel) {
-            const cost = document.createElement('div');
-            cost.className = 'mt-cost';
-            cost.textContent = item.costLabel;
-            card.appendChild(cost);
-        }
+        // 비용 표시는 모바일 가로 일정표에서 제외
 
         card.addEventListener('click', () => {
             zoomToLocation(item.location);
@@ -1526,18 +1521,7 @@ function buildMobileTimelineData(dayKey) {
                 time: schedule.time || '',
                 location: schedule.location || ''
             };
-            // 카드 내 비용(활동/식사) 표시: activity 우선, 없으면 meal
-            let activityYuan = null;
-            if (schedule.cost?.activity) {
-                const val = parseInt(String(schedule.cost.activity).replace(/[^\d]/g, ''));
-                if (!isNaN(val)) activityYuan = val;
-            } else if (schedule.cost?.meal) {
-                const val = parseInt(String(schedule.cost.meal).replace(/[^\d]/g, ''));
-                if (!isNaN(val)) activityYuan = val;
-            }
-            if (activityYuan !== null) {
-                item.costLabel = `¥${activityYuan.toLocaleString()}`;
-            }
+            // 모바일 가로 일정표에서는 비용 표시를 제외
             // 점 사이 이동 정보: 다음 항목의 거리/이동수단 배지 사용 (비용은 제외)
             if (next) {
                 const dist = (next.distance && next.distance !== null) ? String(next.distance) : '';
