@@ -1404,27 +1404,9 @@ function renderMobileTimeline(dayKey) {
         node.className = 'mt-node';
         const dotWrap = document.createElement('div');
         dotWrap.className = 'mt-dot-wrap';
-        if (idx > 0) {
-            const left = document.createElement('div');
-            left.className = 'mt-connector left';
-            dotWrap.appendChild(left);
-        }
-        if (idx < data.length - 1) {
-            const right = document.createElement('div');
-            right.className = 'mt-connector right';
-            dotWrap.appendChild(right);
-        }
         const dot = document.createElement('div');
         dot.className = 'mt-dot';
         dotWrap.appendChild(dot);
-
-        // 점과 점 사이 이동 정보(거리 · 교통비) 표시
-        if (item.moveLabel) {
-            const move = document.createElement('div');
-            move.className = 'mt-move';
-            move.textContent = item.moveLabel;
-            dotWrap.appendChild(move);
-        }
 
         const card = document.createElement('div');
         card.className = 'mt-card';
@@ -1450,6 +1432,17 @@ function renderMobileTimeline(dayKey) {
         node.appendChild(dotWrap);
         node.appendChild(card);
         scroll.appendChild(node);
+
+        // 점과 점 사이 이동 정보(거리 · 교통비)는 별도 링크 블록으로 추가
+        if (idx < data.length - 1 && item.moveLabel) {
+            const link = document.createElement('div');
+            link.className = 'mt-link';
+            const move = document.createElement('div');
+            move.className = 'mt-move';
+            move.textContent = item.moveLabel;
+            link.appendChild(move);
+            scroll.appendChild(link);
+        }
     });
 }
 

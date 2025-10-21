@@ -1590,6 +1590,18 @@ html, body {
     overflow-y: hidden;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+.mobile-timeline .mt-scroll::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 26px; /* align with dot center */
+    height: 2px;
+    background: #8B1E3F;
+    opacity: 0.85;
+    pointer-events: none;
 }
 .mobile-timeline .mt-scroll::-webkit-scrollbar { height: 6px; }
 .mobile-timeline .mt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 6px; }
@@ -1620,15 +1632,7 @@ html, body {
     border: 2px solid #FFF8F0;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-.mobile-timeline .mt-connector {
-    position: absolute;
-    top: 14px;
-    height: 2px;
-    background: #8B1E3F;
-    opacity: 0.8;
-}
-.mobile-timeline .mt-connector.left { left: 0; right: 50%; }
-.mobile-timeline .mt-connector.right { left: 50%; right: 0; }
+/* per-node connectors removed in favor of continuous baseline */
 
 .mobile-timeline .mt-move {
     position: absolute;
@@ -1643,16 +1647,31 @@ html, body {
 
 .mobile-timeline .mt-card {
     background: #FFF8F0;
-    border: 1.5px solid #8B1E3F;
+    border: none;
     border-radius: 10px;
-    padding: 6px 8px;
+    padding: 4px 6px;
     color: #8B1E3F;
     width: 100%;
     cursor: pointer;
+    text-align: center;
 }
-.mobile-timeline .mt-time { font-weight: 800; font-family: 'Yangjin','Noto Sans KR',sans-serif; }
-.mobile-timeline .mt-place { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mobile-timeline .mt-cost { font-size: 0.86em; opacity: 0.95; margin-top: 2px; font-weight: 700; }
+.mobile-timeline .mt-time { font-weight: 800; font-family: 'Yangjin','Noto Sans KR',sans-serif; font-size: 0.86em; }
+.mobile-timeline .mt-place { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.86em; }
+.mobile-timeline .mt-cost { font-size: 0.78em; opacity: 0.95; margin-top: 2px; font-weight: 700; }
+
+.mobile-timeline .mt-link {
+    min-width: 90px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.mobile-timeline .mt-link .mt-move {
+    margin-top: 20px; /* appear under the baseline between dots */
+    text-align: center;
+    color: #8B1E3F;
+    font-size: 0.72em;
+    opacity: 0.9;
+}
 .mobile-timeline .mt-seg {
     display: inline-block;
     margin-top: 4px;
