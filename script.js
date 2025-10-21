@@ -1356,6 +1356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             window.itineraryData = data.shanghai_tourism.itinerary;
             setupMapClickToClosePopup();
+            initMobileTimeline();
         });
 });
 
@@ -1368,3 +1369,122 @@ map.on('popupclose', function(e) {
         }
     });
 });
+
+// ---------------- Mobile Horizontal Timeline -----------------
+function initMobileTimeline() {
+    const container = document.getElementById('mobile-timeline');
+    if (!container) return;
+
+    const tabs = document.getElementById('mt-tabs');
+    const days = ['day1', 'day2', 'day3', 'day4', 'all'];
+    tabs.innerHTML = '';
+    days.forEach(d => {
+        const btn = document.createElement('button');
+        btn.className = 'mt-tab' + (d === 'day1' ? ' active' : '');
+        btn.dataset.day = d;
+        btn.textContent = d === 'all' ? '전체' : d.replace('day', '') + '일차';
+        btn.addEventListener('click', () => {
+            tabs.querySelectorAll('.mt-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderMobileTimeline(d);
+            filterMarkersByDay(d);
+        });
+        tabs.appendChild(btn);
+    });
+
+    renderMobileTimeline('day1');
+    filterMarkersByDay('day1');
+}
+
+function renderMobileTimeline(dayKey) {
+    const scroll = document.getElementById('mt-scroll');
+    if (!scroll || !window.itineraryData) return;
+    scroll.innerHTML = '';
+
+    const data = buildMobileTimelineData(dayKey);
+    data.forEach((item, idx) => {
+        const node = document.createElement('div');
+        node.className = 'mt-node';
+        const dotWrap = document.createElement('div');
+        dotWrap.className = 'mt-dot-wrap';
+        if (idx > 0) {
+            const left = document.createElement('div');
+            left.className = 'mt-connector left';
+            dotWrap.appendChild(left);
+        }
+        if (idx < data.length - 1) {
+            const right = document.createElement('div');
+            right.className = 'mt-connector right';
+            dotWrap.appendChild(right);
+        }
+        const dot = document.createElement('div');
+        dot.className = 'mt-dot';
+        dotWrap.appendChild(dot);
+
+        const card = document.createElement('div');
+        card.className = 'mt-card';
+        const time = document.createElement('div');
+        time.className = 'mt-time';
+        time.textContent = item.time || '';
+        const place = document.createElement('div');
+        place.className = 'mt-place';
+        place.textContent = extractKorean(item.location);
+        const desc = document.createElement('div');
+        desc.className = 'mt-desc';
+        desc.textContent = item.description || '';
+        card.appendChild(time);
+        card.appendChild(place);
+        if (item.description) card.appendChild(desc);
+
+        if (item.segment) {
+            const seg = document.createElement('div');
+            seg.className = 'mt-seg';
+            seg.textContent = item.segment;
+            card.appendChild(seg);
+        }
+
+        card.addEventListener('click', () => {
+            zoomToLocation(item.location);
+        });
+
+        node.appendChild(dotWrap);
+        node.appendChild(card);
+        scroll.appendChild(node);
+    });
+}
+
+function buildMobileTimelineData(dayKey) {
+    const out = [];
+    if (!window.itineraryData) return out;
+
+    const pushDay = (ds) => {
+        const entries = Object.entries(ds).sort((a,b)=> (a[1].time||'00:00').localeCompare(b[1].time||'00:00'));
+        for (let i=0;i<entries.length;i++) {
+            const [key, schedule] = entries[i];
+            const next = entries[i+1]?.[1];
+            const item = {
+                time: schedule.time || '',
+                location: schedule.location || '',
+                description: schedule.description || ''
+            };
+            if (next) {
+                const dist = (next.distance && next.distance !== null) ? next.distance : '-';
+                const moveCost = next.cost?.transport ? ` · 교통 ¥${parseInt(next.cost.transport).toLocaleString()}` : '';
+                item.segment = `이동: ${dist}${moveCost}`;
+            }
+            out.push(item);
+        }
+    };
+
+    if (dayKey === 'all') {
+        for (let i=1;i<=4;i++) {
+            const dk = `day${i}`;
+            const ds = window.itineraryData[dk];
+            if (ds) pushDay(ds);
+        }
+    } else {
+        const ds = window.itineraryData[dayKey];
+        if (ds) pushDay(ds);
+    }
+    return out;
+}
