@@ -1381,7 +1381,7 @@ function initMobileTimeline() {
     if (!container) return;
 
     const tabs = document.getElementById('mt-tabs');
-    const days = ['day1', 'day2', 'day3', 'day4', 'all'];
+    const days = ['all', 'day1', 'day2', 'day3', 'day4'];
     tabs.innerHTML = '';
     days.forEach(d => {
         const btn = document.createElement('button');
