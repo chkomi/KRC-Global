@@ -101,6 +101,12 @@ async function initMap() {
         mixedCluster.addTo(map);
 
         displayMarkers();
+
+        // 팝업 닫힐 때 라벨/표시 갱신 (초기화 이후에 바인딩)
+        map.on('popupclose', function() {
+            // 현재 구현에서는 별도 라벨 토글 없음. 필요시 표시 갱신 호출
+            updateLabelVisibility();
+        });
         
         // 이벤트 리스너 연결
         setupEventListeners();
@@ -1360,15 +1366,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-// 팝업 닫힐 때 라벨 다시 표시
-map.on('popupclose', function(e) {
-    allMarkers.forEach(markerData => {
-        if (!markerData.visible) {
-            markerData.marker.bindTooltip(markerData.tooltip);
-            markerData.visible = true;
-        }
-    });
-});
+// 팝업 닫힘 이벤트는 initMap에서 바인딩
 
 // ---------------- Mobile Horizontal Timeline -----------------
 function initMobileTimeline() {
@@ -1421,6 +1419,14 @@ function renderMobileTimeline(dayKey) {
         dot.className = 'mt-dot';
         dotWrap.appendChild(dot);
 
+        // 점과 점 사이 이동 정보(거리 · 교통비) 표시
+        if (item.moveLabel) {
+            const move = document.createElement('div');
+            move.className = 'mt-move';
+            move.textContent = item.moveLabel;
+            dotWrap.appendChild(move);
+        }
+
         const card = document.createElement('div');
         card.className = 'mt-card';
         const time = document.createElement('div');
@@ -1429,18 +1435,13 @@ function renderMobileTimeline(dayKey) {
         const place = document.createElement('div');
         place.className = 'mt-place';
         place.textContent = extractKorean(item.location);
-        const desc = document.createElement('div');
-        desc.className = 'mt-desc';
-        desc.textContent = item.description || '';
         card.appendChild(time);
         card.appendChild(place);
-        if (item.description) card.appendChild(desc);
-
-        if (item.segment) {
-            const seg = document.createElement('div');
-            seg.className = 'mt-seg';
-            seg.textContent = item.segment;
-            card.appendChild(seg);
+        if (item.costLabel) {
+            const cost = document.createElement('div');
+            cost.className = 'mt-cost';
+            cost.textContent = item.costLabel;
+            card.appendChild(cost);
         }
 
         card.addEventListener('click', () => {
@@ -1464,13 +1465,29 @@ function buildMobileTimelineData(dayKey) {
             const next = entries[i+1]?.[1];
             const item = {
                 time: schedule.time || '',
-                location: schedule.location || '',
-                description: schedule.description || ''
+                location: schedule.location || ''
             };
+            // 카드 내 비용(활동/식사) 표시: activity 우선, 없으면 meal
+            let activityYuan = null;
+            if (schedule.cost?.activity) {
+                const val = parseInt(String(schedule.cost.activity).replace(/[^\d]/g, ''));
+                if (!isNaN(val)) activityYuan = val;
+            } else if (schedule.cost?.meal) {
+                const val = parseInt(String(schedule.cost.meal).replace(/[^\d]/g, ''));
+                if (!isNaN(val)) activityYuan = val;
+            }
+            if (activityYuan !== null) {
+                item.costLabel = `¥${activityYuan.toLocaleString()}`;
+            }
+            // 점 사이 이동 정보: 다음 항목의 거리/교통비 사용
             if (next) {
-                const dist = (next.distance && next.distance !== null) ? next.distance : '-';
-                const moveCost = next.cost?.transport ? ` · 교통 ¥${parseInt(next.cost.transport).toLocaleString()}` : '';
-                item.segment = `이동: ${dist}${moveCost}`;
+                const dist = (next.distance && next.distance !== null) ? String(next.distance) : '-';
+                let moveCostLabel = '';
+                if (next.cost?.transport) {
+                    const t = parseInt(String(next.cost.transport).replace(/[^\d]/g, ''));
+                    if (!isNaN(t)) moveCostLabel = ` · ¥${t.toLocaleString()}`;
+                }
+                item.moveLabel = `${dist}${moveCostLabel}`;
             }
             out.push(item);
         }

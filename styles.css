@@ -1606,7 +1606,7 @@ html, body {
 .mobile-timeline .mt-dot-wrap {
     position: relative;
     width: 100%;
-    height: 24px;
+    height: 36px;
 }
 .mobile-timeline .mt-dot {
     position: absolute;
@@ -1622,13 +1622,24 @@ html, body {
 }
 .mobile-timeline .mt-connector {
     position: absolute;
-    top: 15px;
+    top: 14px;
     height: 2px;
     background: #8B1E3F;
     opacity: 0.8;
 }
 .mobile-timeline .mt-connector.left { left: 0; right: 50%; }
 .mobile-timeline .mt-connector.right { left: 50%; right: 0; }
+
+.mobile-timeline .mt-move {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20px;
+    text-align: center;
+    color: #8B1E3F;
+    font-size: 0.72em;
+    opacity: 0.9;
+}
 
 .mobile-timeline .mt-card {
     background: #FFF8F0;
@@ -1641,7 +1652,7 @@ html, body {
 }
 .mobile-timeline .mt-time { font-weight: 800; font-family: 'Yangjin','Noto Sans KR',sans-serif; }
 .mobile-timeline .mt-place { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mobile-timeline .mt-desc { font-size: 0.88em; opacity: 0.9; margin-top: 2px; }
+.mobile-timeline .mt-cost { font-size: 0.86em; opacity: 0.95; margin-top: 2px; font-weight: 700; }
 .mobile-timeline .mt-seg {
     display: inline-block;
     margin-top: 4px;
