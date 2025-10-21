@@ -460,42 +460,48 @@
           "time": "09:00",
           "location": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
           "description": "아침 식사",
-          "distance": null,
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "morning": {
           "time": "10:00",
           "location": "大韩民国上海临时政府 (상하이임시정부, Provisional Government of the Republic of Korea in Shanghai)",
           "description": "역사 탐방",
-          "distance": null,
+          "distance": "3km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "lunch": {
           "time": "11:00",
           "location": "四季民福烤鸭店-香港广场店 (사계민복, Sihai Minfu)",
           "description": "점심 식사",
-          "distance": null,
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon": {
           "time": "12:00",
           "location": "朱家角古镇(주가각, ZhuJiaJiao)",
           "description": "주가각 방문",
-          "distance": null,
+          "distance": "2km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon2": {
           "time": "15:00",
           "location": "豫园 (예원, Yu Garden)",
           "description": "예원 방문",
-          "distance": null,
+          "distance": "46km",
+          "moveMode": "패키지",
           "cost": {"transport": null, "activity": null}
         },
         "dinner": {
           "time": "18:00",
           "location": "상하이구광쇼핑몰 (Shanghai JiuGuang Shopping Mall)",
           "description": "쇼핑",
-          "distance": null,
+          "distance": "9km",
+          "moveMode": "패키지",
           "cost": {"transport": null, "activity": null}
         },
         "evening2": {
@@ -509,7 +515,8 @@
           "time": "21:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소로 복귀",
-          "distance": "4km",
+          "distance": "9km",
+          "moveMode": "택시",
           "cost": {
             "transport": "30위안 (디디)",
             "activity": null
