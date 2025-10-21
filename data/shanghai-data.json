@@ -449,6 +449,13 @@
         
       },
       "day2": {
+        "hotel_morning": {
+          "time": "08:30",
+          "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
+          "description": "숙소",
+          "distance": null,
+          "cost": {"transport": null, "activity": null}
+        },
         "breakfast": {
           "time": "09:00",
           "location": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
