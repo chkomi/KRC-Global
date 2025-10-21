@@ -1493,7 +1493,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
             const topEl = document.createElement('div');
             topEl.className = 'mt-move-abs';
             topEl.style.left = `${mid}px`;
-            topEl.style.top = `${y - 16}px`; // 선 위쪽, 배지와 거리 대칭/근접
+            topEl.style.top = `${y - 20}px`; // 선 위쪽 20px 간격
             topEl.innerHTML = badgeHtml;
             scroll.appendChild(topEl);
         }
@@ -1501,7 +1501,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist) {
             const bottomEl = document.createElement('div');
             bottomEl.className = 'mt-move-abs';
             bottomEl.style.left = `${mid}px`;
-            bottomEl.style.top = `${y + 16}px`; // 선 아래쪽, 배지와 동일 거리
+            bottomEl.style.top = `${y + 5}px`; // 선 아래쪽 5px 간격
             bottomEl.textContent = distText;
             scroll.appendChild(bottomEl);
         }
