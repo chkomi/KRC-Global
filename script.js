@@ -1481,7 +1481,7 @@ function layoutMobileTrackAndLabels(scroll, centers, labels) {
         el.className = 'mt-move-abs';
         el.style.left = `${mid}px`;
         el.style.top = `${y + 8}px`; // 8px 아래에 배치
-        el.textContent = label;
+        el.innerHTML = label; // HTML 지원 (배지 렌더링)
         scroll.appendChild(el);
     }
 
@@ -1516,15 +1516,28 @@ function buildMobileTimelineData(dayKey) {
             if (activityYuan !== null) {
                 item.costLabel = `¥${activityYuan.toLocaleString()}`;
             }
-            // 점 사이 이동 정보: 다음 항목의 거리/교통비 사용
+            // 점 사이 이동 정보: 다음 항목의 거리/교통비/이동수단 배지 사용
             if (next) {
-                const dist = (next.distance && next.distance !== null) ? String(next.distance) : '-';
-                let moveCostLabel = '';
+                const dist = (next.distance && next.distance !== null) ? String(next.distance) : '';
+                // 이동수단 배지 결정: moveMode 우선, 없으면 transport 문자열 내 괄호 텍스트 참고
+                let mode = next.moveMode || '';
+                if (!mode && next.cost?.transport && /\(([^)]+)\)/.test(String(next.cost.transport))) {
+                    mode = String(next.cost.transport).match(/\(([^)]+)\)/)[1];
+                }
+                let badgeClass = '';
+                if (mode.includes('공항픽업')) badgeClass = 'wine';
+                else if (mode.includes('도보')) badgeClass = 'walk';
+                else if (mode.includes('택시') || mode.includes('디디')) badgeClass = 'taxi';
+                const badge = mode ? `<span class="mt-badge ${badgeClass}">${mode}</span>` : '';
+
+                let costHtml = '';
                 if (next.cost?.transport) {
                     const t = parseInt(String(next.cost.transport).replace(/[^\d]/g, ''));
-                    if (!isNaN(t)) moveCostLabel = ` · ¥${t.toLocaleString()}`;
+                    if (!isNaN(t) && t > 0) costHtml = ` · ¥${t.toLocaleString()}`;
                 }
-                item.moveLabel = `${dist}${moveCostLabel}`;
+                const distHtml = dist ? `${dist}` : '';
+                const pieces = [distHtml, badge, costHtml].filter(Boolean).join(' ');
+                item.moveLabel = pieces;
             }
             out.push(item);
         }

@@ -350,9 +350,10 @@
           "time": "11:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소 체크인 및 짐 두기",
-          "distance": null,
+          "distance": "15km",
+          "moveMode": "공항픽업",
           "cost": {
-            "transport": null,
+            "transport": "620위안",
             "activity": null
           }
         },
@@ -360,7 +361,8 @@
           "time": "11:30",
           "location": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
           "description": "중국 전통 정원에서 아름다운 풍경 감상",
-          "distance": "2km",
+          "distance": "4km",
+          "moveMode": "택시",
           "cost": {
             "transport": null,
             "activity": "210위안 (관광)"
@@ -370,7 +372,8 @@
           "time": "13:00",
           "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
           "description": "베이징 오리 요리 전문점",
-          "distance": "3km",
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {
             "transport": "30위안 (디디)",
             "activity": "1000위안 (식사)"
@@ -380,7 +383,8 @@
           "time": "14:00",
           "location": "外滩 (와이탄, The Bund)",
           "description": "풍부한 중국 예술품과 역사 컬렉션 관람",
-          "distance": null,
+          "distance": "5km",
+          "moveMode": "택시",
           "cost": {
             "transport": null,
             "activity": null
@@ -390,7 +394,8 @@
           "time": "15:30",
           "location": "大韩民国上海临时政府(상하이임시정부)",
           "description": "독립운동의 성지에서 역사 교육",
-          "distance": "2km",
+          "distance": "5km",
+          "moveMode": "택시",
           "cost": {
             "transport": "30위안 (디디)",
             "activity": null
@@ -400,7 +405,8 @@
           "time": "16:00",
           "location": "南京东路 (난징동루, Nanjing Road East)",
           "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역 탐방",
-          "distance": "1km",
+          "distance": "3km",
+          "moveMode": "택시",
           "cost": {
             "transport": null,
             "activity": "140위안 (관광)"
@@ -410,7 +416,8 @@
           "time": "18:00",
           "location": "海底捞火锅-外滩店(하이디라오, HaiDiLao)",
           "description": "중국 최고의 훠궈 체인점에서 프리미엄 훠궈",
-          "distance": "3km",
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {
             "transport": "30위안 (디디)",
             "activity": "2000위안 (식사)"
@@ -420,9 +427,10 @@
           "time": "19:00",
           "location": "VUE Bar - 上海外滩茂悦大酒店 (하야트 뷰바, VUE Bar at Hyatt on the Bund)",
           "description": "루자쭈이의 초고층 전망과 함께 즐기는 럭셔리 루프탑 레스토랑 & 바",
-          "distance": "5km",
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {
-            "transport": "30위안 (디디)",
+            "transport": null,
             "activity": "1400위안 (관광)"
           },
           "alternative": "황푸강 유람선 (Huangpu River Cruise)"
@@ -431,7 +439,8 @@
           "time": "21:00",
           "location": "上海中星铂尔曼酒店 (SSAW 부티크 호텔상하이 번드)",
           "description": "숙소로 복귀",
-          "distance": "4km",
+          "distance": "3km",
+          "moveMode": "택시",
           "cost": {
             "transport": "30위안 (디디)",
             "activity": null

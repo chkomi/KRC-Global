@@ -1666,6 +1666,18 @@ html, body {
     opacity: 0.9;
     z-index: 1;
 }
+.mobile-timeline .mt-move-abs .mt-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 0.72em;
+    font-weight: 800;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+.mobile-timeline .mt-badge.wine { background: #8B1E3F; color: #FFF8F0; }
+.mobile-timeline .mt-badge.taxi { background: rgba(139,30,63,0.08); color: #8B1E3F; border: 1px solid #8B1E3F; }
+.mobile-timeline .mt-badge.walk { background: rgba(107,142,90,0.12); color: #6B8E5A; border: 1px solid #6B8E5A; }
 .mobile-timeline .mt-seg {
     display: inline-block;
     margin-top: 4px;
