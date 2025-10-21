@@ -46,15 +46,7 @@
         "features": ["쇼핑", "문화"],
         "image": "images/attractions/nanjing-road-east.jpg"
       },
-      {
-        "name": "新天地 (신천지, Xintiandi)",
-        "address": "上海市黄浦区太仓路181弄 (Lane 181, Taicang Road, Huangpu District, Shanghai - General area)",
-        "latitude": 31.221775,
-        "longitude": 121.470391,
-        "description": "트렌디한 레스토랑과 바가 밀집한 도심 지역",
-        "features": ["트렌디", "레스토랑"],
-        "image": "images/attractions/xintiandi.jpg"
-      },
+      
       {
         "name": "上海中心大厦 (상하이타워, Shanghai Tower)",
         "address": "上海市浦东新区银城中路501号(No. 501 Yincheng Middle Road, Pudong New Area, Shanghai)",
@@ -100,42 +92,10 @@
         "features": ["수상 마을", "전통 문화", "운하"],
         "image": "images/attractions/zhujiajiao.jpg"
       },
-      {
-        "name": "上海影视乐园 (상하이영화테마파크, Shanghai Film Park)",
-        "address": "上海市松江区车墩镇北松公路4915号",
-        "latitude": 31.01224,
-        "longitude": 121.30840,
-        "description": "1930년대 상하이 거리를 재현한 영화 촬영지로, 영화 '색계' 등 유명 작품의 배경이 된 테마파크",
-        "features": ["영화촬영지", "1930년대 복원", "테마파크"],
-        "image": "images/attractions/shanghai-film-park.jpg"
-      },
-      {
-        "name": "泰晤士小镇 (템즈타운, Thames Town)",
-        "address": "上海市松江区三新北路900弄",
-        "latitude": 31.033517,
-        "longitude": 121.19246,
-        "description": "영국 런던의 템즈강변을 모델로 한 영국풍 마을로, 고딕 양식의 교회와 빅토리아 시대 건물들이 특징",
-        "features": ["영국풍 마을", "고딕 건축", "사진촬영"],
-        "image": "images/attractions/thames-town.jpg"
-      },
-      {
-        "name": "新场古镇 (신창고진, Xinchang Ancient Town)",
-        "address": "上海市浦东新区新场镇",
-        "latitude": 31.02833,
-        "longitude": 121.64921,
-        "description": "명청 시대의 전통 건축물이 잘 보존된 고대 마을로, 상하이에서 가장 오래된 수상 마을 중 하나",
-        "features": ["고대 마을", "명청 건축", "수상 마을"],
-        "image": "images/attractions/xinchang-ancient-town.jpg"
-      },
-      {
-        "name": "虹泉路 (홍췐루, Hongquan Road)",
-        "address": "上海市闵行区虹泉路",
-        "latitude": 31.1718,
-        "longitude": 121.370307,
-        "description": "상하이의 한국인 거주지역으로 한국 음식과 문화를 체험할 수 있는 곳",
-        "features": ["한국문화", "한국음식", "한국마트"],
-        "image": "images/attractions/hongquan-road.jpg"
-      },
+      
+      
+      
+      
       {
         "name": "黄浦江游船 (황푸강유람선, Huangpu River Cruise)",
         "address": "上海市黄浦区中山东一路外滩游船码头 (The Bund Cruise Terminal, Zhongshan East 1st Road, Huangpu District, Shanghai)",
@@ -211,15 +171,7 @@
         "menu": ["홍미창펀", "하가우", "시우마이", "차슈번"],
         "image": "images/restaurants/dian-dou-de.jpg"
       },
-      {
-        "name": "富春小笼-虹桥南丰城店 (푸춘샤오롱, FuChunXiaoLong)",
-        "address": "上海市长宁区遵义路100号虹桥南丰城南区B1층",
-        "latitude": 31.208943,
-        "longitude": 121.402836,
-        "description": "상하이 3대 샤오롱바오 맛집 중 하나로 단황시엔 샤오롱바오(계란노른자 포함)가 시그니처 메뉴",
-        "menu": ["단황시엔샤오롱바오", "샹요우산쓰샤렌샤오룽", "전통상하이맛"],
-        "image": "images/restaurants/fu-chun-xiao-long.jpg"
-      },
+      
       {
         "name": "海底捞火锅-外滩店 (하이디라오, HaiDiLao)",
         "address": "上海市黄浦区南京东路123号中央商场5楼",
@@ -238,15 +190,7 @@
         "menu": ["훠궈"],
         "image": "images/restaurants/pingjie-huoguo.jpg"
       },
-      {
-        "name": "莱莱小笼(라이라이샤오롱, LaiLaiXiaoLong)",
-        "address": "上海市黄浦区天津路506호(人民广场地铁站19호구보행440미)",
-        "latitude": 31.28084,
-        "longitude": 121.472574,
-        "description": "미슐랭 빕구르망 선정 샤오롱바오 전문점, 게살 샤오롱바오가 시그니처 메뉴인 현지인 맛집",
-        "menu": ["게살샤오롱바오", "일반샤오롱바오", "훈툰", "미슐랭"],
-        "image": "images/restaurants/lai-lai-xiao-long.jpg"
-      },
+      
       {
         "name": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
         "address": "上海市浦东新区陆家嘴环路1318호성점은행대厦B1층6호",
@@ -256,15 +200,7 @@
         "menu": ["파인애플볶음밥", "굴전", "대만가정식", "허자이지엔"],
         "image": "images/restaurants/lu-gang-xiao-zhen.jpg"
       },
-      {
-        "name": "外婆家-上海静安大悦城店 (와이포지아, WaiPoJia)",
-        "address": "上海市静安区曲阜路180号上海大悦城7楼(曲阜路地铁站출입구옆)",
-        "latitude": 31.2144771,
-        "longitude": 121.467395,
-        "description": "외할머니집이라는 뜻의 중국 가정식 전문점, 마늘새우당면찜이 시그니처 메뉴인 가성비 맛집으로 현지인과 관광객 모두에게 인기",
-        "menu": ["마늘새우당면찜", "동파육", "마파두부", "중국가정식"],
-        "image": "images/restaurants/wai-po-jia.jpg"
-      },
+      
       {
         "name": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian)",
         "address": "上海市浦东新区银城路167号兴业银行大厦北侧B1层内广场",
