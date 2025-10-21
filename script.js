@@ -1533,6 +1533,7 @@ function buildMobileTimelineData(dayKey) {
                 let badgeClass = '';
                 if (mode.includes('공항픽업')) badgeClass = 'wine';
                 else if (mode.includes('도보')) badgeClass = 'walk';
+                else if (mode.includes('패키지')) badgeClass = 'wine';
                 else if (mode.includes('택시') || mode.includes('디디')) badgeClass = 'taxi';
                 const badge = mode ? `<span class="mt-badge ${badgeClass}">${mode}</span>` : '';
                 item.moveBadge = badge;

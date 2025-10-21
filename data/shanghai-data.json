@@ -497,7 +497,8 @@
           "time": "19:00",
           "location": "上海马戏城 (상하이 서커스월드, Shanghai Circus World)",
           "description": "공연 관람",
-          "distance": null,
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "hotel_return": {
