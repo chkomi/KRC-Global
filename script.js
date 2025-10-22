@@ -1457,7 +1457,7 @@ function renderMobileTimeline(dayKey) {
 
 function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey, cards) {
     // 기존 트랙/라벨 제거
-    scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox, .mt-range-label').forEach(el => el.remove());
+    scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox, .mt-range-label, .mt-day-arrow, .mt-day-arrow-label, .mt-day-badge').forEach(el => el.remove());
 
     if (centers.length === 0) return;
     const scrollRect = scroll.getBoundingClientRect();
@@ -1515,7 +1515,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
         }
     }
 
-    // 전체 보기에서 각 일자별 범위를 하단 텍스트 라벨(점선 형식)로 표시
+    // 전체 보기에서 각 일자별 범위를 하단 화살표 라인으로 표시
     if (dayKey === 'all' && dayLabels && dayLabels.length === centers.length) {
         const groups = [];
         let start = 0;
@@ -1529,15 +1529,24 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const leftX = toContentX(centers[g.start].dot);
             const rightX = toContentX(centers[g.end].dot);
             const mid = (leftX + rightX) / 2;
-            // 각 일자 범위 내 카드의 가장 아래쪽을 기준으로 라벨 위치 결정
+            // 각 일자 범위 내 카드의 가장 아래쪽을 기준으로 화살표 위치 결정
             const bottoms = cards.slice(g.start, g.end + 1).map(elBottom);
             const baseY = Math.max(...bottoms);
+            const arrow = document.createElement('div');
+            arrow.className = 'mt-day-arrow';
+            arrow.style.left = `${leftX}px`;
+            const arrowTop = baseY + 10; // 카드 하단 아래 적당한 간격
+            arrow.style.top = `${arrowTop}px`;
+            arrow.style.width = `${Math.max(0, rightX - leftX)}px`;
+            scroll.appendChild(arrow);
+
+            // 일자 텍스트 뱃지 (화살표 위에 얹기)
             const label = document.createElement('div');
-            label.className = 'mt-range-label';
+            label.className = 'mt-day-badge';
             label.style.left = `${mid}px`;
-            label.style.top = `${baseY + 6}px`; // 카드 하단 아래로 약간 여백
+            label.style.top = `${arrowTop}px`; // 라인 중앙에 배치 (transform로 수직 중앙 정렬)
             const dayText = (g.day === 'day1') ? '1일차' : (g.day === 'day2') ? '2일차' : (g.day === 'day3') ? '3일차' : (g.day === 'day4') ? '4일차' : g.day;
-            label.textContent = `<----${dayText}----->`;
+            label.textContent = dayText;
             scroll.appendChild(label);
         });
     }
