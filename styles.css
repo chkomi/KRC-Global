@@ -1698,11 +1698,11 @@ html, body {
     position: absolute;
     transform: translateX(-50%);
     font-family: 'Courier New', monospace;
-    font-size: 0.82em;
+    font-size: 0.86em;
     color: #8B1E3F;
     opacity: 0.9;
     white-space: nowrap;
-    z-index: 1;
+    z-index: 2; /* 트랙/카드 아래 겹침 방지용 */
 }
 .mobile-timeline .mt-badge.taxi { background: rgba(139,30,63,0.08); color: #8B1E3F; border: 1px solid #8B1E3F; }
 .mobile-timeline .mt-badge.walk { background: rgba(107,142,90,0.12); color: #6B8E5A; border: 1px solid #6B8E5A; }

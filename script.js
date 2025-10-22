@@ -1529,10 +1529,13 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const leftX = toContentX(centers[g.start].dot);
             const rightX = toContentX(centers[g.end].dot);
             const mid = (leftX + rightX) / 2;
+            // 각 일자 범위 내 카드의 가장 아래쪽을 기준으로 라벨 위치 결정
+            const bottoms = cards.slice(g.start, g.end + 1).map(elBottom);
+            const baseY = Math.max(...bottoms);
             const label = document.createElement('div');
             label.className = 'mt-range-label';
             label.style.left = `${mid}px`;
-            label.style.top = `${y + 28}px`; // 선 아래 충분한 위치
+            label.style.top = `${baseY + 6}px`; // 카드 하단 아래로 약간 여백
             const dayText = (g.day === 'day1') ? '1일차' : (g.day === 'day2') ? '2일차' : (g.day === 'day3') ? '3일차' : (g.day === 'day4') ? '4일차' : g.day;
             label.textContent = `<----${dayText}----->`;
             scroll.appendChild(label);
