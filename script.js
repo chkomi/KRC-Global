@@ -1457,7 +1457,7 @@ function renderMobileTimeline(dayKey) {
 
 function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabels, dayKey, cards) {
     // 기존 트랙/라벨 제거
-    scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox').forEach(el => el.remove());
+    scroll.querySelectorAll('.mt-track, .mt-move-abs, .mt-daybox, .mt-range-label').forEach(el => el.remove());
 
     if (centers.length === 0) return;
     const scrollRect = scroll.getBoundingClientRect();
@@ -1515,7 +1515,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
         }
     }
 
-    // 전체 보기에서 각 일자별 범위를 점선 박스로 표시
+    // 전체 보기에서 각 일자별 범위를 하단 텍스트 라벨(점선 형식)로 표시
     if (dayKey === 'all' && dayLabels && dayLabels.length === centers.length) {
         const groups = [];
         let start = 0;
@@ -1528,21 +1528,14 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
         groups.forEach(g => {
             const leftX = toContentX(centers[g.start].dot);
             const rightX = toContentX(centers[g.end].dot);
-            // 그룹 내 카드들의 top/bottom을 이용해 자연스러운 박스 높이 산정
-            const tops = cards.slice(g.start, g.end + 1).map(elTop);
-            const bottoms = cards.slice(g.start, g.end + 1).map(elBottom);
-            const badgeTop = y - 26 - 12; // 배지 오프셋 26, 높이 12 기준 상단
-            const distBottom = y + 5 + 12; // 거리 라벨 하단 추정 (오프셋 5, 높이 12)
-            const topEdge = Math.min(badgeTop - 10, Math.min(...tops) - 10);
-            const bottomEdge = Math.max(distBottom + 12, Math.max(...bottoms) + 12);
-            const box = document.createElement('div');
-            box.className = 'mt-daybox';
-            // 이전 버전: 양끝 약간만 안쪽/겹침 완화
-            box.style.left = `${leftX + 4}px`;
-            box.style.top = `${topEdge}px`;
-            box.style.width = `${Math.max(12, rightX - leftX - 8)}px`;
-            box.style.height = `${Math.max(12, bottomEdge - topEdge)}px`;
-            scroll.appendChild(box);
+            const mid = (leftX + rightX) / 2;
+            const label = document.createElement('div');
+            label.className = 'mt-range-label';
+            label.style.left = `${mid}px`;
+            label.style.top = `${y + 28}px`; // 선 아래 충분한 위치
+            const dayText = (g.day === 'day1') ? '1일차' : (g.day === 'day2') ? '2일차' : (g.day === 'day3') ? '3일차' : (g.day === 'day4') ? '4일차' : g.day;
+            label.textContent = `<----${dayText}----->`;
+            scroll.appendChild(label);
         });
     }
 
