@@ -148,8 +148,8 @@
         "address": "上海市黄浦区淮海中路282号(No. 282 Huaihai Middle Road, Huangpu District, Shanghai)",
         "latitude": 31.225798,
         "longitude": 121.470208,
-        "description": "1840년대 프랑스 조계지 시절의 역사를 간직한 공원, 동서양 문화 교류의 흔적",
-        "menu": ["역사공원", "프랑스조계", "문화유산"],
+        "description": "북경오리(베이징 카오야)로 유명한 맛집",
+        "menu": ["북경오리", "카오야"],
         "image": "images/restaurants/sihai-minfu.jpg"
       },
       
@@ -474,23 +474,15 @@
           "cost": {"transport": null, "activity": null}
         },
         "afternoon": {
-          "time": "12:00",
-          "location": "萍姐火锅 (핑지에훠궈, Pingjie Hotpot)",
-          "description": "훠궈",
-          "distance": "62km",
-          "moveMode": "택시",
+          "time": "14:00",
+          "location": "田子坊(톈즈팡, Tianzifang)",
+          "description": "톈즈팡",
+          "distance": null,
+          "moveMode": null,
           "cost": {"transport": null, "activity": null}
         },
         "afternoon2": {
-          "time": "15:00",
-          "location": "田子坊(톈즈팡, Tianzifang)",
-          "description": "톈즈팡",
-          "distance": "1km",
-          "moveMode": "도보",
-          "cost": {"transport": null, "activity": null}
-        },
-        "afternoon3": {
-          "time": "17:00",
+          "time": "16:30",
           "location": "武康大楼(우캉맨션, WuKang Mansion, WuKangDaLou)",
           "description": "우캉맨션",
           "distance": "5km",
@@ -498,7 +490,7 @@
           "cost": {"transport": null, "activity": null}
         },
         "dinner": {
-          "time": "18:00",
+          "time": "17:30",
           "location": "很久以前羊肉串-光音广场店 (옛날옛적에, HenJiuYiQian)",
           "description": "양꼬치",
           "distance": "5km",
