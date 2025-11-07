@@ -264,6 +264,59 @@ function displayLocationForSchedule(text) {
     return isHotel ? '숙소' : korean;
 }
 
+// 식당 매칭: 일정의 location을 기반으로 레스토랑 데이터에서 메뉴를 찾는다
+function findRestaurantMenuByLocation(locationText) {
+    try {
+        if (!window.shanghaiData || !window.shanghaiData.restaurants) return null;
+        const loc = (locationText || '').toString();
+        if (!loc) return null;
+        const norm = (s) => (s || '').toString().replace(/\s+/g, '').toLowerCase();
+        const locKor = norm(displayLocationForSchedule(loc));
+        const locRaw = norm(loc);
+
+        for (const r of window.shanghaiData.restaurants) {
+            const name = r.name || '';
+            const rKor = norm(extractKorean(name));
+            const paren = (name.match(/\(([^)]+)\)/)?.[1] || '');
+            const aliases = paren.split(/[，,]/).map(s => norm(s));
+            const nameRaw = norm(name);
+
+            const matched = (
+                (rKor && (locKor.includes(rKor) || rKor.includes(locKor))) ||
+                (nameRaw && (locRaw.includes(nameRaw) || nameRaw.includes(locRaw))) ||
+                aliases.some(a => a && (locKor.includes(a) || a.includes(locKor)))
+            );
+            if (matched) {
+                return Array.isArray(r.menu) ? r.menu : null;
+            }
+        }
+        return null;
+    } catch (e) {
+        console.warn('findRestaurantMenuByLocation error', e);
+        return null;
+    }
+}
+
+function getMenuBadgeInfo(locationText) {
+    const korName = extractKorean(locationText || '');
+    const n = (korName || '').replace(/\s+/g, '');
+    const is = (s) => n.includes(s);
+    // 우선 순위: 명시적 매핑
+    if (is('사계민복')) return { text: '북경오리', cls: 'wine' };
+    if (is('하이디라오')) return { text: '훠궈', cls: 'wine' };
+    if (is('핑지에훠궈') || is('핑지에')) return { text: '훠궈', cls: 'wine' };
+    if (is('샤오양셩지엔') || is('샤오양셔지엔')) return { text: '딤섬', cls: 'wine' };
+    if (is('점도덕')) return { text: '딤섬', cls: 'wine' };
+    if (is('옛날옛적에') || is('양꼬치')) return { text: '양꼬치', cls: 'wine' };
+    // 그 외에는 레스토랑 데이터의 메뉴 첫 항목 사용 (외곽선 스타일)
+    const menu = findRestaurantMenuByLocation(locationText);
+    if (menu && menu.length > 0) {
+        const first = (menu[0] || '').toString().trim();
+        if (first) return { text: first, cls: '' };
+    }
+    return { text: '', cls: '' };
+}
+
 // 설명을 3단어로 압축하는 함수
 function compressDescription(description) {
     const words = description.split(' ');
@@ -696,6 +749,7 @@ function buildTimelineHTML(dayKey) {
             const [key, schedule] = entries[i];
             const next = entries[i+1]?.[1];
             const locName = displayLocationForSchedule(schedule.location);
+            const menuInfo = getMenuBadgeInfo(schedule.location);
             const transportCost = schedule.cost?.transport ? `교통 ¥${parseInt(schedule.cost.transport).toLocaleString()}` : '';
             const activityCost = schedule.cost?.activity ? `활동 ¥${parseInt(schedule.cost.activity).toLocaleString()}` : '';
             const mealCost = schedule.cost?.meal ? `식사 ¥${parseInt(schedule.cost.meal).toLocaleString()}` : '';
@@ -711,6 +765,7 @@ function buildTimelineHTML(dayKey) {
                     <div class='timeline-top'>
                       <div class='timeline-time'>${schedule.time || ''}</div>
                       <div class='timeline-place'>${locName}</div>
+                      ${menuInfo.text ? `<div class='timeline-menu-badge'><span class='menu-badge ${menuInfo.cls}'>${menuInfo.text}</span></div>` : ''}
                       ${costLabel ? `<div class='timeline-cost'>${costLabel}</div>` : ''}
                     </div>
                     ${schedule.description ? `<div class='timeline-desc'>${schedule.description}</div>` : ''}
@@ -1432,6 +1487,17 @@ function renderMobileTimeline(dayKey) {
         place.textContent = displayLocationForSchedule(item.location);
         card.appendChild(time);
         card.appendChild(place);
+        const menuInfo = getMenuBadgeInfo(item.location);
+        if (menuInfo.text) {
+            const menuDiv = document.createElement('div');
+            menuDiv.className = 'mt-menu-badge';
+            const span = document.createElement('span');
+            span.className = 'menu-badge';
+            if (menuInfo.cls) span.className += ` ${menuInfo.cls}`;
+            span.textContent = menuInfo.text;
+            menuDiv.appendChild(span);
+            card.appendChild(menuDiv);
+        }
         // 비용 표시는 모바일 가로 일정표에서 제외
 
         card.addEventListener('click', () => {
@@ -1535,7 +1601,7 @@ function layoutMobileTrackAndLabels(scroll, centers, badges, labelsDist, dayLabe
             const arrow = document.createElement('div');
             arrow.className = 'mt-day-arrow';
             arrow.style.left = `${leftX}px`;
-            const arrowTop = baseY + 10; // 카드 하단 아래 적당한 간격
+            const arrowTop = baseY + 28; // 카드 하단 아래 간격을 더 내려서 여유 확보
             arrow.style.top = `${arrowTop}px`;
             arrow.style.width = `${Math.max(0, rightX - leftX)}px`;
             scroll.appendChild(arrow);
