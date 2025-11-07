@@ -295,10 +295,10 @@
         },
         "morning": {
           "time": "11:30",
-          "location": "东方明珠 (동방명주, Oriental Pearl TV Tower)",
+          "location": "사계민복",
           "description": "중국 전통 정원에서 아름다운 풍경 감상",
-          "distance": "4km",
-          "moveMode": "택시",
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {
             "transport": null,
             "activity": "210위안 (관광)"
@@ -306,12 +306,12 @@
         },
         "lunch": {
           "time": "13:00",
-          "location": "鹿港小镇-星展银行大厦店(벨라지오, LuGangXiaoZhen)",
+          "location": "스타벅스 로스터리",
           "description": "베이징 오리 요리 전문점",
-          "distance": "1km",
+          "distance": "2km",
           "moveMode": "도보",
           "cost": {
-            "transport": "30위안 (디디)",
+            "transport": null,
             "activity": "1000위안 (식사)"
           }
         },
@@ -383,26 +383,26 @@
         },
         "breakfast": {
           "time": "09:00",
-          "location": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
+          "location": "쓰난공관",
           "description": "아침 식사",
-          "distance": "1km",
-          "moveMode": "도보",
+          "distance": "4km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "morning": {
           "time": "10:00",
           "location": "大韩民国上海临时政府 (상하이임시정부, Provisional Government of the Republic of Korea in Shanghai)",
           "description": "역사 탐방",
-          "distance": "3km",
-          "moveMode": "택시",
+          "distance": "1km",
+          "moveMode": "도보",
           "cost": {"transport": null, "activity": null}
         },
         "lunch": {
           "time": "11:00",
-          "location": "四季民福烤鸭店-香港广场店 (사계민복, Sihai Minfu)",
+          "location": "샤오양셩지엔",
           "description": "점심 식사",
-          "distance": "1km",
-          "moveMode": "도보",
+          "distance": "4km",
+          "moveMode": "택시",
           "cost": {"transport": null, "activity": null}
         },
         "afternoon": {
