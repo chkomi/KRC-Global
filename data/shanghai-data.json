@@ -156,8 +156,8 @@
       {
         "name": "小杨生煎-福州路文化街店 (샤오양셩지엔, XiaoYangShengJian)",
         "address": "上海市黄浦区福州路567号1楼东北侧-b(八仙商务楼西侧30米)",
-        "latitude": 31.231105,
-        "longitude": 121.487321,
+        "latitude": 31.236587,
+        "longitude": 121.465927,
         "description": "육즙 가득한 셩지엔(군만두)으로 유명한 상하이 대표 맛집. 겉은 바삭하고 속은 촉촉한 만두피와 풍부한 육즙이 특징입니다.",
         "menu": ["셩지엔", "상하이 대표 맛집"],
         "image": "images/restaurants/xiaoyang-shengjian.jpg"
@@ -467,14 +467,14 @@
         },
         "morning": {
           "time": "10:00",
-          "location": "上海乐高乐园度假区 (레고랜드 상하이 리조트, LEGOLAND Shanghai Resort)",
-          "description": "레고랜드 방문",
-          "distance": "64km",
-          "moveMode": "택시",
+          "location": "(자유시간)",
+          "description": "자유시간",
+          "distance": null,
+          "moveMode": null,
           "cost": {"transport": null, "activity": null}
         },
         "afternoon": {
-          "time": "14:00",
+          "time": "12:00",
           "location": "萍姐火锅 (핑지에훠궈, Pingjie Hotpot)",
           "description": "훠궈",
           "distance": "62km",
